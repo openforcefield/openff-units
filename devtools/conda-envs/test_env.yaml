@@ -8,4 +8,4 @@ dependencies:
   - pytest
   - pytest-cov
   - codecov
-  - pint
+  - pint >=0.16.1
