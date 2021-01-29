@@ -64,11 +64,6 @@ jobs:
       run: |
         pytest -v $COV openff/units/tests/
 
-    - name: Run example notebooks
-      shell: bash -l {0}
-      run: |
-        pytest -v $COV examples/ --nbval-lax
-
     - name: Codecov
       uses: codecov/codecov-action@v1
       with:
