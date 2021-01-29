@@ -5,8 +5,9 @@ channels:
 dependencies:
   - python
   - pip
+  - numpy
+  - pint >=0.16.1
   - pytest
   - pytest-cov
   - codecov
-  - pint >=0.16.1
   - mypy =0.790
