@@ -29,6 +29,7 @@ setup(
     cmdclass=versioneer.get_cmdclass(),
     license='MIT',
     packages=find_namespace_packages(include=['openff.*']),
+    package_data={"openff.units": ["py.typed"]},
     include_package_data=True,
     setup_requires=[] + pytest_runner,
 )
