@@ -38,7 +38,7 @@ jobs:
         auto-activate-base: false
 
     - name: Optionally install OpenMM
-      if: ${{ matrix.cfg.openmm == 'TRUE' }}
+      if: ${{ matrix.openmm == 'TRUE' }}
       shell: bash -l {0}
       run: |
         mamba install openmm -c conda-forge -yq
