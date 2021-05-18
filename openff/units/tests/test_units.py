@@ -15,6 +15,7 @@ if has_package("simtk.unit"):
         5.0 * simtk_unit.angstrom,
         1.0 * simtk_unit.elementary_charge,
         0.5 * simtk_unit.erg,
+        1.0 * simtk_unit.dimensionless,
     ]
 
     pint_quantities = [
@@ -22,14 +23,15 @@ if has_package("simtk.unit"):
         5.0 * unit.angstrom,
         1.0 * unit.elementary_charge,
         0.5 * unit.erg,
+        1.0 * unit.dimensionless,
     ]
 else:
     simtk_quantitites = []
     pint_quantities = []
 
 
-def test_pickle_type():
-    """Test pickle-based serialization
+class TestPickle:
+    """Test pickle-based serialization of Quantity, Unit, and Measurement objects
 
     See:
       * https://github.com/hgrecco/pint/issues/1017
@@ -37,10 +39,24 @@ def test_pickle_type():
 
     """
 
-    x = 1.0 * unit.kelvin
-    y = pickle.loads(pickle.dumps(x))
+    def test_pickle_unit(self):
+        x = unit.kelvin
+        y = pickle.loads(pickle.dumps(x))
 
-    assert x == y
+        assert x == y
+
+    def test_pick_quantity(self):
+        x = 1.0 * unit.kelvin
+        y = pickle.loads(pickle.dumps(x))
+
+        assert x == y
+
+    @skip_if_missing("uncertainties")
+    def test_pickle_quantity(self):
+        x = (1.0 * unit.kelvin).plus_minus(0.05)
+        y = pickle.loads(pickle.dumps(x))
+
+        assert x.value == y.value and x.error == y.error
 
 
 @skip_if_missing("simtk.unit")
