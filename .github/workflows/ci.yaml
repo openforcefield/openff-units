@@ -67,6 +67,7 @@ jobs:
         python setup.py develop --no-deps
 
     - name: Run mypy
+      if: ${{ matrix.python-version == 3.9 }}
       shell: bash -l {0}
       run: |
         mypy --namespace-packages -p "openff.units"
