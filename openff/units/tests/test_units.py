@@ -1,24 +1,31 @@
 import pickle
 
 import pytest
-from simtk import unit as simtk_unit
+from openff.utilities.testing import skip_if_missing
+from openff.utilities.utilities import has_package
 
 from openff.units import unit
 from openff.units.simtk import from_simtk
 
-simtk_quantitites = [
-    4.0 * simtk_unit.nanometer,
-    5.0 * simtk_unit.angstrom,
-    1.0 * simtk_unit.elementary_charge,
-    0.5 * simtk_unit.erg,
-]
+if has_package("simtk.unit"):
+    from simtk import unit as simtk_unit
 
-pint_quantities = [
-    4.0 * unit.nanometer,
-    5.0 * unit.angstrom,
-    1.0 * unit.elementary_charge,
-    0.5 * unit.erg,
-]
+    simtk_quantitites = [
+        4.0 * simtk_unit.nanometer,
+        5.0 * simtk_unit.angstrom,
+        1.0 * simtk_unit.elementary_charge,
+        0.5 * simtk_unit.erg,
+    ]
+
+    pint_quantities = [
+        4.0 * unit.nanometer,
+        5.0 * unit.angstrom,
+        1.0 * unit.elementary_charge,
+        0.5 * unit.erg,
+    ]
+else:
+    simtk_quantitites = []
+    pint_quantities = []
 
 
 def test_pickle_type():
@@ -36,6 +43,7 @@ def test_pickle_type():
     assert x == y
 
 
+@skip_if_missing("simtk.unit")
 @pytest.mark.parametrize(
     "simtk_quantity,pint_quantity",
     [(s, p) for s, p in zip(simtk_quantitites, pint_quantities)],
