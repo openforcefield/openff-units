@@ -4,7 +4,7 @@ import pytest
 from simtk import unit as simtk_unit
 
 from openff.units import unit
-from openff.units.utils import from_simtk
+from openff.units.simtk import from_simtk
 
 simtk_quantitites = [
     4.0 * simtk_unit.nanometer,
