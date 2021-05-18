@@ -10,12 +10,14 @@ simtk_quantitites = [
     4.0 * simtk_unit.nanometer,
     5.0 * simtk_unit.angstrom,
     1.0 * simtk_unit.elementary_charge,
+    0.5 * simtk_unit.erg,
 ]
 
 pint_quantities = [
     4.0 * unit.nanometer,
     5.0 * unit.angstrom,
     1.0 * unit.elementary_charge,
+    0.5 * unit.erg,
 ]
 
 

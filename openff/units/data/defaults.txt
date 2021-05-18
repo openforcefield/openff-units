@@ -114,6 +114,7 @@ reciprocal_centimeter = 1 / cm = cm_1 = kayser
 # Force
 [force] = [mass] * [acceleration]
 newton = kilogram * meter / second ** 2 = N
+dyne = gram * centimeter / second ** 2 = dyn
 
 # Energy
 [energy] = [force] * [length]
