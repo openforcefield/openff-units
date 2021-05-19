@@ -6,7 +6,7 @@ from pint.measurement import _Measurement
 from pint.quantity import _Quantity
 from pint.unit import _Unit
 
-from openff.units.utils import get_defaults_path
+from openff.units.utilities import get_defaults_path
 
 DEFAULT_UNIT_REGISTRY = pint.UnitRegistry(get_defaults_path())
 

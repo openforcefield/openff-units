@@ -17,7 +17,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [macOS-latest, ubuntu-latest]
-        python-version: [3.6, 3.7, 3.8]
+        openmm: ["true", "false"]
+        python-version: [3.7, 3.8, 3.9]
     env:
       CI_OS: ${{ matrix.os }}
       PYVER: ${{ matrix.python-version }}
@@ -35,6 +36,17 @@ jobs:
         channel-priority: true
         environment-file: devtools/conda-envs/test_env.yaml
         auto-activate-base: false
+
+    - name: Optionally install OpenMM
+      if: ${{ matrix.openmm == 'TRUE' }}
+      shell: bash -l {0}
+      run: |
+        mamba install openmm -c conda-forge -yq
+
+    - name: Install OpenFF Utilities
+      shell: bash -l {0}
+      run: |
+        pip install git+git://github.com/mattwthompson/openff-utilities.git
 
     - name: Additional info about the build
       shell: bash
@@ -55,9 +67,10 @@ jobs:
         python setup.py develop --no-deps
 
     - name: Run mypy
+      if: ${{ matrix.python-version == 3.9 }}
       shell: bash -l {0}
       run: |
-        mypy openff --namespace-packages
+        mypy --namespace-packages -p "openff.units"
 
     - name: Run unit tests
       shell: bash -l {0}
