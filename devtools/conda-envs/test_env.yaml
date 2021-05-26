@@ -1,4 +1,4 @@
-name: test
+name: openff-units-test
 channels:
   - conda-forge
   - defaults
@@ -14,3 +14,4 @@ dependencies:
   - codecov
   - mypy
   - uncertainties
+  - openmm
