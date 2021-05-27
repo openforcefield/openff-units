@@ -99,7 +99,6 @@ def string_to_simtk_unit(unit_string: str) -> "simtk_unit.Quantity":
     output_unit: simtk.unit.Quantity
         The deserialized unit from the string
     """
-    import ast
 
     output_unit = _ast_eval(ast.parse(unit_string, mode="eval").body)  # type: ignore
     return output_unit
