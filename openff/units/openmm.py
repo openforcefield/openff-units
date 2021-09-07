@@ -7,45 +7,22 @@ from openff.utilities import has_package, requires_package
 
 from openff.units import unit
 
-simtk_to_openmm = {
-    "from_simtk": "from_openmm",
-    "to_simtk": "to_openmm",
-    "simtk_unit_to_string": "openmm_unit_to_string",
-    "string_to_simtk_unit": "simtk_unit_to_string",
-}
-
-
-def __getattr__(name):
-    if has_package("openmm.unit"):
-        if name in simtk_to_openmm.keys():
-            warnings.warn(
-                "Found units module in openmm namespace, not simtk. Returning a "
-                "corresponding method in openff.units.openmm, but you should import "
-                "from that module directly."
-            )
-
-            return simtk_to_openmm[name]
-    raise AttributeError(f"module {__name__} has no attribute {name}")
-
-
-if TYPE_CHECKING:
-    from simtk import unit as simtk_unit
+if has_package("openmm.unit") or TYPE_CHECKING:
+    from openmm import unit as openmm_unit
 elif has_package("simtk.unit"):
-    from simtk import unit as simtk_unit
-
     warnings.warn(
-        "The openff.units.simtk module is deprecated. Use openff.units.openmm instead."
+        "Found units module in simtk namespace, not openmm. Use openff.units.simtk instead."
     )
 
 
-@requires_package("simtk.unit")
-def simtk_unit_to_string(input_unit: "simtk_unit.Unit") -> str:
+@requires_package("openmm.unit")
+def openmm_unit_to_string(input_unit: "openmm_unit.Unit") -> str:
     """
-    Convert a simtk.unit.Unit to a string representation.
+    Convert a openmm.unit.Unit to a string representation.
 
     Parameters
     ----------
-    input_unit : A simtk.unit
+    input_unit : A openmm.unit
         The unit to serialize
 
     Returns
@@ -53,7 +30,7 @@ def simtk_unit_to_string(input_unit: "simtk_unit.Unit") -> str:
     unit_string : str
         The serialized unit.
     """
-    if input_unit == simtk_unit.dimensionless:
+    if input_unit == openmm_unit.dimensionless:
         return "dimensionless"
 
     # Decompose output_unit into a tuples of (base_dimension_unit, exponent)
@@ -101,8 +78,8 @@ def _ast_eval(node):
     elif isinstance(node, ast.UnaryOp):  # <operator> <operand> e.g., -1
         return operators[type(node.op)](_ast_eval(node.operand))
     elif isinstance(node, ast.Name):
-        # see if this is a simtk unit
-        b = getattr(simtk_unit, node.id)
+        # see if this is a openmm unit
+        b = getattr(openmm_unit, node.id)
         return b
     # TODO: This toolkit code that had a hack to cover some edge behavior; not clear which tests trigger it
     elif isinstance(node, ast.List):
@@ -111,20 +88,20 @@ def _ast_eval(node):
         raise TypeError(node)
 
 
-def string_to_simtk_unit(unit_string: str) -> "simtk_unit.Quantity":
+def string_to_openmm_unit(unit_string: str) -> "openmm_unit.Quantity":
     """
-    Deserializes a simtk.unit.Quantity from a string representation, for
+    Deserializes a openmm.unit.Quantity from a string representation, for
     example: "kilocalories_per_mole / angstrom ** 2"
 
 
     Parameters
     ----------
     unit_string : dict
-        Serialized representation of a simtk.unit.Quantity.
+        Serialized representation of a openmm.unit.Quantity.
 
     Returns
     -------
-    output_unit: simtk.unit.Quantity
+    output_unit: openmm.unit.Quantity
         The deserialized unit from the string
     """
 
@@ -132,24 +109,24 @@ def string_to_simtk_unit(unit_string: str) -> "simtk_unit.Quantity":
     return output_unit
 
 
-@requires_package("simtk.unit")
-def from_simtk(simtk_quantity: "simtk_unit.Quantity"):
-    if isinstance(simtk_quantity, List):
-        simtk_quantity = simtk_unit.Quantity(simtk_quantity)
-    openmm_unit = simtk_quantity.unit
-    openmm_value = simtk_quantity.value_in_unit(openmm_unit)
+@requires_package("openmm.unit")
+def from_openmm(openmm_quantity: "openmm_unit.Quantity"):
+    if isinstance(openmm_quantity, List):
+        openmm_quantity = openmm_unit.Quantity(openmm_quantity)
+    openmm_unit_ = openmm_quantity.unit
+    openmm_value = openmm_quantity.value_in_unit(openmm_unit_)
 
-    target_unit = simtk_unit_to_string(openmm_unit)
+    target_unit = openmm_unit_to_string(openmm_unit_)
     target_unit = unit.Unit(target_unit)
 
     return openmm_value * target_unit
 
 
-@requires_package("simtk.unit")
-def to_simtk(quantity) -> "simtk_unit.Quantity":
+@requires_package("openmm.unit")
+def to_openmm(quantity) -> "openmm_unit.Quantity":
     value = quantity.m
 
     unit_string = str(quantity.units._units)
-    simtk_unit_ = string_to_simtk_unit(unit_string)
+    openmm_unit_ = string_to_openmm_unit(unit_string)
 
-    return value * simtk_unit_
+    return value * openmm_unit_

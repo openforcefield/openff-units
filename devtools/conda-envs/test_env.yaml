@@ -12,6 +12,11 @@ dependencies:
   - pytest
   - pytest-cov
   - codecov
-  - mypy
   - uncertainties
   - openmm
+
+    # Typing
+  - mypy
+  - typing-extensions
+  - types-setuptools
+  - types-pkg_resources
