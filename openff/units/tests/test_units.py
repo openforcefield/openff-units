@@ -1,5 +1,6 @@
 import pickle
 
+import pytest
 from openff.utilities.testing import skip_if_missing
 
 from openff.units import unit
@@ -32,3 +33,31 @@ class TestPickle:
         y = pickle.loads(pickle.dumps(x))
 
         assert x.value == y.value and x.error == y.error
+
+
+class TestCompChemUnits:
+    """Test some non-standard units used in comp chem stacks."""
+
+    @pytest.mark.parametrize(
+        "shorthand_string,full_string",
+        [
+            (
+                "2000.0 * kilocalories_per_mole/angstrom**2",
+                "2000.0 * kilocalories/mole/angstrom**2",
+            ),
+            (
+                "2000.0 * kilocalorie_per_mole/angstrom**2",
+                "2000.0 * kilocalorie/mole/angstrom**2",
+            ),
+            (
+                "2000.0 * kilojoules_per_mole/angstrom**2",
+                "2000.0 * kilojoules/mole/angstrom**2",
+            ),
+            (
+                "2000.0 * kilojoule_per_mole/angstrom**2",
+                "2000.0 * kilojoule/mole/angstrom**2",
+            ),
+        ],
+    )
+    def test_parse_molar_units_string(self, shorthand_string, full_string):
+        assert unit.Quantity(shorthand_string) == unit.Quantity(full_string)
