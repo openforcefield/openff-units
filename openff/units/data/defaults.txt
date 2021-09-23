@@ -124,6 +124,12 @@ rydberg = h * c * R_inf = Ry
 hartree = 2 * rydberg = E_h = Eh = hartree_energy = atomic_unit_of_energy = a_u_energy
 calorie = 4.184 * joule = cal = thermochemical_calorie = cal_th
 
+# Energy per mole
+calorie_per_mole = calorie / mol
+joule_per_mole = joule / mol
+calories_per_mole = calorie / mol
+joules_per_mole = joule / mol
+
 # Momentum
 [momentum] = [length] * [mass] / [time]
 
