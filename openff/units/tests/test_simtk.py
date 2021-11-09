@@ -16,6 +16,7 @@ if has_package("simtk.unit"):
         1.0 * simtk_unit.elementary_charge,
         0.5 * simtk_unit.erg,
         1.0 * simtk_unit.dimensionless,
+        0.5 * simtk_unit.dalton,
     ]
 
     pint_quantities = [
@@ -24,6 +25,7 @@ if has_package("simtk.unit"):
         1.0 * unit.elementary_charge,
         0.5 * unit.erg,
         1.0 * unit.dimensionless,
+        0.5 * unit.gram / unit.mol,
     ]
 else:
     simtk_quantitites = []

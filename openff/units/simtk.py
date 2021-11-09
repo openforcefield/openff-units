@@ -56,6 +56,9 @@ def simtk_unit_to_string(input_unit: "simtk_unit.Unit") -> str:
     if input_unit == simtk_unit.dimensionless:
         return "dimensionless"
 
+    if input_unit == simtk_unit.dalton:
+        return "g/mol"
+
     # Decompose output_unit into a tuples of (base_dimension_unit, exponent)
     unit_string = ""
 

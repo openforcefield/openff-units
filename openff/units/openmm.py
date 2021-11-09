@@ -33,6 +33,9 @@ def openmm_unit_to_string(input_unit: "openmm_unit.Unit") -> str:
     if input_unit == openmm_unit.dimensionless:
         return "dimensionless"
 
+    if input_unit == openmm_unit.dalton:
+        return "g/mol"
+
     # Decompose output_unit into a tuples of (base_dimension_unit, exponent)
     unit_string = ""
 
