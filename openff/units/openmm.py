@@ -33,6 +33,9 @@ def openmm_unit_to_string(input_unit: "openmm_unit.Unit") -> str:
     if input_unit == openmm_unit.dimensionless:
         return "dimensionless"
 
+    if input_unit == openmm_unit.dalton:
+        return "g/mol"
+
     # Decompose output_unit into a tuples of (base_dimension_unit, exponent)
     unit_string = ""
 
@@ -88,7 +91,7 @@ def _ast_eval(node):
         raise TypeError(node)
 
 
-def string_to_openmm_unit(unit_string: str) -> "openmm_unit.Quantity":
+def string_to_openmm_unit(unit_string: str) -> "openmm_unit.Unit":
     """
     Deserializes a openmm.unit.Quantity from a string representation, for
     example: "kilocalories_per_mole / angstrom ** 2"
@@ -104,6 +107,8 @@ def string_to_openmm_unit(unit_string: str) -> "openmm_unit.Quantity":
     output_unit: openmm.unit.Quantity
         The deserialized unit from the string
     """
+    if unit_string == "standard_atmosphere":
+        return openmm_unit.atmosphere
 
     output_unit = _ast_eval(ast.parse(unit_string, mode="eval").body)  # type: ignore
     return output_unit

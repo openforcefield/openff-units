@@ -20,6 +20,7 @@ if has_package("openmm.unit"):
         1.0 * openmm_unit.elementary_charge,
         0.5 * openmm_unit.erg,
         1.0 * openmm_unit.dimensionless,
+        0.5 * openmm_unit.dalton,
     ]
 
     pint_quantities = [
@@ -28,6 +29,7 @@ if has_package("openmm.unit"):
         1.0 * unit.elementary_charge,
         0.5 * unit.erg,
         1.0 * unit.dimensionless,
+        0.5 * unit.gram / unit.mol,
     ]
 else:
     # Must be defined as something, despite not being used, because pytest
@@ -52,7 +54,6 @@ else:
     pint_quantities = []
 
 
-@pytest.mark.xfail
 @skip_if_missing("openmm.unit")
 class TestOpenMMUnits:
     @pytest.mark.parametrize(
