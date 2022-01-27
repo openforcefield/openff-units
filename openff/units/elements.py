@@ -2,8 +2,11 @@
 Store dict mappings from atomic number to atomic mass and symbol. These dicts were seeded from
 running the below script using OpenMM 7.7.
 
+It's not completely clear where OpenMM sourced these values from [1] but they are generally
+consistent with recent IUPAC values [2].
 
-TODO: Find and document OpenMM's source
+1. https://github.com/openmm/openmm/issues/3434#issuecomment-1023406296
+2. https://www.ciaaw.org/publications.htm
 
 ```
 import openmm.app
