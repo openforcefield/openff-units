@@ -72,11 +72,11 @@ class TestOpenMMUnits:
         [
             (openmm_unit.kilojoule_per_mole, "mole**-1 * kilojoule"),
             (
-                openmm_unit.kilocalories_per_mole / openmm_unit.angstrom ** 2,
+                openmm_unit.kilocalories_per_mole / openmm_unit.angstrom**2,
                 "angstrom**-2 * mole**-1 * kilocalorie",
             ),
             (
-                openmm_unit.joule / (openmm_unit.mole * openmm_unit.nanometer ** 2),
+                openmm_unit.joule / (openmm_unit.mole * openmm_unit.nanometer**2),
                 "nanometer**-2 * mole**-1 * joule",
             ),
             (
