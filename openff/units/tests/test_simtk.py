@@ -50,11 +50,11 @@ class TestSimTKUnits:
         [
             (simtk_unit.kilojoule_per_mole, "mole**-1 * kilojoule"),
             (
-                simtk_unit.kilocalories_per_mole / simtk_unit.angstrom ** 2,
+                simtk_unit.kilocalories_per_mole / simtk_unit.angstrom**2,
                 "angstrom**-2 * mole**-1 * kilocalorie",
             ),
             (
-                simtk_unit.joule / (simtk_unit.mole * simtk_unit.nanometer ** 2),
+                simtk_unit.joule / (simtk_unit.mole * simtk_unit.nanometer**2),
                 "nanometer**-2 * mole**-1 * joule",
             ),
             (
