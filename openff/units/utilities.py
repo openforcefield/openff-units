@@ -1,10 +1,6 @@
-import os
+from openff.utilities import get_data_file_path
 
 
-def get_defaults_path():
+def get_defaults_path() -> str:
     """Get the full path to the defaults.txt file"""
-    from pkg_resources import resource_filename
-
-    fn = resource_filename("openff.units", os.path.join("data", "defaults.txt"))
-
-    return fn
+    return get_data_file_path("data/defaults.txt", "openff.units")
