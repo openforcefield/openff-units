@@ -25,10 +25,11 @@ conda install openff-units -c conda-forge
 
 ### Getting Started
 
-This example shows how to tag a number with a unit (generating an object called a `Quantity`),
-get its magntude with without units, convnert to another unit, and also get its magnnitude after converting to another unit.
+Below shows how to tag a number with a unit (generating a `Quantity` object),
+get its magnitude with and without units, convert to another unit, and also get its magnitude after converting to another unit.
 
 ```python3
+>>> from opennff.units import unit
 >>> bond_length = 1.4 * unit.angstrom
 >>> bond_length
 <Quantity(1.4, 'angstrom')>
@@ -40,11 +41,11 @@ get its magntude with without units, convnert to another unit, and also get its 
 0.14
 ```
 
-From here, one can proceed with the rest of the [Pint tutorial](https://pint.readthedocs.io/en/0.16.1/tutorial.html#tutorial), using the `unit` object above as a drop-in replacement for `ureg` in the tutorial.
+One could also do the [Pint tutorial](https://pint.readthedocs.io/en/0.16.1/tutorial.html#tutorial) using the `unit` object above as a drop-in replacement for `ureg` in the tutorial.
 
 ### Serialization
 
-Scalar quantities can be serialised to strings unsing the built-in `str()` function and deserialized using the `unit.Quantity` constructor.
+Scalar quantities can be serialized to strings using the built-in `str()` function and deserialized using the `unit.Quantity` constructor.
 
 ```python3
 >>> k = 10 * unit.kilocalorie / unit.mol / unit.nanometer**2
@@ -76,7 +77,7 @@ Quantity(value=24.0, unit=meter)
 <class 'openff.units.units.Quantity'>
 ```
 
-An effort is made to convert from OpenMM constructs, such as when OpenMM provides array-like data as a list of `Vec3` objects into Pint's wrapped NumPy arrays:
+An effort is made to convert from OpenMM constructs, such as when OpenMM provides array-like data as a list of `Vec3` objects:into Pint's wrapped NumPy arrays:
 
 ```python3
 >>> from openmm import app
