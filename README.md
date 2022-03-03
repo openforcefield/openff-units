@@ -1,8 +1,11 @@
 openff-units
 ==============================
 [//]: # (Badges)
-[![GitHub Actions Build Status](https://github.com/openforcefield/openff-units/workflows/CI/badge.svg)](https://github.com/openforcefield/openff-units/actions?query=workflow%3ACI)
+[![CI Status](https://github.com/openforcefield/openff-units/workflows/CI/badge.svg)](https://github.com/openforcefield/openff-units/actions?query=workflow%3ACI)
 [![codecov](https://codecov.io/gh/openforcefield/openff-units/branch/main/graph/badge.svg)](https://codecov.io/gh/openforcefield/openff-units/branch/main)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/openforcefield/openff-units/main.svg)](https://results.pre-commit.ci/latest/github/openforcefield/openff-units/main)
+[![conda](https://img.shields.io/conda/v/conda-forge/openff-units.svg)](https://anaconda.org/conda-forge/openff-units)
 
 
 A common units module for the OpenFF software stack
