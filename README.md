@@ -10,7 +10,7 @@ openff-units
 
 A common units module for the OpenFF software stack
 
-**Please note that this software in an early and experimental state and unsuitable for production.**
+**Please note that there may still be some changes to the API prior to a stable 1.0.0 release.**
 
 This package provides a common unit registry for all OpenFF packages to use in order to ensure consistent unit definitions across the software ecosystem.
 
