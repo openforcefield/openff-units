@@ -82,7 +82,7 @@ jobs:
           PYTEST_ARGS+= " --ignore=openff/units/tests/test_simtk.py"
           PYTEST_ARGS+= " --ignore=openff/units/tests/test_openmm.py"
         fi
-        pytest -v $COV openff/units/tests/
+        pytest $PYTEST_ARGS $COV openff/units/tests/
 
     - name: Codecov
       uses: codecov/codecov-action@v1
