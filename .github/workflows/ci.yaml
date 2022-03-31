@@ -3,11 +3,9 @@ name: CI
 on:
   push:
     branches:
-      - "master"
       - "main"
   pull_request:
     branches:
-      - "master"
       - "main"
 
 jobs:
@@ -43,11 +41,6 @@ jobs:
       shell: bash -l {0}
       run: |
         mamba install openmm -c conda-forge -yq
-
-    - name: Install OpenFF Utilities
-      shell: bash -l {0}
-      run: |
-        pip install git+git://github.com/mattwthompson/openff-utilities.git
 
     - name: Additional info about the build
       shell: bash
