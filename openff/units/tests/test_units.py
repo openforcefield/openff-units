@@ -61,3 +61,16 @@ class TestCompChemUnits:
     )
     def test_parse_molar_units_string(self, shorthand_string, full_string):
         assert unit.Quantity(shorthand_string) == unit.Quantity(full_string)
+
+    def test_timestep_creation(self):
+        # basic sanity check, can I make the unit and does it serialize
+        q = 10 * unit.timestep
+
+        assert q.m == 10
+        assert str(q) == '10 timestep'
+
+    def test_timestep_compatibility(self):
+        # timesteps aren't a form of time
+        q = 20 * unit.timestep
+
+        assert not q.is_compatible_with(10 * unit.picosecond)
