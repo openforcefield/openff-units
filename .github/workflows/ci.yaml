@@ -8,6 +8,10 @@ on:
     branches:
       - "main"
 
+defaults:
+  run:
+    shell: bash -l {0}
+
 jobs:
   test:
     name: ${{ matrix.os }}, 🐍=${{ matrix.python-version }}, OpenMM=${{ matrix.openmm }}
@@ -21,6 +25,7 @@ jobs:
     env:
       CI_OS: ${{ matrix.os }}
       PYVER: ${{ matrix.python-version }}
+      PYTEST_ARGS: -v
       COV: --cov=openff/units --cov-report=xml --cov-config=setup.cfg --cov-append
 
     steps:
@@ -38,9 +43,15 @@ jobs:
 
     - name: Optionally install OpenMM
       if: ${{ matrix.openmm == 'TRUE' }}
-      shell: bash -l {0}
       run: |
-        mamba install openmm -c conda-forge -yq
+        mamba install "openmm >=7.6" -c conda-forge -yq
+
+    - name: Verify OpenMM is not installed when not expected
+      if: ${{ matrix.openmm == 'FALSE' }}
+      run: |
+        if [[ $(conda list | grep yaml | wc -l) -ge 0 ]]; then
+          exit 1;
+        fi
 
     - name: Additional info about the build
       shell: bash
@@ -50,25 +61,25 @@ jobs:
         ulimit -a
 
     - name: Environment Information
-      shell: bash -l {0}
       run: |
         conda info
         conda list
 
     - name: Install package
-      shell: bash -l {0}
       run: |
         python setup.py develop --no-deps
 
     - name: Run mypy
       if: ${{ matrix.python-version == 3.9 }}
-      shell: bash -l {0}
       run: |
         mypy --namespace-packages -p "openff.units"
 
     - name: Run unit tests
-      shell: bash -l {0}
       run: |
+        if [[ matrix.openmm == 'FALSE' ]]; then
+          PYTEST_ARGS+= " --ignore=openff/units/tests/test_simtk.py"
+          PYTEST_ARGS+= " --ignore=openff/units/tests/test_openmm.py"
+        fi
         pytest -v $COV openff/units/tests/
 
     - name: Codecov
