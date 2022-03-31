@@ -3,12 +3,14 @@ name: CI
 on:
   push:
     branches:
-      - "master"
       - "main"
   pull_request:
     branches:
-      - "master"
       - "main"
+
+defaults:
+  run:
+    shell: bash -l {0}
 
 jobs:
   test:
@@ -20,9 +22,15 @@ jobs:
         os: [macOS-latest, ubuntu-latest]
         openmm: ["true", "false"]
         python-version: ["3.7", "3.8", "3.9", "3.10"]
+        exclude:
+          # As of March 2021, these conda builds are broken and unavailable
+          - openmm: "true"
+            python-version: "3.10"
+
     env:
       CI_OS: ${{ matrix.os }}
       PYVER: ${{ matrix.python-version }}
+      PYTEST_ARGS: -v
       COV: --cov=openff/units --cov-report=xml --cov-config=setup.cfg --cov-append
 
     steps:
@@ -39,15 +47,18 @@ jobs:
         auto-activate-base: false
 
     - name: Optionally install OpenMM
-      if: ${{ matrix.openmm == 'TRUE' }}
-      shell: bash -l {0}
+      if: ${{ matrix.openmm == 'true' }}
       run: |
-        mamba install openmm -c conda-forge -yq
+        mamba install "openmm >=7.6" -c conda-forge -yq
 
-    - name: Install OpenFF Utilities
-      shell: bash -l {0}
+    - name: Verify OpenMM is not installed when not expected
+      if: ${{ matrix.openmm == 'false' }}
       run: |
-        pip install git+git://github.com/mattwthompson/openff-utilities.git
+        # If the number of packages matching "*openmm*" is greater than zero
+        if [[ $(conda list | grep openmm | wc -l) -gt 0 ]]; then
+          conda list;
+          exit 1;
+        fi
 
     - name: Additional info about the build
       shell: bash
@@ -57,26 +68,30 @@ jobs:
         ulimit -a
 
     - name: Environment Information
-      shell: bash -l {0}
       run: |
         conda info
         conda list
 
     - name: Install package
-      shell: bash -l {0}
       run: |
         python setup.py develop --no-deps
 
     - name: Run mypy
       if: ${{ matrix.python-version == 3.9 }}
-      shell: bash -l {0}
       run: |
         mypy --namespace-packages -p "openff.units"
 
-    - name: Run unit tests
-      shell: bash -l {0}
+    - name: Run unit tests with OpenMM
+      if: ${{ matrix.openmm == 'true' }}
       run: |
-        pytest -v $COV openff/units/tests/
+        pytest $PYTEST_ARGS $COV openff/units/tests/
+
+    - name: Run unit tests without OpenMM
+      if: ${{ matrix.openmm == 'false' }}
+      run: |
+        pytest $PYTEST_ARGS $COV openff/units/tests/ \
+          --ignore=openff/units/tests/test_simtk.py \
+          --ignore=openff/units/tests/test_openmm.py
 
     - name: Codecov
       uses: codecov/codecov-action@v1
