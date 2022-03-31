@@ -76,13 +76,17 @@ jobs:
       run: |
         mypy --namespace-packages -p "openff.units"
 
-    - name: Run unit tests
+    - name: Run unit tests with OpenMM
+      if: ${{ matrix.openmm == 'true' }}
       run: |
-        if [[ matrix.openmm == 'false' ]]; then
-          PYTEST_ARGS+= " --ignore=openff/units/tests/test_simtk.py"
-          PYTEST_ARGS+= " --ignore=openff/units/tests/test_openmm.py"
-        fi
         pytest $PYTEST_ARGS $COV openff/units/tests/
+
+    - name: Run unit tests without OpenMM
+      if: ${{ matrix.openmm == 'false' }}
+      run: |
+        pytest $PYTEST_ARGS $COV openff/units/tests/ \
+          --ignore=openff/units/tests/test_simtk.py \
+          --ignore=openff/units/tests/test_openmm.py
 
     - name: Codecov
       uses: codecov/codecov-action@v1
