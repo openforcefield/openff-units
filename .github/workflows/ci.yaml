@@ -42,12 +42,12 @@ jobs:
         auto-activate-base: false
 
     - name: Optionally install OpenMM
-      if: ${{ matrix.openmm == 'TRUE' }}
+      if: ${{ matrix.openmm == 'true' }}
       run: |
         mamba install "openmm >=7.6" -c conda-forge -yq
 
     - name: Verify OpenMM is not installed when not expected
-      if: ${{ matrix.openmm == 'FALSE' }}
+      if: ${{ matrix.openmm == 'false' }}
       run: |
         # If the number of packages matching "*openmm*" is greater than zero
         if [[ $(conda list | grep openmm | wc -l) -gt 0 ]]; then
@@ -78,7 +78,7 @@ jobs:
 
     - name: Run unit tests
       run: |
-        if [[ matrix.openmm == 'FALSE' ]]; then
+        if [[ matrix.openmm == 'false' ]]; then
           PYTEST_ARGS+= " --ignore=openff/units/tests/test_simtk.py"
           PYTEST_ARGS+= " --ignore=openff/units/tests/test_openmm.py"
         fi
