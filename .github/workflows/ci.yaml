@@ -22,6 +22,11 @@ jobs:
         os: [macOS-latest, ubuntu-latest]
         openmm: ["true", "false"]
         python-version: ["3.7", "3.8", "3.9", "3.10"]
+        exclude:
+          # As of March 2021, these conda builds are broken and unavailable
+          - openmm: "true"
+            python-version: "3.10"
+
     env:
       CI_OS: ${{ matrix.os }}
       PYVER: ${{ matrix.python-version }}
