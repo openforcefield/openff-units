@@ -90,6 +90,9 @@ week = 7 * day
 year = 365.25 * day = a = yr = julian_year
 month = year / 12
 
+# MD Time
+timestep = [timestep] = _ = timesteps
+
 # Temperature
 degree_Celsius = kelvin; offset: 273.15 = °C = celsius = degC = degreeC
 
