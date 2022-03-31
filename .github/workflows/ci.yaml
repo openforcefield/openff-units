@@ -49,7 +49,8 @@ jobs:
     - name: Verify OpenMM is not installed when not expected
       if: ${{ matrix.openmm == 'FALSE' }}
       run: |
-        if [[ $(conda list | grep yaml | wc -l) -ge 0 ]]; then
+        if [[ $(conda list | grep openmm | wc -l) -ge 0 ]]; then
+          conda list;
           exit 1;
         fi
 
