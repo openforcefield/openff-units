@@ -67,7 +67,7 @@ class TestCompChemUnits:
         q = 10 * unit.timestep
 
         assert q.m == 10
-        assert str(q) == '10 timestep'
+        assert str(q) == "10 timestep"
 
     def test_timestep_compatibility(self):
         # timesteps aren't a form of time
