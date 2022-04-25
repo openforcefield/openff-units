@@ -133,6 +133,12 @@ joule_per_mole = joule / mol
 calories_per_mole = calorie / mol
 joules_per_mole = joule / mol
 
+# OpenMM compatibility
+kilocalorie_per_mole = kilocalorie / mol
+kilojoule_per_mole = kilojoule / mol
+kilocalories_per_mole = kilocalorie / mol
+kilojoules_per_mole = kilojoule / mol
+
 # Momentum
 [momentum] = [length] * [mass] / [time]
 
