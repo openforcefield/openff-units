@@ -68,7 +68,6 @@ DEFAULT_UNIT_REGISTRY.Quantity = Quantity
 DEFAULT_UNIT_REGISTRY.Measurement = Measurement
 
 pint.set_application_registry(DEFAULT_UNIT_REGISTRY)
-DEFAULT_UNIT_REGISTRY.default_format = "~"
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
