@@ -1,6 +1,7 @@
+from pint import UnitRegistry
+
 from openff.units._version import get_versions  # type: ignore
 from openff.units.units import DEFAULT_UNIT_REGISTRY, Measurement, Quantity, Unit
-from pint import UnitRegistry
 
 __all__ = [
     "unit",
