@@ -1,3 +1,7 @@
+"""
+Functions for converting between OpenFF and SimTK units
+"""
+
 import ast
 import operator as op
 import warnings
@@ -6,6 +10,14 @@ from typing import TYPE_CHECKING, List
 from openff.utilities import has_package, requires_package
 
 from openff.units import unit
+
+__all__ = [
+    "from_simtk",
+    "to_simtk",
+    "simtk_unit_to_string",
+    "string_to_simtk_unit",
+]
+
 
 simtk_to_openmm = {
     "from_simtk": "from_openmm",
@@ -137,6 +149,7 @@ def string_to_simtk_unit(unit_string: str) -> "simtk_unit.Quantity":
 
 @requires_package("simtk.unit")
 def from_simtk(simtk_quantity: "simtk_unit.Quantity"):
+    """Convert an OpenMM ``Quantity`` from the ``simtk`` namespace to an OpenFF ``Quantity``"""
     if isinstance(simtk_quantity, List):
         simtk_quantity = simtk_unit.Quantity(simtk_quantity)
     openmm_unit = simtk_quantity.unit
@@ -150,6 +163,7 @@ def from_simtk(simtk_quantity: "simtk_unit.Quantity"):
 
 @requires_package("simtk.unit")
 def to_simtk(quantity) -> "simtk_unit.Quantity":
+    """Convert an OpenFF ``Quantity`` to an OpenMM ``Quantity`` from the ``simtk`` namespace"""
     value = quantity.m
 
     unit_string = str(quantity.units._units)

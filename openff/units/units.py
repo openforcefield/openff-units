@@ -1,3 +1,7 @@
+"""
+Core classes for OpenFF Units
+"""
+
 import uuid
 import warnings
 
@@ -8,7 +12,15 @@ from pint.unit import _Unit
 
 from openff.units.utilities import get_defaults_path
 
+__all__ = [
+    "DEFAULT_UNIT_REGISTRY",
+    "Quantity",
+    "Measurement",
+    "Unit",
+]
+
 DEFAULT_UNIT_REGISTRY = pint.UnitRegistry(get_defaults_path())
+"""The default unit registry provided by OpenFF Units"""
 
 
 def _unpickle_quantity(cls, *args):
@@ -27,6 +39,8 @@ def _unpickle_measurement(cls, *args):
 
 
 class Unit(_Unit):
+    """A unit of measure."""
+
     _REGISTRY = DEFAULT_UNIT_REGISTRY
 
     def __reduce__(self):
@@ -34,6 +48,8 @@ class Unit(_Unit):
 
 
 class Quantity(_Quantity):
+    """A value with associated units."""
+
     _REGISTRY = DEFAULT_UNIT_REGISTRY
 
     def __reduce__(self):
@@ -49,6 +65,8 @@ class Quantity(_Quantity):
 
 
 class Measurement(_Measurement):
+    """A value with associated units and uncertainty."""
+
     _REGISTRY = DEFAULT_UNIT_REGISTRY
 
     def __reduce__(self):

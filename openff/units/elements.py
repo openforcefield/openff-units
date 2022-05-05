@@ -1,6 +1,8 @@
 """
-Store dict mappings from atomic number to atomic mass and symbol. These dicts were seeded from
-running the below script using OpenMM 7.7.
+Symbols and masses for the chemical elements.
+
+This module provides mappings from atomic number to atomic mass and symbol.
+These dicts were seeded from running the below script using OpenMM 7.7.
 
 It's not completely clear where OpenMM sourced these values from [1] but they are generally
 consistent with recent IUPAC values [2].
@@ -8,23 +10,29 @@ consistent with recent IUPAC values [2].
 1. https://github.com/openmm/openmm/issues/3434#issuecomment-1023406296
 2. https://www.ciaaw.org/publications.htm
 
-```
-import openmm.app
+.. code-block:: python
 
-masses = {
-    atomic_number: openmm.app.element.Element.getByAtomicNumber(
-        atomic_number
-    ).mass._value
-    for atomic_number in range(1, 117)
-}
+    import openmm.app
 
-symbols = {
-    atomic_number: openmm.app.element.Element.getByAtomicNumber(atomic_number).symbol
-    for atomic_number in range(1, 117)
-}
-```
+    masses = {
+        atomic_number: openmm.app.element.Element.getByAtomicNumber(
+            atomic_number
+        ).mass._value
+        for atomic_number in range(1, 117)
+    }
+
+    symbols = {
+        atomic_number: openmm.app.element.Element.getByAtomicNumber(atomic_number).symbol
+        for atomic_number in range(1, 117)
+    }
+
 """
 from openff.units import unit
+
+__all__ = [
+    "MASSES",
+    "SYMBOLS",
+]
 
 MASSES = {
     index + 1: mass * unit.dalton
@@ -149,6 +157,7 @@ MASSES = {
         ]
     )
 }
+"""Mapping from atomic number to atomic mass"""
 
 SYMBOLS = {
     index + 1: symbol
@@ -273,3 +282,4 @@ SYMBOLS = {
         ]
     )
 }
+"""Mapping from atomic number to element symbol"""

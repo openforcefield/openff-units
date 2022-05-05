@@ -1,3 +1,7 @@
+"""
+Functions for converting between OpenFF and OpenMM units
+"""
+
 import ast
 import operator as op
 import warnings
@@ -6,6 +10,14 @@ from typing import TYPE_CHECKING, List
 from openff.utilities import has_package, requires_package
 
 from openff.units import unit
+from openff.units.units import Quantity
+
+__all__ = [
+    "from_openmm",
+    "to_openmm",
+    "openmm_unit_to_string",
+    "string_to_openmm_unit",
+]
 
 if has_package("openmm.unit") or TYPE_CHECKING:
     from openmm import unit as openmm_unit
@@ -115,7 +127,13 @@ def string_to_openmm_unit(unit_string: str) -> "openmm_unit.Unit":
 
 
 @requires_package("openmm.unit")
-def from_openmm(openmm_quantity: "openmm_unit.Quantity"):
+def from_openmm(openmm_quantity: "openmm_unit.Quantity") -> Quantity:
+    """Convert an OpenMM ``Quantity`` to an OpenFF ``Quantity``
+
+    :class:`openmm.unit.quantity.Quantity` from OpenMM and
+    :class:`openff.units.Quantity` from this package both represent a numerical
+    value with units.
+    """
     if isinstance(openmm_quantity, List):
         openmm_quantity = openmm_unit.Quantity(openmm_quantity)
     openmm_unit_ = openmm_quantity.unit
@@ -128,7 +146,13 @@ def from_openmm(openmm_quantity: "openmm_unit.Quantity"):
 
 
 @requires_package("openmm.unit")
-def to_openmm(quantity) -> "openmm_unit.Quantity":
+def to_openmm(quantity: Quantity) -> "openmm_unit.Quantity":
+    """Convert an OpenFF ``Quantity`` to an OpenMM ``Quantity``
+
+    :class:`openmm.unit.quantity.Quantity` from OpenMM and
+    :class:`openff.units.Quantity` from this package both represent a numerical
+    value with units.
+    """
     value = quantity.m
 
     unit_string = str(quantity.units._units)
