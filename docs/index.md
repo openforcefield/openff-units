@@ -2,7 +2,7 @@
 
 Units of measure for biomolecular software.
 
-OpenFF Units is based on [Pint]. It's [`Quantity`], [`Unit`], and [`Measurement`] types inherit from Pint's, and add improved support for serialization and deserialization. OpenFF Units improves support for biomolecular software by providing a [system of units] that are compatible with [OpenMM] and [providing functions] to convert to OpenMM units and back. It also provides [atomic masses] with units, as well as some [other useful maps].
+OpenFF Units is based on [Pint]. Its [`Quantity`], [`Unit`], and [`Measurement`] types inherit from Pint's, and add improved support for serialization and deserialization. OpenFF Units improves support for biomolecular software by providing a [system of units] that are compatible with [OpenMM] and [providing functions] to convert to OpenMM units and back. It also provides [atomic masses] with units, as well as some [other useful maps].
 
 [system of units]: openff.units.unit
 [OpenMM]: openmm:index
