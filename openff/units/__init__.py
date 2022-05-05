@@ -1,5 +1,5 @@
 from openff.units._version import get_versions  # type: ignore
-from openff.units.units import DEFAULT_UNIT_REGISTRY, Quantity, Measurement, Unit
+from openff.units.units import DEFAULT_UNIT_REGISTRY, Measurement, Quantity, Unit
 
 __all__ = [
     "unit",
