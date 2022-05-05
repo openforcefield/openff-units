@@ -12,7 +12,10 @@ unit = DEFAULT_UNIT_REGISTRY
 """
 Registry of units provided by OpenFF Units.
 
-``unit`` may be used similarly to a module. It exports
+``unit`` may be used similarly to a module. It makes constants and units of
+measure available as attributes. Available units can be found in the
+:download:`constants <../../../openff/units/data/constants.txt>` and
+:download:`defaults <../../../openff/units/data/defaults.txt>` data files.
 """
 
 # Handle versioneer
