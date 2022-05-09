@@ -21,7 +21,11 @@ if has_package("openmm.unit"):
         0.5 * openmm_unit.erg,
         1.0 * openmm_unit.dimensionless,
         0.5 * openmm_unit.dalton,
-        0.008314462621026537 * openmm.nanometer ** 2 openmm_unit.dalton / openmm.kelvin / openmm.picosecond ** 2,
+        0.008314462621026537
+        * openmm_unit.nanometer**2
+        * openmm_unit.dalton
+        / openmm_unit.kelvin
+        / openmm_unit.picosecond**2,
     ]
 
     pint_quantities = [

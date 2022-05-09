@@ -17,6 +17,11 @@ if has_package("simtk.unit"):
         0.5 * simtk_unit.erg,
         1.0 * simtk_unit.dimensionless,
         0.5 * simtk_unit.dalton,
+        0.008314462621026537
+        * simtk_unit.nanometer**2
+        * simtk_unit.dalton
+        / simtk_unit.kelvin
+        / simtk_unit.picosecond**2,
     ]
 
     pint_quantities = [
@@ -26,6 +31,7 @@ if has_package("simtk.unit"):
         0.5 * unit.erg,
         1.0 * unit.dimensionless,
         0.5 * unit.gram / unit.mol,
+        1.0 * unit.boltzmann_constant,
     ]
 else:
     simtk_quantitites = []
@@ -43,6 +49,16 @@ class TestSimTKUnits:
         converted_pint_quantity = from_simtk(simtk_quantity)
 
         assert pint_quantity == converted_pint_quantity
+
+    @pytest.mark.parametrize(
+        "simtk_quantity,pint_quantity",
+        [(s, p) for s, p in zip(simtk_quantitites, pint_quantities)],
+    )
+    def test_pint_to_simtk(self, converted_simtk_quantity, pint_quantity):
+        """Test conversion from SimTK Quantity to pint Quantity."""
+        converted_simtk_quantity = to_simtk(pint_quantity)
+
+        assert abs(converted_simtk_quantity - converted_simtk_quantity) < 1.0e-5
 
     @skip_if_missing("simtk.unit")
     @pytest.mark.parametrize(
