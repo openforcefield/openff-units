@@ -75,6 +75,7 @@ autosummary_context = {
     # Modules to exclude from API docs
     "exclude_modules": [
         "openff.units.tests",
+        "openff.units.units",
     ]
 }
 
