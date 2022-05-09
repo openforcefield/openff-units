@@ -22,6 +22,15 @@ __all__ = [
 DEFAULT_UNIT_REGISTRY = pint.UnitRegistry(get_defaults_path())
 """The default unit registry provided by OpenFF Units"""
 
+MD_UNITS = {
+    "[length]": DEFAULT_UNIT_REGISTRY.nanometer,
+    "[mass]": DEFAULT_UNIT_REGISTRY.unified_atomic_mass_unit,
+    "[temperature]": DEFAULT_UNIT_REGISTRY.kelvin,
+    "[time]": DEFAULT_UNIT_REGISTRY.picosecond,
+    "[substance]": DEFAULT_UNIT_REGISTRY.mol,
+    "[current]": DEFAULT_UNIT_REGISTRY.e / DEFAULT_UNIT_REGISTRY.picosecond,
+}
+
 
 def _unpickle_quantity(cls, *args):
     """Rebuild quantity upon unpickling using the application registry."""
@@ -46,6 +55,17 @@ class Unit(_Unit):
     def __reduce__(self):
         return _unpickle_unit, (Unit, self._units)
 
+    def get_compatible_md_units(self) -> "Unit":
+        iterable = iter(self.dimensionality.items())
+
+        dim, exp = next(iterable)
+        print(dim, exp)
+        out_units = MD_UNITS[dim] ** exp
+        for dim, exp in iterable:
+            print(dim, exp)
+            out_units *= MD_UNITS[dim] ** exp
+        return out_units
+
 
 class Quantity(_Quantity):
     """A value with associated units."""
@@ -62,6 +82,14 @@ class Quantity(_Quantity):
     def _dask_finalize(results, func, args, units):
         values = func(results, *args)
         return Quantity(values, units)
+
+    def to_md_units(self) -> "Quantity":
+        """Convert the quantity to Da/nm/ps/e units"""
+        return self.to(self.units.get_compatible_md_units())
+
+    def ito_md_units(self):
+        """Convert the quantity to Da/nm/ps/e units"""
+        self.ito(self.units.get_compatible_md_units())
 
 
 class Measurement(_Measurement):

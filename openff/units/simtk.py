@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, List
 from openff.utilities import has_package, requires_package
 
 from openff.units import unit
+from openff.units.utilities import MissingOpenMMUnitError
 
 __all__ = [
     "from_simtk",
@@ -164,9 +165,20 @@ def from_simtk(simtk_quantity: "simtk_unit.Quantity"):
 @requires_package("simtk.unit")
 def to_simtk(quantity) -> "simtk_unit.Quantity":
     """Convert an OpenFF ``Quantity`` to an OpenMM ``Quantity`` from the ``simtk`` namespace"""
-    value = quantity.m
 
-    unit_string = str(quantity.units._units)
-    simtk_unit_ = string_to_simtk_unit(unit_string)
+    def to_simtk_inner(quantity) -> "simtk_unit.Quantity":
+        value = quantity.m
 
-    return value * simtk_unit_
+        unit_string = str(quantity.units._units)
+
+        try:
+            simtk_unit_ = string_to_simtk_unit(unit_string)
+        except AttributeError:
+            raise MissingOpenMMUnitError(unit_string)
+
+        return value * simtk_unit_
+
+    try:
+        return to_simtk_inner(quantity)
+    except MissingOpenMMUnitError:
+        return to_simtk_inner(quantity.to_md_units())

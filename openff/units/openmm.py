@@ -11,6 +11,7 @@ from openff.utilities import has_package, requires_package
 
 from openff.units import unit
 from openff.units.units import Quantity
+from openff.units.utilities import MissingOpenMMUnitError
 
 __all__ = [
     "from_openmm",
@@ -153,9 +154,20 @@ def to_openmm(quantity: Quantity) -> "openmm_unit.Quantity":
     :class:`openff.units.Quantity` from this package both represent a numerical
     value with units.
     """
-    value = quantity.m
 
-    unit_string = str(quantity.units._units)
-    openmm_unit_ = string_to_openmm_unit(unit_string)
+    def to_openmm_inner(quantity) -> "openmm_unit.Quantity":
+        value = quantity.m
 
-    return value * openmm_unit_
+        unit_string = str(quantity.units._units)
+
+        try:
+            openmm_unit_ = string_to_openmm_unit(unit_string)
+        except AttributeError:
+            raise MissingOpenMMUnitError(unit_string)
+
+        return value * openmm_unit_
+
+    try:
+        return to_openmm_inner(quantity)
+    except MissingOpenMMUnitError:
+        return to_openmm_inner(quantity.to_md_units())

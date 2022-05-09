@@ -14,13 +14,14 @@ if has_package("openmm.unit"):
         to_openmm,
     )
 
-    openmm_quantitites = [
+    openmm_quantities = [
         4.0 * openmm_unit.nanometer,
         5.0 * openmm_unit.angstrom,
         1.0 * openmm_unit.elementary_charge,
         0.5 * openmm_unit.erg,
         1.0 * openmm_unit.dimensionless,
         0.5 * openmm_unit.dalton,
+        0.008314462621026537 * openmm.nanometer ** 2 openmm_unit.dalton / openmm.kelvin / openmm.picosecond ** 2,
     ]
 
     pint_quantities = [
@@ -30,6 +31,7 @@ if has_package("openmm.unit"):
         0.5 * unit.erg,
         1.0 * unit.dimensionless,
         0.5 * unit.gram / unit.mol,
+        1.0 * unit.boltzmann_constant,
     ]
 else:
     # Must be defined as something, despite not being used, because pytest
@@ -50,7 +52,7 @@ else:
         second = 1
         kelvin = 1
 
-    openmm_quantitites = []
+    openmm_quantities = []
     pint_quantities = []
 
 
@@ -58,13 +60,23 @@ else:
 class TestOpenMMUnits:
     @pytest.mark.parametrize(
         "openmm_quantity,pint_quantity",
-        [(s, p) for s, p in zip(openmm_quantitites, pint_quantities)],
+        [(s, p) for s, p in zip(openmm_quantities, pint_quantities)],
     )
     def test_openmm_to_pint(self, openmm_quantity, pint_quantity):
         """Test conversion from OpenMM Quantity to pint Quantity."""
         converted_pint_quantity = from_openmm(openmm_quantity)
 
         assert pint_quantity == converted_pint_quantity
+
+    @pytest.mark.parametrize(
+        "openmm_quantity,pint_quantity",
+        [(s, p) for s, p in zip(openmm_quantities, pint_quantities)],
+    )
+    def test_pint_to_openmm(self, openmm_quantity, pint_quantity):
+        """Test conversion from OpenMM Quantity to pint Quantity."""
+        converted_openmm_quantity = to_openmm(pint_quantity)
+
+        assert abs(openmm_quantity - converted_openmm_quantity) < 1.0e-5
 
     @skip_if_missing("openmm.unit")
     @pytest.mark.parametrize(
