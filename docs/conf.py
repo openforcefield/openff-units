@@ -154,7 +154,7 @@ html_theme = "openff_sphinx_theme"
 # default: ``['localtoc.html', 'relations.html', 'sourcelink.html',
 # 'searchbox.html']``.
 html_sidebars = {
-    "**": ["globaltoc.html", "localtoc.html", "searchbox.html"],
+    "**": ["globaltoc.html", "searchbox.html"],
 }
 
 # Theme options are theme-specific and customize the look and feel of a
@@ -177,6 +177,8 @@ html_theme_options = {
     "html_minify": False,
     "html_prettify": False,
     "css_minify": False,
+    "globaltoc_depth": 2,
+    "globaltoc_include_local": True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

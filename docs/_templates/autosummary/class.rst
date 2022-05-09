@@ -1,4 +1,4 @@
-{{ ("``" ~ objname ~ "``") | underline}}
+{{ ("``" ~ objname ~ "``") | underline('=')}}
 
 .. currentmodule:: {{ module }}
 
