@@ -118,7 +118,10 @@ def _ast_eval(node):
         return operators[type(node.op)](_ast_eval(node.operand))
     elif isinstance(node, ast.Name):
         # see if this is a simtk unit
-        b = getattr(simtk_unit, node.id)
+        try:
+            b = getattr(simtk_unit, node.id)
+        except AttributeError:
+            raise MissingOpenMMUnitError(node.id)
         return b
     # TODO: This toolkit code that had a hack to cover some edge behavior; not clear which tests trigger it
     elif isinstance(node, ast.List):
@@ -170,11 +173,7 @@ def to_simtk(quantity) -> "simtk_unit.Quantity":
         value = quantity.m
 
         unit_string = str(quantity.units._units)
-
-        try:
-            simtk_unit_ = string_to_simtk_unit(unit_string)
-        except AttributeError:
-            raise MissingOpenMMUnitError(unit_string)
+        simtk_unit_ = string_to_simtk_unit(unit_string)
 
         return value * simtk_unit_
 

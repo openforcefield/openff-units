@@ -95,7 +95,10 @@ def _ast_eval(node):
         return operators[type(node.op)](_ast_eval(node.operand))
     elif isinstance(node, ast.Name):
         # see if this is a openmm unit
-        b = getattr(openmm_unit, node.id)
+        try:
+            b = getattr(openmm_unit, node.id)
+        except AttributeError:
+            raise MissingOpenMMUnitError(node.id)
         return b
     # TODO: This toolkit code that had a hack to cover some edge behavior; not clear which tests trigger it
     elif isinstance(node, ast.List):
@@ -160,10 +163,7 @@ def to_openmm(quantity: Quantity) -> "openmm_unit.Quantity":
 
         unit_string = str(quantity.units._units)
 
-        try:
-            openmm_unit_ = string_to_openmm_unit(unit_string)
-        except AttributeError:
-            raise MissingOpenMMUnitError(unit_string)
+        openmm_unit_ = string_to_openmm_unit(unit_string)
 
         return value * openmm_unit_
 
