@@ -27,37 +27,58 @@ conda install -c conda-forge openff-units
 
 ## Using OpenFF Units
 
-OpenFF Units provides the [`Quantity`] class, which represents a numerical value with units. To create a `Quantity`, multiply a value by the appropriate unit:
+OpenFF Units provides the [`Quantity`] class, which represents a numerical value with units. A `Quantity` can be created by providing a value and units:
 
-```python
-from openff.units import unit
-
-mass_proton = 1.007 * unit.amu
+```pycon
+>>> from openff.units import unit, Quantity
+>>> 
+>>> Quantity(1.007, unit.amu)
+<Quantity(1.007, 'unified_atomic_mass_unit')>
 ```
 
-`Quantity` can also wrap NumPy arrays. It's best to wrap an Array of floats in a quantity, rather than have an array of quantities:
+The `unit` singleton value is a registry of units, but also exposes the `Quantity`, `Unit`, and `Measurement` classes so you don't have to import them individually. Even easier, multiplying a number by the appropriate unit also provides a `Quantity`:
 
-```python
-import numpy as np
-from openff.units import unit
-
-box_vectors = np.array([
-    [5.0, 0.0, 0.0],
-    [0.0, 5.0, 0.0],
-    [0.0, 0.0, 5.0],
-]) * unit.nanometer
+```pycon
+>>> mass_proton = 1.007 * unit.amu
+>>> mass_proton == unit.Quantity(1.007, unit.amu)
+True
 ```
+
+`Quantity` can also wrap NumPy arrays. It's best to wrap an array of floats in a quantity, rather than have an array of quantities:
+
+```pycon
+>>> import numpy as np
+>>> 
+>>> box_vectors = np.array([
+...     [5.0, 0.0, 0.0],
+...     [0.0, 5.0, 0.0],
+...     [0.0, 0.0, 5.0],
+... ]) * unit.nanometer
+```
+
+When constructed like this, `Quantity` is transparent; it will pass any attributes it doesn't have through to the inner value. This means that an quantity-wrapped array can be used exactly as though it were an array --- the units are just checked silently in the background:
+
+```pycon
+>>> from numpy.random import rand
+>>> 
+>>> trajectory = 10 * rand(10, 10000, 3) * unit.nanometer
+>>> centroids = trajectory.mean(axis=1)[..., None]
+>>> last_water = trajectory[:, 97:99, :]
+>>> last_water_recentered = last_water - centroids
+```
+
+This transparency works with most container types, so it's usually best to have `Quantity` be the outermost wrapper type.
 
 Complex units can be constructed by combining units with the usual arithmetic operations:
 
-```python
-boltzmann_constant = 8.314462618e-3 * unit.kilojoule / unit.kelvin / unit.avogadro_number
+```pycon
+>>> boltzmann_constant = 8.314462618e-3 * unit.kilojoule / unit.kelvin / unit.avogadro_number
 ```
 
 Some common constants are provided as units as well:
 
-```python
-boltzmann_constant = 1.0 * unit.boltzmann_constant
+```pycon
+>>> boltzmann_constant = 1.0 * unit.boltzmann_constant
 ```
 
 Adding or subtracting different units with the same dimensions just works:
@@ -67,7 +88,7 @@ Adding or subtracting different units with the same dimensions just works:
 <Quantity(11.0, 'angstrom')>
 ```
 
-But quantities with different dimensions raises an exception:
+But quantities with different dimensions raise an exception:
 
 ```pycon
 >>> 1.0 * unit.angstrom + 1.0 * unit.nanojoule
@@ -95,28 +116,25 @@ Or with the [`.ito()`] method for in-place transformations:
 The underlying value without units can be retrieved with the [`.m`] or [`.magnitude`] properties. Just make sure it's in the units you expect first:
 
 ```pycon
->>> quantity = 1.0 * unit.k_B
->>> quantity.ito_base_units()
+>>> quantity = (1.0 * unit.k_B).to_base_units()
 >>> assert quantity.units == unit.kilogram * unit.meter**2 / unit.kelvin / unit.second**2
 >>> quantity.magnitude
 1.380649e-23
 ```
 
-`Quantity` will pass any attributes it doesn't have through to the inner value. This means that an quantity-wrapped array can be used exactly as though it were an array --- the units are just checked silently in the background:
+Alternatively, specify the target units of the output magnitude with [`.m_as`]:
 
-```python
-from numpy.random import rand
-
-trajectory = 10 * rand(10, 10000, 3) * unit.nanometer
-centroids = trajectory.mean(axis=1)[..., None]
-last_water = trajectory[:, 97:99, :]
-last_water_recentered = last_water - centroids
+```pycon
+>>> quantity = 1.0 * unit.k_B
+>>> quantity.m_as(unit.kilogram * unit.meter**2 / unit.kelvin / unit.second**2)
+1.380649e-23
 ```
 
 [`.to()`]: openff.units.Quantity.to
 [`.ito()`]: openff.units.Quantity.ito
 [`.m`]: openff.units.Quantity.m
 [`.magnitude`]: openff.units.Quantity.magnitude
+[`.m_as`]: openff.units.Quantity.m_as
 
 :::{toctree}
 ---
