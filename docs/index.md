@@ -130,11 +130,34 @@ Alternatively, specify the target units of the output magnitude with [`.m_as`]:
 1.380649e-23
 ```
 
+OpenFF Units also provides the [`from_openmm`] and [`to_openmm`] functions to convert between OpenFF quantities and OpenMM quantities:
+
+```pycon
+>>> from openff.units.openmm import from_openmm, to_openmm
+>>>
+>>> quantity = 10.0 * unit.angstrom
+>>> omm_quant = to_openmm(quantity)
+>>> omm_quant
+Quantity(value=10.0, unit=angstrom)
+>>> type(omm_quant)
+<class 'openmm.unit.quantity.Quantity'>
+>>> quant_roundtrip = from_openmm(omm_quant)
+>>> quant_roundtrip
+<Quantity(10.0, 'angstrom')>
+>>> type(quant_roundtrip)
+<class 'openff.units.units.Quantity'>
+```
+
+For more details, see the [API reference].
+
 [`.to()`]: openff.units.Quantity.to
 [`.ito()`]: openff.units.Quantity.ito
 [`.m`]: openff.units.Quantity.m
 [`.magnitude`]: openff.units.Quantity.magnitude
 [`.m_as`]: openff.units.Quantity.m_as
+[`from_openmm`]: openff.units.openmm.from_openmm
+[`to_openmm`]: openff.units.openmm.to_openmm
+[API reference]: openff.units
 
 :::{toctree}
 ---
