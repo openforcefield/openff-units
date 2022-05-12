@@ -3,7 +3,7 @@ from openff.utilities.testing import skip_if_missing
 from openff.utilities.utilities import has_package
 
 from openff.units import unit
-from openff.units.simtk import from_simtk, to_simtk
+from openff.units.simtk import from_simtk
 
 if has_package("simtk.unit"):
     from simtk import unit as simtk_unit

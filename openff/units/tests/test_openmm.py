@@ -3,7 +3,7 @@ from openff.utilities.testing import skip_if_missing
 from openff.utilities.utilities import has_package
 
 from openff.units import unit
-from openff.units.openmm import from_openmm, to_openmm
+from openff.units.openmm import from_openmm
 
 if has_package("openmm.unit"):
     from openmm import unit as openmm_unit
