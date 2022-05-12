@@ -1,4 +1,4 @@
 class MissingOpenMMUnitError(Exception):
-    """OpenMM doesn't know this unit"""
+    """Raised when a unit cannot be converted to an equivalent OpenMM unit"""
 
     pass

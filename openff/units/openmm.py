@@ -75,6 +75,11 @@ def _ast_eval(node):
     Parameters
     ----------
     node : An ast parsing tree node
+
+    Raises
+    ------
+    openff.units.exceptions.MissingOpenMMUnitError
+        if the unit is unavailable in OpenMM.
     """
 
     operators = {
@@ -122,6 +127,11 @@ def string_to_openmm_unit(unit_string: str) -> "openmm_unit.Unit":
     -------
     output_unit: openmm.unit.Quantity
         The deserialized unit from the string
+
+    Raises
+    ------
+    openff.units.exceptions.MissingOpenMMUnitError
+        if the unit is unavailable in OpenMM.
     """
     if unit_string == "standard_atmosphere":
         return openmm_unit.atmosphere
@@ -155,7 +165,11 @@ def to_openmm(quantity: Quantity) -> "openmm_unit.Quantity":
 
     :class:`openmm.unit.quantity.Quantity` from OpenMM and
     :class:`openff.units.Quantity` from this package both represent a numerical
-    value with units.
+    value with units. The units available in the two packages differ; when a
+    unit is missing from the target package, the resulting quantity will be in
+    base units (kg/m/s/A/K/mole), which are shared between both packages. This
+    may cause the resulting value to be slightly different to the input due to
+    the limited precision of floating point numbers.
     """
 
     def to_openmm_inner(quantity) -> "openmm_unit.Quantity":

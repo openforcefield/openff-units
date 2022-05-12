@@ -98,6 +98,11 @@ def _ast_eval(node):
     Parameters
     ----------
     node : An ast parsing tree node
+
+    Raises
+    ------
+    Raises :exception:`openff.units.exceptions.MissingOpenMMUnitError` if the unit
+    is unavailable in SimTK.
     """
 
     operators = {
@@ -132,8 +137,8 @@ def _ast_eval(node):
 
 def string_to_simtk_unit(unit_string: str) -> "simtk_unit.Quantity":
     """
-    Deserializes a simtk.unit.Quantity from a string representation, for
-    example: "kilocalories_per_mole / angstrom ** 2"
+    Deserializes a :class:`simtk.unit.Quantity` from a string representation, for
+    example: ``"kilocalories_per_mole / angstrom ** 2"``
 
 
     Parameters
@@ -145,6 +150,11 @@ def string_to_simtk_unit(unit_string: str) -> "simtk_unit.Quantity":
     -------
     output_unit: simtk.unit.Quantity
         The deserialized unit from the string
+
+    Raises
+    ------
+    openff.units.exceptions.MissingOpenMMUnitError
+        if the unit is unavailable in SimTK.
     """
 
     output_unit = _ast_eval(ast.parse(unit_string, mode="eval").body)  # type: ignore
@@ -167,7 +177,15 @@ def from_simtk(simtk_quantity: "simtk_unit.Quantity"):
 
 @requires_package("simtk.unit")
 def to_simtk(quantity) -> "simtk_unit.Quantity":
-    """Convert an OpenFF ``Quantity`` to an OpenMM ``Quantity`` from the ``simtk`` namespace"""
+    """Convert an OpenFF ``Quantity`` to an SimTK ``Quantity``
+
+    :class:`simtk.unit.quantity.Quantity` from SimTK and
+    :class:`openff.units.Quantity` from this package both represent a numerical
+    value with units. The units available in the two packages differ; when a
+    unit is missing from the target package, the resulting quantity will be in
+    base units (kg/m/s/A/K/mole), which are shared between both packages. This
+    may cause the resulting value to be slightly different to the input due to
+    the limited precision of floating point numbers."""
 
     def to_simtk_inner(quantity) -> "simtk_unit.Quantity":
         value = quantity.m
