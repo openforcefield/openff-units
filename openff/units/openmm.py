@@ -10,8 +10,8 @@ from typing import TYPE_CHECKING, List
 from openff.utilities import has_package, requires_package
 
 from openff.units import unit
-from openff.units.units import Quantity
 from openff.units.exceptions import MissingOpenMMUnitError
+from openff.units.units import Quantity
 
 __all__ = [
     "from_openmm",
