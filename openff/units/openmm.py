@@ -11,6 +11,7 @@ from openff.utilities import has_package, requires_package
 
 from openff.units import unit
 from openff.units.units import Quantity
+from openff.units.exceptions import MissingOpenMMUnitError
 
 __all__ = [
     "from_openmm",
@@ -94,7 +95,10 @@ def _ast_eval(node):
         return operators[type(node.op)](_ast_eval(node.operand))
     elif isinstance(node, ast.Name):
         # see if this is a openmm unit
-        b = getattr(openmm_unit, node.id)
+        try:
+            b = getattr(openmm_unit, node.id)
+        except AttributeError:
+            raise MissingOpenMMUnitError(node.id)
         return b
     # TODO: This toolkit code that had a hack to cover some edge behavior; not clear which tests trigger it
     elif isinstance(node, ast.List):
@@ -153,9 +157,16 @@ def to_openmm(quantity: Quantity) -> "openmm_unit.Quantity":
     :class:`openff.units.Quantity` from this package both represent a numerical
     value with units.
     """
-    value = quantity.m
 
-    unit_string = str(quantity.units._units)
-    openmm_unit_ = string_to_openmm_unit(unit_string)
+    def to_openmm_inner(quantity) -> "openmm_unit.Quantity":
+        value = quantity.m
 
-    return value * openmm_unit_
+        unit_string = str(quantity.units._units)
+        openmm_unit_ = string_to_openmm_unit(unit_string)
+
+        return value * openmm_unit_
+
+    try:
+        return to_openmm_inner(quantity)
+    except MissingOpenMMUnitError:
+        return to_openmm_inner(quantity.to_base_units())
