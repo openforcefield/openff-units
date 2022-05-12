@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, List
 from openff.utilities import has_package, requires_package
 
 from openff.units import unit
+from openff.units.exceptions import MissingOpenMMUnitError
 from openff.units.units import Quantity
 
 __all__ = [
@@ -74,6 +75,11 @@ def _ast_eval(node):
     Parameters
     ----------
     node : An ast parsing tree node
+
+    Raises
+    ------
+    openff.units.exceptions.MissingOpenMMUnitError
+        if the unit is unavailable in OpenMM.
     """
 
     operators = {
@@ -94,7 +100,10 @@ def _ast_eval(node):
         return operators[type(node.op)](_ast_eval(node.operand))
     elif isinstance(node, ast.Name):
         # see if this is a openmm unit
-        b = getattr(openmm_unit, node.id)
+        try:
+            b = getattr(openmm_unit, node.id)
+        except AttributeError:
+            raise MissingOpenMMUnitError(node.id)
         return b
     # TODO: This toolkit code that had a hack to cover some edge behavior; not clear which tests trigger it
     elif isinstance(node, ast.List):
@@ -118,6 +127,11 @@ def string_to_openmm_unit(unit_string: str) -> "openmm_unit.Unit":
     -------
     output_unit: openmm.unit.Quantity
         The deserialized unit from the string
+
+    Raises
+    ------
+    openff.units.exceptions.MissingOpenMMUnitError
+        if the unit is unavailable in OpenMM.
     """
     if unit_string == "standard_atmosphere":
         return openmm_unit.atmosphere
@@ -151,11 +165,22 @@ def to_openmm(quantity: Quantity) -> "openmm_unit.Quantity":
 
     :class:`openmm.unit.quantity.Quantity` from OpenMM and
     :class:`openff.units.Quantity` from this package both represent a numerical
-    value with units.
+    value with units. The units available in the two packages differ; when a
+    unit is missing from the target package, the resulting quantity will be in
+    base units (kg/m/s/A/K/mole), which are shared between both packages. This
+    may cause the resulting value to be slightly different to the input due to
+    the limited precision of floating point numbers.
     """
-    value = quantity.m
 
-    unit_string = str(quantity.units._units)
-    openmm_unit_ = string_to_openmm_unit(unit_string)
+    def to_openmm_inner(quantity) -> "openmm_unit.Quantity":
+        value = quantity.m
 
-    return value * openmm_unit_
+        unit_string = str(quantity.units._units)
+        openmm_unit_ = string_to_openmm_unit(unit_string)
+
+        return value * openmm_unit_
+
+    try:
+        return to_openmm_inner(quantity)
+    except MissingOpenMMUnitError:
+        return to_openmm_inner(quantity.to_base_units())
