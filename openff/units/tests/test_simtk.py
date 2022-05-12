@@ -3,7 +3,7 @@ from openff.utilities.testing import skip_if_missing
 from openff.utilities.utilities import has_package
 
 from openff.units import unit
-from openff.units.simtk import from_simtk
+from openff.units.simtk import from_simtk, to_simtk
 
 if has_package("simtk.unit"):
     from simtk import unit as simtk_unit
@@ -43,6 +43,16 @@ class TestSimTKUnits:
         converted_pint_quantity = from_simtk(simtk_quantity)
 
         assert pint_quantity == converted_pint_quantity
+
+    @pytest.mark.parametrize(
+        "simtk_quantity,pint_quantity",
+        [(s, p) for s, p in zip(simtk_quantitites, pint_quantities)],
+    )
+    def test_pint_to_openmm(self, simtk_quantity, pint_quantity):
+        """Test conversion from pint Quantity to OpenMM Quantity."""
+        converted_simtk_quantity = to_simtk(pint_quantity)
+
+        assert simtk_quantity == converted_simtk_quantity
 
     @skip_if_missing("simtk.unit")
     @pytest.mark.parametrize(
@@ -87,3 +97,47 @@ class TestSimTKUnits:
         assert openff_quantity == from_simtk(simtk_quantity)
 
         assert openff_quantity == from_simtk(to_simtk(openff_quantity))
+
+    @pytest.mark.parametrize(
+        "from_openff_quantity,to_simtk_quantity",
+        [
+            (
+                1.0 * unit.k_B,
+                1.380649e-23
+                * simtk_unit.meter**2
+                * simtk_unit.kilogram
+                * simtk_unit.second**-2
+                * simtk_unit.kelvin**-1,
+            ),
+            (
+                1.0 / unit.pi,
+                0.31830988618 * simtk_unit.dimensionless,
+            ),
+            (
+                1.0 * unit.avogadro_constant,
+                6.02214076e23 / simtk_unit.mole,
+            ),
+            (
+                1.0 * unit.vacuum_permittivity,
+                8.85418782e-12
+                * simtk_unit.meter**-3
+                * simtk_unit.kilogram**-1
+                * simtk_unit.second**4
+                * simtk_unit.ampere**2,
+            ),
+        ],
+    )
+    def test_openmm_unit_constants(self, from_openff_quantity, to_simtk_quantity):
+        """Test conversion of units that do not exist in the SimTK registry
+
+        For these units, the magnitude/value may change due to limited floating
+        point precision. We therefore do not require the final values to be
+        exact - we accept a variance of one part in one million."""
+        converted = to_simtk(from_openff_quantity)
+
+        assert abs(converted - to_simtk_quantity) < (
+            # Multiply by dimensionless to ensure result is an openmm quantity
+            1.0e-6
+            * to_simtk_quantity
+            * simtk_unit.dimensionless
+        )

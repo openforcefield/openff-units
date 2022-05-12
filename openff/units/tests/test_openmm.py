@@ -3,7 +3,7 @@ from openff.utilities.testing import skip_if_missing
 from openff.utilities.utilities import has_package
 
 from openff.units import unit
-from openff.units.openmm import from_openmm
+from openff.units.openmm import from_openmm, to_openmm
 
 if has_package("openmm.unit"):
     from openmm import unit as openmm_unit
@@ -66,6 +66,16 @@ class TestOpenMMUnits:
 
         assert pint_quantity == converted_pint_quantity
 
+    @pytest.mark.parametrize(
+        "openmm_quantity,pint_quantity",
+        [(s, p) for s, p in zip(openmm_quantitites, pint_quantities)],
+    )
+    def test_pint_to_openmm(self, openmm_quantity, pint_quantity):
+        """Test conversion from pint Quantity to OpenMM Quantity."""
+        converted_openmm_quantity = to_openmm(pint_quantity)
+
+        assert openmm_quantity == converted_openmm_quantity
+
     @skip_if_missing("openmm.unit")
     @pytest.mark.parametrize(
         "openmm_unit_,unit_str",
@@ -109,3 +119,47 @@ class TestOpenMMUnits:
         assert openff_quantity == from_openmm(openmm_quantity)
 
         assert openff_quantity == from_openmm(to_openmm(openff_quantity))
+
+    @pytest.mark.parametrize(
+        "from_openff_quantity,to_openmm_quantity",
+        [
+            (
+                1.0 * unit.k_B,
+                1.380649e-23
+                * openmm_unit.meter**2
+                * openmm_unit.kilogram
+                * openmm_unit.second**-2
+                * openmm_unit.kelvin**-1,
+            ),
+            (
+                1.0 / unit.pi,
+                0.31830988618 * openmm_unit.dimensionless,
+            ),
+            (
+                1.0 * unit.avogadro_constant,
+                6.02214076e23 / openmm_unit.mole,
+            ),
+            (
+                1.0 * unit.vacuum_permittivity,
+                8.85418782e-12
+                * openmm_unit.meter**-3
+                * openmm_unit.kilogram**-1
+                * openmm_unit.second**4
+                * openmm_unit.ampere**2,
+            ),
+        ],
+    )
+    def test_openmm_unit_constants(self, from_openff_quantity, to_openmm_quantity):
+        """Test conversion of units that do not exist in the OpenMM registry
+
+        For these units, the magnitude/value may change due to limited floating
+        point precision. We therefore do not require the final values to be
+        exact - we accept a variance of one part in one million."""
+        converted = to_openmm(from_openff_quantity)
+
+        assert abs(converted - to_openmm_quantity) < (
+            # Multiply by dimensionless to ensure result is an openmm quantity
+            1.0e-6
+            * to_openmm_quantity
+            * openmm_unit.dimensionless
+        )
