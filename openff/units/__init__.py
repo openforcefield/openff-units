@@ -1,7 +1,24 @@
-from openff.units._version import get_versions  # type: ignore
-from openff.units.units import DEFAULT_UNIT_REGISTRY
+from pint import UnitRegistry
 
-unit = DEFAULT_UNIT_REGISTRY
+from openff.units._version import get_versions  # type: ignore
+from openff.units.units import DEFAULT_UNIT_REGISTRY, Measurement, Quantity, Unit
+
+__all__ = [
+    "unit",
+    "Quantity",
+    "Measurement",
+    "Unit",
+]
+
+unit: UnitRegistry = DEFAULT_UNIT_REGISTRY
+"""
+Registry of units provided by OpenFF Units.
+
+``unit`` may be used similarly to a module. It makes constants and units of
+measure available as attributes. Available units can be found in the
+:download:`constants <../../../openff/units/data/constants.txt>` and
+:download:`defaults <../../../openff/units/data/defaults.txt>` data files.
+"""
 
 # Handle versioneer
 versions = get_versions()
