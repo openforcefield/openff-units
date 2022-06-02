@@ -4,13 +4,18 @@ Core classes for OpenFF Units
 
 import uuid
 import warnings
+from typing import TYPE_CHECKING
 
 import pint
+from openff.utilities import requires_package
 from pint.measurement import _Measurement
 from pint.quantity import _Quantity
 from pint.unit import _Unit
 
 from openff.units.utilities import get_defaults_path
+
+if TYPE_CHECKING:
+    from openmm.unit import Quantity as OpenMMQuantity
 
 __all__ = [
     "DEFAULT_UNIT_REGISTRY",
@@ -62,6 +67,19 @@ class Quantity(_Quantity):
     def _dask_finalize(results, func, args, units):
         values = func(results, *args)
         return Quantity(values, units)
+
+    @requires_package("openmm")
+    def to_openmm(self) -> "OpenMMQuantity":
+        """Convert the quantity to an `openmm.unit.Quantity`.
+
+        Returns
+        -------
+        openmm_unit : str
+            The OpenMM compatible unit.
+        """
+        from openff.units.openmm import to_openmm
+
+        return to_openmm(self)
 
 
 class Measurement(_Measurement):
