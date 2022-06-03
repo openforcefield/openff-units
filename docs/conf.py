@@ -96,6 +96,8 @@ python_use_unqualified_type_names = True
 napoleon_google_docstring = True
 napoleon_use_param = False
 napoleon_use_ivar = True
+napoleon_use_rtype = False
+napoleon_preprocess_types = True
 
 myst_enable_extensions = [
     "deflist",
