@@ -70,12 +70,12 @@ class Quantity(_Quantity):
 
     @requires_package("openmm")
     def to_openmm(self) -> "OpenMMQuantity":
-        """Convert the quantity to an `openmm.unit.Quantity`.
+        """Convert the quantity to an ``openmm.unit.Quantity``.
 
         Returns
         -------
-        openmm_unit : str
-            The OpenMM compatible unit.
+        openmm_quantity : openmm.unit.quantity.Quantity
+            The OpenMM compatible quantity.
         """
         from openff.units.openmm import to_openmm
 
