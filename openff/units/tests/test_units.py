@@ -6,6 +6,21 @@ from openff.utilities.testing import skip_if_missing
 from openff.units import unit
 
 
+class TestQuantity:
+    @skip_if_missing("openmm.unit")
+    def test_to_openmm_method(self):
+        """
+        Test the basic behavior of `Quantity.to_openmm` as an API call. Testing of the underlying
+        behavior of the standalone `to_openmm` function is in opeff/units/tests/test_openmm.py.
+        """
+        from openmm import unit as openmm_unit
+
+        quantity = unit.Quantity(0.5, "nanometer")
+        converted = quantity.to_openmm()
+
+        assert converted == openmm_unit.Quantity(0.5, openmm_unit.nanometer)
+
+
 class TestPickle:
     """Test pickle-based serialization of Quantity, Unit, and Measurement objects
 
