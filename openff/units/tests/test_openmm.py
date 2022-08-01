@@ -3,6 +3,7 @@ from openff.utilities.testing import skip_if_missing
 from openff.utilities.utilities import has_package
 
 from openff.units import unit
+from openff.units.exceptions import NoneQuantityError, NoneUnitError
 from openff.units.openmm import from_openmm
 
 if has_package("openmm.unit"):
@@ -65,6 +66,18 @@ class TestOpenMMUnits:
         converted_pint_quantity = from_openmm(openmm_quantity)
 
         assert pint_quantity == converted_pint_quantity
+
+    def test_from_openmm_quantity_none(self):
+        with pytest.raises(NoneQuantityError):
+            from_openmm(None)
+
+    def test_to_openmm_quantity_none(self):
+        with pytest.raises(NoneQuantityError):
+            to_openmm(None)
+
+    def test_openmm_unit_to_string_none(self):
+        with pytest.raises(NoneUnitError):
+            openmm_unit_to_string(None)
 
     @pytest.mark.parametrize(
         "openmm_quantity,pint_quantity",

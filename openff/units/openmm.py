@@ -9,7 +9,11 @@ from typing import TYPE_CHECKING, List
 from openff.utilities import has_package, requires_package
 
 from openff.units import unit
-from openff.units.exceptions import MissingOpenMMUnitError
+from openff.units.exceptions import (
+    MissingOpenMMUnitError,
+    NoneQuantityError,
+    NoneUnitError,
+)
 from openff.units.units import Quantity
 
 __all__ = [
@@ -38,6 +42,9 @@ def openmm_unit_to_string(input_unit: "openmm_unit.Unit") -> str:
     unit_string : str
         The serialized unit.
     """
+    if input_unit is None:
+        raise NoneUnitError(f"Input {input_unit} is not an (OpenMM) Unit object.")
+
     if input_unit == openmm_unit.dimensionless:
         return "dimensionless"
 
@@ -143,6 +150,11 @@ def from_openmm(openmm_quantity: "openmm_unit.Quantity") -> Quantity:
     :class:`openff.units.Quantity` from this package both represent a numerical
     value with units.
     """
+    if openmm_quantity is None:
+        raise NoneQuantityError(
+            f"Input {openmm_quantity} is not an (OpenMM) Quantity object."
+        )
+
     if isinstance(openmm_quantity, List):
         openmm_quantity = openmm_unit.Quantity(openmm_quantity)
     openmm_unit_ = openmm_quantity.unit
@@ -166,6 +178,8 @@ def to_openmm(quantity: Quantity) -> "openmm_unit.Quantity":
     may cause the resulting value to be slightly different to the input due to
     the limited precision of floating point numbers.
     """
+    if quantity is None:
+        raise NoneQuantityError(f"Input {quantity} is not an (OpenFF) Quantity object.")
 
     def to_openmm_inner(quantity) -> "openmm_unit.Quantity":
         value = quantity.m
