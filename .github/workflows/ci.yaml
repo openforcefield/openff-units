@@ -89,7 +89,6 @@ jobs:
       if: ${{ matrix.openmm == 'false' }}
       run: |
         pytest $PYTEST_ARGS $COV openff/units/tests/ \
-          --ignore=openff/units/tests/test_simtk.py \
           --ignore=openff/units/tests/test_openmm.py
 
     - name: Codecov
