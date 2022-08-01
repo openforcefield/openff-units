@@ -43,7 +43,7 @@ def openmm_unit_to_string(input_unit: "openmm_unit.Unit") -> str:
         The serialized unit.
     """
     if input_unit is None:
-        raise NoneUnitError(f"Input {input_unit} is not an (OpenMM) Unit object.")
+        raise NoneUnitError("Input is None, expected an (OpenMM) Unit object.")
 
     if input_unit == openmm_unit.dimensionless:
         return "dimensionless"
@@ -151,9 +151,7 @@ def from_openmm(openmm_quantity: "openmm_unit.Quantity") -> Quantity:
     value with units.
     """
     if openmm_quantity is None:
-        raise NoneQuantityError(
-            f"Input {openmm_quantity} is not an (OpenMM) Quantity object."
-        )
+        raise NoneQuantityError("Input is None, expected an (OpenMM) Quantity object.")
 
     if isinstance(openmm_quantity, List):
         openmm_quantity = openmm_unit.Quantity(openmm_quantity)
@@ -179,7 +177,7 @@ def to_openmm(quantity: Quantity) -> "openmm_unit.Quantity":
     the limited precision of floating point numbers.
     """
     if quantity is None:
-        raise NoneQuantityError(f"Input {quantity} is not an (OpenFF) Quantity object.")
+        raise NoneQuantityError("Input is None, expected an (OpenFF) Quantity object.")
 
     def to_openmm_inner(quantity) -> "openmm_unit.Quantity":
         value = quantity.m

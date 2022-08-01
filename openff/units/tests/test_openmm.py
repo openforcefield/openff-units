@@ -68,15 +68,15 @@ class TestOpenMMUnits:
         assert pint_quantity == converted_pint_quantity
 
     def test_from_openmm_quantity_none(self):
-        with pytest.raises(NoneQuantityError):
+        with pytest.raises(NoneQuantityError, match="Input is None.*OpenMM.*Quantity"):
             from_openmm(None)
 
     def test_to_openmm_quantity_none(self):
-        with pytest.raises(NoneQuantityError):
+        with pytest.raises(NoneQuantityError, match="Input is None.*OpenFF.*Quantity"):
             to_openmm(None)
 
     def test_openmm_unit_to_string_none(self):
-        with pytest.raises(NoneUnitError):
+        with pytest.raises(NoneUnitError, match="Input is None.*OpenMM.*Unit"):
             openmm_unit_to_string(None)
 
     @pytest.mark.parametrize(
