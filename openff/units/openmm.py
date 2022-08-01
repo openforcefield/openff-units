@@ -4,7 +4,6 @@ Functions for converting between OpenFF and OpenMM units
 
 import ast
 import operator as op
-import warnings
 from typing import TYPE_CHECKING, List
 
 from openff.utilities import has_package, requires_package
@@ -22,10 +21,6 @@ __all__ = [
 
 if has_package("openmm.unit") or TYPE_CHECKING:
     from openmm import unit as openmm_unit
-elif has_package("simtk.unit"):
-    warnings.warn(
-        "Found units module in simtk namespace, not openmm. Use openff.units.simtk instead."
-    )
 
 
 @requires_package("openmm.unit")
