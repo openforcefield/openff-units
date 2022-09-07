@@ -35,15 +35,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - uses: conda-incubator/setup-miniconda@v2
+    - name: Install conda environment
+      uses: mamba-org/provision-with-micromamba@main
       with:
-        python-version: ${{ matrix.python-version }}
-        activate-environment: test
-        mamba-version: "*"
-        channels: conda-forge,defaults
-        channel-priority: true
         environment-file: devtools/conda-envs/test_env.yaml
-        auto-activate-base: false
+        extra-specs:
+          python=${{ matrix.python-version }}
+          mamba
 
     - name: Optionally install OpenMM
       if: ${{ matrix.openmm == 'true' }}
