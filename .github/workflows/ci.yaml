@@ -39,7 +39,7 @@ jobs:
       uses: mamba-org/provision-with-micromamba@main
       with:
         environment-file: devtools/conda-envs/test_env.yaml
-        extra-specs:
+        extra-specs: |
           python=${{ matrix.python-version }}
           mamba
 
