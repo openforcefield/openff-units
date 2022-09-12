@@ -4,7 +4,7 @@ Core classes for OpenFF Units
 
 import uuid
 import warnings
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeVar
 
 import pint
 from openff.utilities import requires_package
@@ -52,7 +52,10 @@ class Unit(_Unit):
         return _unpickle_unit, (Unit, self._units)
 
 
-class Quantity(_Quantity):
+_MagnitudeType = TypeVar("_MagnitudeType")
+
+
+class Quantity(_Quantity[_MagnitudeType]):
     """A value with associated units."""
 
     _REGISTRY = DEFAULT_UNIT_REGISTRY
