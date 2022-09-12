@@ -4,7 +4,7 @@ Functions for converting between OpenFF and OpenMM units
 
 import ast
 import operator as op
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, List, Literal, Union
 
 from openff.utilities import has_package, requires_package
 
@@ -21,6 +21,7 @@ __all__ = [
     "to_openmm",
     "openmm_unit_to_string",
     "string_to_openmm_unit",
+    "ensure_quantity",
 ]
 
 if has_package("openmm.unit") or TYPE_CHECKING:
@@ -191,3 +192,52 @@ def to_openmm(quantity: Quantity) -> "openmm_unit.Quantity":
         return to_openmm_inner(quantity)
     except MissingOpenMMUnitError:
         return to_openmm_inner(quantity.to_base_units())
+
+
+@requires_package("openmm.unit")
+def _ensure_openmm_quantity(
+    unknown_quantity: Union[Quantity, "openmm_unit.Quantity"]
+) -> "openmm_unit.Quantity":
+    if "openmm" in str(type(unknown_quantity)):
+        from openmm import unit as openmm_unit
+
+        if isinstance(unknown_quantity, openmm_unit.Quantity):
+            return unknown_quantity
+        else:
+            raise ValueError(
+                f"Failed to process input of type {type(unknown_quantity)}."
+            )
+    elif isinstance(unknown_quantity, Quantity):
+        return to_openmm(unknown_quantity)
+    else:
+        raise ValueError(f"Failed to process input of type {type(unknown_quantity)}.")
+
+
+def _ensure_openff_quantity(
+    unknown_quantity: Union[Quantity, "openmm_unit.Quantity"]
+) -> Quantity:
+    if isinstance(unknown_quantity, Quantity):
+        return unknown_quantity
+    elif "openmm" in str(type(unknown_quantity)):
+        from openmm import unit as openmm_unit
+
+        if isinstance(unknown_quantity, openmm_unit.Quantity):
+            return from_openmm(unknown_quantity)
+        else:
+            raise ValueError(
+                f"Failed to process input of type {type(unknown_quantity)}."
+            )
+    else:
+        raise Exception
+
+
+def ensure_quantity(
+    unknown_quantity: Union[Quantity, "openmm_unit.Quantity"],
+    type_to_ensure: Literal["openmm", "openff"],
+) -> Union[Quantity, "openmm_unit.Quantity"]:
+    if type_to_ensure == "openmm":
+        return _ensure_openmm_quantity(unknown_quantity)
+    elif type_to_ensure == "openff":
+        return _ensure_openff_quantity(unknown_quantity)
+    else:
+        raise Exception
