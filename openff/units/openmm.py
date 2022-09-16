@@ -234,7 +234,6 @@ def ensure_quantity(
     unknown_quantity: Union[Quantity, "openmm_unit.Quantity"],
     type_to_ensure: Literal["openmm", "openff"],
 ) -> Union[Quantity, "openmm_unit.Quantity"]:
-    type_to_ensure = type_to_ensure.lower()
     if type_to_ensure == "openmm":
         return _ensure_openmm_quantity(unknown_quantity)
     elif type_to_ensure == "openff":
