@@ -4,7 +4,7 @@ from openff.utilities.utilities import has_package
 
 from openff.units import unit
 from openff.units.exceptions import NoneQuantityError, NoneUnitError
-from openff.units.openmm import from_openmm
+from openff.units.openmm import ensure_quantity, from_openmm
 
 if has_package("openmm.unit"):
     from openmm import unit as openmm_unit
@@ -176,3 +176,33 @@ class TestOpenMMUnits:
             * to_openmm_quantity
             * openmm_unit.dimensionless
         )
+
+
+@skip_if_missing("openmm.unit")
+class TestEnsureType:
+    from openmm import unit as openmm_unit
+
+    from openff.units import unit
+
+    @pytest.mark.parametrize(
+        "registry",
+        ["openmm", "openff"],
+    )
+    def test_ensure_units(self, registry):
+        x = unit.Quantity(4.0, unit.angstrom)
+        y = openmm_unit.Quantity(4.0, openmm_unit.angstrom)
+
+        assert ensure_quantity(x, registry) == ensure_quantity(y, registry)
+
+    def test_unsupported_type(self):
+        x = unit.Quantity(4.0, unit.angstrom)
+
+        with pytest.raises(ValueError, match="Unsupported.*type_to_ensure.*pint"):
+            ensure_quantity(x, "pint")
+
+    def test_short_circuit(self):
+        x = unit.Quantity(4.0, unit.angstrom)
+        y = openmm_unit.Quantity(4.0, openmm_unit.angstrom)
+
+        assert id(ensure_quantity(x, "openff")) == id(x)
+        assert id(ensure_quantity(y, "openmm")) == id(y)
