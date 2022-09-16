@@ -194,6 +194,12 @@ class TestEnsureType:
 
         assert ensure_quantity(x, registry) == ensure_quantity(y, registry)
 
+    def test_unsupported_type(self):
+        x = unit.Quantity(4.0, unit.angstrom)
+
+        with pytest.raises(ValueError, match="Unsupported.*type_to_ensure.*pint"):
+            ensure_quantity(x, "pint")
+
     def test_short_circuit(self):
         x = unit.Quantity(4.0, unit.angstrom)
         y = openmm_unit.Quantity(4.0, openmm_unit.angstrom)

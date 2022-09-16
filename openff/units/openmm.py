@@ -1,7 +1,6 @@
 """
 Functions for converting between OpenFF and OpenMM units
 """
-
 import ast
 import operator as op
 from typing import TYPE_CHECKING, List, Literal, Union
@@ -235,9 +234,13 @@ def ensure_quantity(
     unknown_quantity: Union[Quantity, "openmm_unit.Quantity"],
     type_to_ensure: Literal["openmm", "openff"],
 ) -> Union[Quantity, "openmm_unit.Quantity"]:
+    type_to_ensure = type_to_ensure.lower()
     if type_to_ensure == "openmm":
         return _ensure_openmm_quantity(unknown_quantity)
     elif type_to_ensure == "openff":
         return _ensure_openff_quantity(unknown_quantity)
     else:
-        raise Exception
+        raise ValueError(
+            f"Unsupported `type_to_ensure` found. Given {type_to_ensure}, "
+            "expected 'openff' or 'openmm'."
+        )
