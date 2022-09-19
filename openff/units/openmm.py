@@ -138,7 +138,7 @@ def string_to_openmm_unit(unit_string: str) -> "openmm_unit.Unit":
     if unit_string == "standard_atmosphere":
         return openmm_unit.atmosphere
 
-    output_unit = _ast_eval(ast.parse(unit_string, mode="eval").body)  # type: ignore
+    output_unit = _ast_eval(ast.parse(unit_string, mode="eval").body)
     return output_unit
 
 
@@ -238,7 +238,7 @@ def _ensure_openff_quantity(
             )
     else:
         try:
-            return unit.Quantity(
+            return unit.Quantity(  # type: ignore
                 unknown_quantity,
                 unit.dimensionless,
             )
