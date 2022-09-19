@@ -209,7 +209,17 @@ def _ensure_openmm_quantity(
     elif isinstance(unknown_quantity, Quantity):
         return to_openmm(unknown_quantity)
     else:
-        raise ValueError(f"Failed to process input of type {type(unknown_quantity)}.")
+        from openmm import unit as openmm_unit
+
+        try:
+            return openmm_unit.Quantity(
+                unknown_quantity,
+                openmm_unit.dimensionless,
+            )
+        except Exception as e:
+            raise ValueError(
+                f"Failed to process input of type {type(unknown_quantity)}."
+            ) from e
 
 
 def _ensure_openff_quantity(
@@ -227,7 +237,15 @@ def _ensure_openff_quantity(
                 f"Failed to process input of type {type(unknown_quantity)}."
             )
     else:
-        raise Exception
+        try:
+            return unit.Quantity(
+                unknown_quantity,
+                unit.dimensionless,
+            )
+        except Exception as e:
+            raise ValueError(
+                f"Failed to process input of type {type(unknown_quantity)}."
+            ) from e
 
 
 def ensure_quantity(

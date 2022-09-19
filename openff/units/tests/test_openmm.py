@@ -206,3 +206,37 @@ class TestEnsureType:
 
         assert id(ensure_quantity(x, "openff")) == id(x)
         assert id(ensure_quantity(y, "openmm")) == id(y)
+
+    @pytest.mark.parametrize(
+        "value",
+        [
+            1,
+            2.0,
+        ],
+    )
+    def test_primitives(self, value):
+        assert ensure_quantity(value, "openff") == unit.Quantity(
+            value, unit.dimensionless
+        )
+        assert ensure_quantity(value, "openmm") == openmm_unit.Quantity(
+            value, openmm_unit.dimensionless
+        )
+
+    @pytest.mark.parametrize("use_numpy", [True, False])
+    def test_array(self, use_numpy):
+        import numpy
+
+        value = [4, 5]
+
+        if use_numpy:
+            value = numpy.asarray(value)
+
+        numpy.testing.assert_allclose(
+            ensure_quantity(value, "openff"),
+            unit.Quantity(value, unit.dimensionless),
+        )
+
+        numpy.testing.assert_equal(
+            numpy.array(ensure_quantity(value, "openmm")),
+            numpy.array(openmm_unit.Quantity(value, openmm_unit.dimensionless)),
+        )
