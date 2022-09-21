@@ -295,6 +295,12 @@ def ensure_quantity(
     >>> # Seemingly-redundant "conversions" short-circuit
     >>> assert ensure_quantity(length1, "openff") == ensure_quantity(length2, "openff")
     >>> assert ensure_quantity(length1, "openmm") == ensure_quantity(length2, "openmm")
+    >>> # NumPy arrays and some primitives are automatically up-converted to `Quantity` objects
+    >>> # Note that their units are set to "dimensionless"
+    >>> ensure_quantity(numpy.array([1, 2]), "openff")
+    <Quantity([1 2], 'dimensionless')>
+    >>> ensure_quantity(4.0, "openmm")
+    Quantity(value=4.0, unit=dimensionless)
 
     """
     if type_to_ensure == "openmm":
