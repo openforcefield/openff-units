@@ -149,6 +149,18 @@ def from_openmm(openmm_quantity: "openmm_unit.Quantity") -> Quantity:
     :class:`openmm.unit.quantity.Quantity` from OpenMM and
     :class:`openff.units.Quantity` from this package both represent a numerical
     value with units.
+
+    Examples
+    --------
+
+    >>> from openff.units import Quantity as OpenFFQuantity
+    >>> from openff.units.openmm import from_openmm
+    >>> from openmm import unit
+    >>> length = unit.Quantity(9.0, unit.angstrom)
+    >>> from_openmm(length)
+    <Quantity(9.0, 'angstrom')>
+    >>> assert isinstance(from_openmm(length), OpenFFQuantity)
+
     """
     if openmm_quantity is None:
         raise NoneQuantityError("Input is None, expected an (OpenMM) Quantity object.")
@@ -175,6 +187,18 @@ def to_openmm(quantity: Quantity) -> "openmm_unit.Quantity":
     base units (kg/m/s/A/K/mole), which are shared between both packages. This
     may cause the resulting value to be slightly different to the input due to
     the limited precision of floating point numbers.
+
+    Examples
+    --------
+
+    >>> from openff.units import unit
+    >>> from openff.units.openmm import to_openmm
+    >>> from openmm import unit as openmm_unit
+    >>> length = unit.Quantity(9.0, unit.angstrom)
+    >>> to_openmm(length)
+    Quantity(value=9.0, unit=angstrom)
+    >>> assert isinstance(to_openmm(length), openmm_unit.Quantity)
+
     """
     if quantity is None:
         raise NoneQuantityError("Input is None, expected an (OpenFF) Quantity object.")
@@ -252,6 +276,27 @@ def ensure_quantity(
     unknown_quantity: Union[Quantity, "openmm_unit.Quantity"],
     type_to_ensure: Literal["openmm", "openff"],
 ) -> Union[Quantity, "openmm_unit.Quantity"]:
+    """
+    Given a quantity that could be of a variety of types, attempt to coerce into a given type.
+
+    Examples
+    --------
+
+    >>> import numpy
+    >>> from openmm import unit as openmm_unit
+    >>> from openff.units import unit
+    >>> from openff.units.openmm import ensure_quantity
+    >>> # Create a 9 Angstrom quantity with each registry
+    >>> length1 = unit.Quantity(9.0, unit.angstrom)
+    >>> length2 = openmm_unit.Quantity(9.0, openmm_unit.angstrom)
+    >>> # Similar quantities are be coerced into requested type
+    >>> assert type(ensure_quantity(length1, "openmm")) == openmm_unit.Quantity
+    >>> assert type(ensure_quantity(length2, "openff")) == unit.Quantity
+    >>> # Seemingly-redundant "conversions" short-circuit
+    >>> assert ensure_quantity(length1, "openff") == ensure_quantity(length2, "openff")
+    >>> assert ensure_quantity(length1, "openmm") == ensure_quantity(length2, "openmm")
+
+    """
     if type_to_ensure == "openmm":
         return _ensure_openmm_quantity(unknown_quantity)
     elif type_to_ensure == "openff":
