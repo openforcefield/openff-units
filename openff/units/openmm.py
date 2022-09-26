@@ -138,7 +138,7 @@ def string_to_openmm_unit(unit_string: str) -> "openmm_unit.Unit":
     if unit_string == "standard_atmosphere":
         return openmm_unit.atmosphere
 
-    output_unit = _ast_eval(ast.parse(unit_string, mode="eval").body)  # type: ignore
+    output_unit = _ast_eval(ast.parse(unit_string, mode="eval").body)
     return output_unit
 
 
@@ -149,6 +149,18 @@ def from_openmm(openmm_quantity: "openmm_unit.Quantity") -> Quantity:
     :class:`openmm.unit.quantity.Quantity` from OpenMM and
     :class:`openff.units.Quantity` from this package both represent a numerical
     value with units.
+
+    Examples
+    --------
+
+    >>> from openff.units import Quantity as OpenFFQuantity
+    >>> from openff.units.openmm import from_openmm
+    >>> from openmm import unit
+    >>> length = unit.Quantity(9.0, unit.angstrom)
+    >>> from_openmm(length)
+    <Quantity(9.0, 'angstrom')>
+    >>> assert isinstance(from_openmm(length), OpenFFQuantity)
+
     """
     if openmm_quantity is None:
         raise NoneQuantityError("Input is None, expected an (OpenMM) Quantity object.")
@@ -175,6 +187,18 @@ def to_openmm(quantity: Quantity) -> "openmm_unit.Quantity":
     base units (kg/m/s/A/K/mole), which are shared between both packages. This
     may cause the resulting value to be slightly different to the input due to
     the limited precision of floating point numbers.
+
+    Examples
+    --------
+
+    >>> from openff.units import unit
+    >>> from openff.units.openmm import to_openmm
+    >>> from openmm import unit as openmm_unit
+    >>> length = unit.Quantity(9.0, unit.angstrom)
+    >>> to_openmm(length)
+    Quantity(value=9.0, unit=angstrom)
+    >>> assert isinstance(to_openmm(length), openmm_unit.Quantity)
+
     """
     if quantity is None:
         raise NoneQuantityError("Input is None, expected an (OpenFF) Quantity object.")
@@ -209,7 +233,17 @@ def _ensure_openmm_quantity(
     elif isinstance(unknown_quantity, Quantity):
         return to_openmm(unknown_quantity)
     else:
-        raise ValueError(f"Failed to process input of type {type(unknown_quantity)}.")
+        from openmm import unit as openmm_unit
+
+        try:
+            return openmm_unit.Quantity(
+                unknown_quantity,
+                openmm_unit.dimensionless,
+            )
+        except Exception as e:
+            raise ValueError(
+                f"Failed to process input of type {type(unknown_quantity)}."
+            ) from e
 
 
 def _ensure_openff_quantity(
@@ -227,13 +261,48 @@ def _ensure_openff_quantity(
                 f"Failed to process input of type {type(unknown_quantity)}."
             )
     else:
-        raise Exception
+        try:
+            return unit.Quantity(  # type: ignore
+                unknown_quantity,
+                unit.dimensionless,
+            )
+        except Exception as e:
+            raise ValueError(
+                f"Failed to process input of type {type(unknown_quantity)}."
+            ) from e
 
 
 def ensure_quantity(
     unknown_quantity: Union[Quantity, "openmm_unit.Quantity"],
     type_to_ensure: Literal["openmm", "openff"],
 ) -> Union[Quantity, "openmm_unit.Quantity"]:
+    """
+    Given a quantity that could be of a variety of types, attempt to coerce into a given type.
+
+    Examples
+    --------
+
+    >>> import numpy
+    >>> from openmm import unit as openmm_unit
+    >>> from openff.units import unit
+    >>> from openff.units.openmm import ensure_quantity
+    >>> # Create a 9 Angstrom quantity with each registry
+    >>> length1 = unit.Quantity(9.0, unit.angstrom)
+    >>> length2 = openmm_unit.Quantity(9.0, openmm_unit.angstrom)
+    >>> # Similar quantities are be coerced into requested type
+    >>> assert type(ensure_quantity(length1, "openmm")) == openmm_unit.Quantity
+    >>> assert type(ensure_quantity(length2, "openff")) == unit.Quantity
+    >>> # Seemingly-redundant "conversions" short-circuit
+    >>> assert ensure_quantity(length1, "openff") == ensure_quantity(length2, "openff")
+    >>> assert ensure_quantity(length1, "openmm") == ensure_quantity(length2, "openmm")
+    >>> # NumPy arrays and some primitives are automatically up-converted to `Quantity` objects
+    >>> # Note that their units are set to "dimensionless"
+    >>> ensure_quantity(numpy.array([1, 2]), "openff")
+    <Quantity([1 2], 'dimensionless')>
+    >>> ensure_quantity(4.0, "openmm")
+    Quantity(value=4.0, unit=dimensionless)
+
+    """
     if type_to_ensure == "openmm":
         return _ensure_openmm_quantity(unknown_quantity)
     elif type_to_ensure == "openff":
