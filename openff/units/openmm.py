@@ -7,12 +7,12 @@ from typing import TYPE_CHECKING, List, Literal, Union
 
 from openff.utilities import has_package, requires_package
 
-from openff.units import unit
 from openff.units.exceptions import (
     MissingOpenMMUnitError,
     NoneQuantityError,
     NoneUnitError,
 )
+from openff.units.units import DEFAULT_UNIT_REGISTRY as unit
 from openff.units.units import Quantity
 
 __all__ = [
