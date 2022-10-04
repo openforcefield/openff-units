@@ -29,16 +29,15 @@ consistent with recent IUPAC values [2].
 """
 from typing import Dict
 
-from openff.units import unit
-from openff.units.units import Quantity
+from openff.units import Quantity, unit
 
 __all__ = [
     "MASSES",
     "SYMBOLS",
 ]
 
-MASSES: Dict[int, Quantity] = {
-    index + 1: mass * unit.dalton
+MASSES: Dict[int, Quantity[float]] = {
+    index + 1: Quantity(mass, unit.dalton)
     for index, mass in enumerate(
         [
             1.007947,
@@ -285,4 +284,3 @@ SYMBOLS: Dict[int, str] = {
         ]
     )
 }
-"""Mapping from atomic number to element symbol"""
