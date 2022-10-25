@@ -32,7 +32,7 @@ Below shows how to tag a number with a unit (generating a `Quantity` object),
 get its magnitude with and without units, convert to another unit, and also get its magnitude after converting to another unit.
 
 ```python3
->>> from opennff.units import unit
+>>> from openff.units import unit
 >>> bond_length = 1.4 * unit.angstrom
 >>> bond_length
 <Quantity(1.4, 'angstrom')>
