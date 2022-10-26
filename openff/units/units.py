@@ -8,9 +8,11 @@ from typing import TYPE_CHECKING, TypeVar
 
 import pint
 from openff.utilities import requires_package
-from pint.measurement import _Measurement
-from pint.quantity import _Quantity
-from pint.unit import _Unit
+from pint import (
+    Measurement as _Measurement,
+    Quantity as _Quantity,
+    Unit as _Unit,
+)
 
 from openff.units.utilities import get_defaults_path
 
