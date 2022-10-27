@@ -41,12 +41,11 @@ jobs:
         environment-file: devtools/conda-envs/test_env.yaml
         extra-specs: |
           python=${{ matrix.python-version }}
-          mamba
 
     - name: Optionally install OpenMM
       if: ${{ matrix.openmm == 'true' }}
       run: |
-        mamba install "openmm >=7.6" -c conda-forge -yq
+        micromamba install "openmm >=7.6" -c conda-forge -yq
 
     - name: Verify OpenMM is not installed when not expected
       if: ${{ matrix.openmm == 'false' }}
