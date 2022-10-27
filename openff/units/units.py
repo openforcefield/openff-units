@@ -4,13 +4,10 @@ Core classes for OpenFF Units
 
 import uuid
 import warnings
-from typing import TYPE_CHECKING, TypeVar
+from typing import TYPE_CHECKING
 
 import pint
 from openff.utilities import requires_package
-from pint.measurement import _Measurement
-from pint.quantity import _Quantity
-from pint.unit import _Unit
 
 from openff.units.utilities import get_defaults_path
 
@@ -43,7 +40,7 @@ def _unpickle_measurement(cls, *args):
     return pint._unpickle(DEFAULT_UNIT_REGISTRY.Measurement, *args)
 
 
-class Unit(_Unit):
+class Unit(DEFAULT_UNIT_REGISTRY.Unit):  # type: ignore[name-defined]
     """A unit of measure."""
 
     _REGISTRY = DEFAULT_UNIT_REGISTRY
@@ -52,10 +49,10 @@ class Unit(_Unit):
         return _unpickle_unit, (Unit, self._units)
 
 
-_MagnitudeType = TypeVar("_MagnitudeType")
+# _MagnitudeType = TypeVar("_MagnitudeType")
 
 
-class Quantity(_Quantity[_MagnitudeType]):
+class Quantity(DEFAULT_UNIT_REGISTRY.Quantity):  # type: ignore[name-defined]
     """A value with associated units."""
 
     _REGISTRY = DEFAULT_UNIT_REGISTRY
@@ -85,7 +82,7 @@ class Quantity(_Quantity[_MagnitudeType]):
         return to_openmm(self)
 
 
-class Measurement(_Measurement):
+class Measurement(DEFAULT_UNIT_REGISTRY.Measurement):  # type: ignore[name-defined]
     """A value with associated units and uncertainty."""
 
     _REGISTRY = DEFAULT_UNIT_REGISTRY
