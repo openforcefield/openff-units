@@ -74,6 +74,7 @@ jobs:
 
     - name: Run mypy
       if: ${{ matrix.python-version == 3.9 }}
+      continue-on-error: true
       run: |
         mypy --namespace-packages -p "openff.units"
 
