@@ -5,7 +5,7 @@ dependencies:
   - python
   - pip
   - numpy
-  - pint >=0.19
+  - pint >=0.20
   - openff-utilities >=0.1.3
   - sphinx >=4.5,<5
   - myst-parser>=0.13.6
