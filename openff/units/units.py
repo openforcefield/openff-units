@@ -8,6 +8,8 @@ from typing import TYPE_CHECKING
 import pint
 from openff.utilities import requires_package
 from pint import UnitRegistry as _UnitRegistry
+from pint.facets.measurement import Measurement as _BaseMeasurement
+from pint.facets.plain import PlainQuantity, PlainUnit
 
 from openff.units.utilities import get_defaults_path
 
@@ -36,27 +38,18 @@ __all__ = [
 #     return pint._unpickle(Measurement, *args)
 
 
-class Unit:
+class _Unit(PlainUnit):
     pass
-    """
-    def __reduce__(self):
-        return _unpickle_unit, (Unit, self._units)
-    """
 
 
-class Quantity:
-    """
-    def __reduce__(self):
-        return _unpickle_quantity, (Quantity, self.magnitude, self._units)
-    """
-
+class _Quantity(PlainQuantity):
     def __dask_tokenize__(self):
         return uuid.uuid4().hex
 
     @staticmethod
     def _dask_finalize(results, func, args, units):
         values = func(results, *args)
-        return Quantity(values, units)
+        return _Quantity(values, units)
 
     @requires_package("openmm")
     def to_openmm(self) -> "OpenMMQuantity":
@@ -72,7 +65,7 @@ class Quantity:
         return to_openmm(self)
 
 
-class Measurement:
+class _Measurement(_BaseMeasurement):
     """
     def __reduce__(self):
         return _unpickle_measurement, (Measurement, self.magnitude, self._units)
@@ -84,13 +77,13 @@ class Measurement:
     @staticmethod
     def _dask_finalize(results, func, args, units):
         values = func(results, *args)
-        return Measurement(values, units)
+        return _Measurement(values, units)
 
 
 class UnitRegistry(_UnitRegistry):
-    _quantity_class = Quantity
-    _unit_class = Quantity
-    _measurement_class = Measurement
+    _quantity_class = _Quantity
+    _unit_class = _Unit
+    _measurement_class = _Measurement
 
 
 DEFAULT_UNIT_REGISTRY = UnitRegistry(get_defaults_path())

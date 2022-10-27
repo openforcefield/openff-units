@@ -211,6 +211,8 @@ def to_openmm(quantity: Quantity) -> "openmm_unit.Quantity":
 
         return value * openmm_unit_
 
+    assert isinstance(quantity, Quantity)
+
     try:
         return to_openmm_inner(quantity)
     except MissingOpenMMUnitError:
