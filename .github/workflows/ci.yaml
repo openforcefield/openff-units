@@ -81,18 +81,18 @@ jobs:
     - name: Run unit tests with OpenMM
       if: ${{ matrix.openmm == 'true' }}
       run: |
-        pytest $PYTEST_ARGS $COV openff/units/tests/
+        python -m pytest $PYTEST_ARGS $COV openff/units/tests/
 
     - name: Run unit tests without OpenMM
       if: ${{ matrix.openmm == 'false' }}
       run: |
-        pytest $PYTEST_ARGS $COV openff/units/tests/ \
+        python -m pytest $PYTEST_ARGS $COV openff/units/tests/ \
           --ignore=openff/units/tests/test_openmm.py
 
     - name: Run docexamples
       if: ${{ matrix.openmm == 'true' }}
       run: |
-        pytest --doctest-modules $PYTEST_ARGS $COV openff
+        python -m pytest --doctest-modules $PYTEST_ARGS $COV openff --ignore=openff/units/tests
 
     - name: Codecov
       uses: codecov/codecov-action@v1
