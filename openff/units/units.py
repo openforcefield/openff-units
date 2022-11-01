@@ -7,9 +7,10 @@ from typing import TYPE_CHECKING
 
 import pint
 from openff.utilities import requires_package
+from pint import Measurement as _Measurement
+from pint import Quantity as _Quantity
+from pint import Unit as _Unit
 from pint import UnitRegistry as _UnitRegistry
-from pint.facets.measurement import Measurement as _BaseMeasurement
-from pint.facets.plain import PlainQuantity, PlainUnit
 
 from openff.units.utilities import get_defaults_path
 
@@ -23,33 +24,23 @@ __all__ = [
     "Unit",
 ]
 
-# def _unpickle_quantity(cls, *args):
-#     """Rebuild quantity upon unpickling using the application registry."""
-#     return pint._unpickle(Quantity, *args)
-#
-#
-# def _unpickle_unit(cls, *args):
-#     """Rebuild unit upon unpickling using the application registry."""
-#     return pint._unpickle(Unit, *args)
-#
-#
-# def _unpickle_measurement(cls, *args):
-#     """Rebuild measurement upon unpickling using the application registry."""
-#     return pint._unpickle(Measurement, *args)
 
+class Unit(_Unit):
+    """A unit of measure."""
 
-class _Unit(PlainUnit):
     pass
 
 
-class _Quantity(PlainQuantity):
+class Quantity(_Quantity):
+    """A value with associated units."""
+
     def __dask_tokenize__(self):
         return uuid.uuid4().hex
 
     @staticmethod
     def _dask_finalize(results, func, args, units):
         values = func(results, *args)
-        return _Quantity(values, units)
+        return Quantity(values, units)
 
     @requires_package("openmm")
     def to_openmm(self) -> "OpenMMQuantity":
@@ -65,11 +56,8 @@ class _Quantity(PlainQuantity):
         return to_openmm(self)
 
 
-class _Measurement(_BaseMeasurement):
-    """
-    def __reduce__(self):
-        return _unpickle_measurement, (Measurement, self.magnitude, self._units)
-    """
+class Measurement(_Measurement):
+    """A value with associated units and uncertainty."""
 
     def __dask_tokenize__(self):
         return uuid.uuid4().hex
@@ -77,20 +65,20 @@ class _Measurement(_BaseMeasurement):
     @staticmethod
     def _dask_finalize(results, func, args, units):
         values = func(results, *args)
-        return _Measurement(values, units)
+        return Measurement(values, units)
 
 
 class UnitRegistry(_UnitRegistry):
-    _quantity_class = _Quantity
-    _unit_class = _Unit
-    _measurement_class = _Measurement
+    _quantity_class = Quantity
+    _unit_class = Unit
+    _measurement_class = Measurement
 
 
 DEFAULT_UNIT_REGISTRY = UnitRegistry(get_defaults_path())
 
-Unit = DEFAULT_UNIT_REGISTRY.Unit
-Quantity = DEFAULT_UNIT_REGISTRY.Quantity
-Measurement = DEFAULT_UNIT_REGISTRY.Measurement
+Unit: _Unit = DEFAULT_UNIT_REGISTRY.Unit  # type: ignore[no-redef]
+Quantity: _Quantity = DEFAULT_UNIT_REGISTRY.Quantity  # type: ignore[no-redef]
+Measurement: _Measurement = DEFAULT_UNIT_REGISTRY.Measurement  # type: ignore[no-redef]
 
 pint.set_application_registry(DEFAULT_UNIT_REGISTRY)
 

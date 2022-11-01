@@ -74,25 +74,24 @@ jobs:
 
     - name: Run mypy
       if: ${{ matrix.python-version == 3.9 }}
-      continue-on-error: true
       run: |
         mypy --namespace-packages -p "openff.units"
 
     - name: Run unit tests with OpenMM
       if: ${{ matrix.openmm == 'true' }}
       run: |
-        python -m pytest $PYTEST_ARGS $COV openff/units/tests/
+        pytest $PYTEST_ARGS $COV openff/units/tests/
 
     - name: Run unit tests without OpenMM
       if: ${{ matrix.openmm == 'false' }}
       run: |
-        python -m pytest $PYTEST_ARGS $COV openff/units/tests/ \
+        pytest $PYTEST_ARGS $COV openff/units/tests/ \
           --ignore=openff/units/tests/test_openmm.py
 
     - name: Run docexamples
       if: ${{ matrix.openmm == 'true' }}
       run: |
-        python -m pytest --doctest-modules $PYTEST_ARGS $COV openff --ignore=openff/units/tests
+        pytest --doctest-modules $PYTEST_ARGS $COV openff --ignore=openff/units/tests
 
     - name: Codecov
       uses: codecov/codecov-action@v1

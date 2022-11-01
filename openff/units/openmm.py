@@ -264,7 +264,7 @@ def _ensure_openff_quantity(
             )
     else:
         try:
-            return unit.Quantity(  # type: ignore
+            return unit.Quantity(
                 unknown_quantity,
                 unit.dimensionless,
             )
