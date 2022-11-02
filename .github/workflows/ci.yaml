@@ -91,7 +91,7 @@ jobs:
     - name: Run docexamples
       if: ${{ matrix.openmm == 'true' }}
       run: |
-        pytest --doctest-modules $PYTEST_ARGS $COV openff
+        pytest --doctest-modules $PYTEST_ARGS $COV openff --ignore=openff/units/tests
 
     - name: Codecov
       uses: codecov/codecov-action@v1

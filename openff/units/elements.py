@@ -36,7 +36,7 @@ __all__ = [
     "SYMBOLS",
 ]
 
-MASSES: Dict[int, Quantity[float]] = {
+MASSES: Dict[int, Quantity] = {
     index + 1: Quantity(mass, unit.dalton)
     for index, mass in enumerate(
         [
