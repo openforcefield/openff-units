@@ -75,7 +75,7 @@ jobs:
     - name: Run mypy
       if: ${{ matrix.python-version == 3.9 }}
       run: |
-        mypy --namespace-packages -p "openff.units"
+        mypy -p "openff.units"
 
     - name: Run unit tests with OpenMM
       if: ${{ matrix.openmm == 'true' }}
