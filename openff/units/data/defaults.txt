@@ -109,7 +109,8 @@ hertz = 1 / second = Hz
 reciprocal_centimeter = 1 / cm = cm_1 = kayser
 
 # Velocity
-[velocity] = [length] / [time] = [speed]
+# As of 0.20, derived dimensions cannot have aliases
+[velocity] = [length] / [time]
 
 # Acceleration
 [acceleration] = [velocity] / [time]

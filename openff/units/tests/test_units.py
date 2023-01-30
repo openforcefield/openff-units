@@ -36,14 +36,14 @@ class TestPickle:
 
         assert x == y
 
-    def test_pick_quantity(self):
+    def test_pickle_quantity(self):
         x = 1.0 * unit.kelvin
         y = pickle.loads(pickle.dumps(x))
 
         assert x == y
 
     @skip_if_missing("uncertainties")
-    def test_pickle_quantity(self):
+    def test_pickle_quantity_uncertainties(self):
         x = (1.0 * unit.kelvin).plus_minus(0.05)
         y = pickle.loads(pickle.dumps(x))
 

@@ -1,16 +1,16 @@
 """
 Core classes for OpenFF Units
 """
-
 import uuid
 import warnings
-from typing import TYPE_CHECKING, TypeVar
+from typing import TYPE_CHECKING
 
 import pint
 from openff.utilities import requires_package
-from pint.measurement import _Measurement
-from pint.quantity import _Quantity
-from pint.unit import _Unit
+from pint import Measurement as _Measurement
+from pint import Quantity as _Quantity
+from pint import Unit as _Unit
+from pint import UnitRegistry as _UnitRegistry
 
 from openff.units.utilities import get_defaults_path
 
@@ -24,44 +24,15 @@ __all__ = [
     "Unit",
 ]
 
-DEFAULT_UNIT_REGISTRY = pint.UnitRegistry(get_defaults_path())
-"""The default unit registry provided by OpenFF Units"""
-
-
-def _unpickle_quantity(cls, *args):
-    """Rebuild quantity upon unpickling using the application registry."""
-    return pint._unpickle(DEFAULT_UNIT_REGISTRY.Quantity, *args)
-
-
-def _unpickle_unit(cls, *args):
-    """Rebuild unit upon unpickling using the application registry."""
-    return pint._unpickle(DEFAULT_UNIT_REGISTRY.Unit, *args)
-
-
-def _unpickle_measurement(cls, *args):
-    """Rebuild measurement upon unpickling using the application registry."""
-    return pint._unpickle(DEFAULT_UNIT_REGISTRY.Measurement, *args)
-
 
 class Unit(_Unit):
     """A unit of measure."""
 
-    _REGISTRY = DEFAULT_UNIT_REGISTRY
-
-    def __reduce__(self):
-        return _unpickle_unit, (Unit, self._units)
+    pass
 
 
-_MagnitudeType = TypeVar("_MagnitudeType")
-
-
-class Quantity(_Quantity[_MagnitudeType]):
+class Quantity(_Quantity):
     """A value with associated units."""
-
-    _REGISTRY = DEFAULT_UNIT_REGISTRY
-
-    def __reduce__(self):
-        return _unpickle_quantity, (Quantity, self.magnitude, self._units)
 
     def __dask_tokenize__(self):
         return uuid.uuid4().hex
@@ -88,11 +59,6 @@ class Quantity(_Quantity[_MagnitudeType]):
 class Measurement(_Measurement):
     """A value with associated units and uncertainty."""
 
-    _REGISTRY = DEFAULT_UNIT_REGISTRY
-
-    def __reduce__(self):
-        return _unpickle_measurement, (Measurement, self.magnitude, self._units)
-
     def __dask_tokenize__(self):
         return uuid.uuid4().hex
 
@@ -102,9 +68,17 @@ class Measurement(_Measurement):
         return Measurement(values, units)
 
 
-DEFAULT_UNIT_REGISTRY.Unit = Unit
-DEFAULT_UNIT_REGISTRY.Quantity = Quantity
-DEFAULT_UNIT_REGISTRY.Measurement = Measurement
+class UnitRegistry(_UnitRegistry):
+    _quantity_class = Quantity
+    _unit_class = Unit
+    _measurement_class = Measurement
+
+
+DEFAULT_UNIT_REGISTRY = UnitRegistry(get_defaults_path())
+
+Unit: _Unit = DEFAULT_UNIT_REGISTRY.Unit  # type: ignore[no-redef]
+Quantity: _Quantity = DEFAULT_UNIT_REGISTRY.Quantity  # type: ignore[no-redef]
+Measurement: _Measurement = DEFAULT_UNIT_REGISTRY.Measurement  # type: ignore[no-redef]
 
 pint.set_application_registry(DEFAULT_UNIT_REGISTRY)
 
