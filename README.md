@@ -113,6 +113,23 @@ array([[-7.8900e-02, -1.9800e-02, -0.0000e+00],
 >>> type(converted.m)
 <class 'numpy.ndarray'>
 ```
+#### Dealing with multiple unit packages
+
+You may find yourself needing to deal with `openff.units` and `openmm.unit` at the same time, i.e. preparing OpenMM simulations alongside other OpenFF tools. The above conversions offer one solution, but there is an alternative in the `ensure_quantity` function. It takes two arguments - a quantity object _that can be from either unit solution_ and a string (`"openff"` or `"openmm"`) indicating which unit solution it should convert it to - and it returns a quantity that is ensured to be in that registry. (If the quantity argument is already the requested type, the funciton short-circuits, so it should not generally introduce overhead.)
+
+```python3
+>>> from openff.units import unit, ensure_quantity
+>>> ensure_quantity(unit.Quantity(4.0, unit.angstrom), "openff")
+<Quantity(4.0, 'angstrom')>  # OpenFF
+>>> ensure_quantity(unit.Quantity(4.0, unit.angstrom), "openmm")
+Quantity(value=4.0, unit=angstrom)  # OpenMM
+>>>
+>>> import openmm.unit
+>>> ensure_quantity(openmm.unit.Quantity(4.0, openmm.unit.angstrom), "openmm")
+Quantity(value=4.0, unit=angstrom)  # OpenMM
+>>> ensure_quantity(openmm.unit.Quantity(4.0, openmm.unit.angstrom), "openff")
+<Quantity(4.0, 'angstrom')>  # OpenFF
+```
 
 ### Copyright
 
