@@ -113,6 +113,25 @@ array([[-7.8900e-02, -1.9800e-02, -0.0000e+00],
 >>> type(converted.m)
 <class 'numpy.ndarray'>
 ```
+#### Dealing with multiple unit packages
+
+You may find yourself needing to normalize a quantity to a particular unit package, while accepting inputs from either `openff.units` or `openmm.unit`. The [`ensure_quantity`] function simplifies this. It takes as arguments a quantity object from either unit solution and a string (`"openff"` or `"openmm"`) indicating the desired unit type, and returns a quantity from that package. If the quantity argument is already the requested type, the function short-circuits, so it should not introduce substantial overhead compared to simply requiring the target quantity type.
+
+[`ensure_quantity`]: https://docs.openforcefield.org/projects/units/en/stable/api/generated/openff.units.ensure_quantity.html
+
+```python3
+>>> from openff.units import unit, ensure_quantity
+>>> ensure_quantity(unit.Quantity(4.0, unit.angstrom), "openff")
+<Quantity(4.0, 'angstrom')>  # OpenFF
+>>> ensure_quantity(unit.Quantity(4.0, unit.angstrom), "openmm")
+Quantity(value=4.0, unit=angstrom)  # OpenMM
+>>>
+>>> import openmm.unit
+>>> ensure_quantity(openmm.unit.Quantity(4.0, openmm.unit.angstrom), "openmm")
+Quantity(value=4.0, unit=angstrom)  # OpenMM
+>>> ensure_quantity(openmm.unit.Quantity(4.0, openmm.unit.angstrom), "openff")
+<Quantity(4.0, 'angstrom')>  # OpenFF
+```
 
 ### Copyright
 
