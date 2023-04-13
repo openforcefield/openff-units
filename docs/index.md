@@ -24,7 +24,7 @@ conda install -c conda-forge openff-units
 
 [Conda]: https://conda.io
 [Mamba]: https://mamba.readthedocs.io
-[ecosystem install docs]: openff.docs:installation
+[OpenFF install docs]: openff.docs:install
 [MambaForge]: https://github.com/conda-forge/miniforge#mambaforge
 
 ## Using OpenFF Units
