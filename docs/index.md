@@ -152,6 +152,12 @@ Quantity(value=10.0, unit=angstrom)
 
 For more details, see the [API reference].
 
+## Current development
+
+### Behavior changes
+
+* #62 Drops support for Python 3.8, following [NEP 29](https://numpy.org/neps/nep-0029-deprecation_policy.html#support-table).
+
 [`.to()`]: openff.units.Quantity.to
 [`.ito()`]: openff.units.Quantity.ito
 [`.m`]: openff.units.Quantity.m
