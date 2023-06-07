@@ -16,4 +16,4 @@ dependencies:
   - uncertainties
 
     # Typing
-  - mypy =1.1  # https://github.com/hgrecco/pint/issues/1767
+  - mypy  # https://github.com/hgrecco/pint/issues/1767

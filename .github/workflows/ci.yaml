@@ -70,7 +70,8 @@ jobs:
         python setup.py develop --no-deps
 
     - name: Run mypy
-      if: ${{ matrix.python-version == 3.9 }}
+      # https://github.com/hgrecco/pint/issues/1767
+      if: ${{ matrix.python-version == 'false' }}
       run: |
         mypy -p "openff.units"
 
