@@ -22,6 +22,7 @@ jobs:
         os: [macOS-latest, ubuntu-latest]
         openmm: ["true", "false"]
         python-version: ["3.9", "3.10", "3.11"]
+        pint-version: ["0.21", "0.22"]
 
     env:
       CI_OS: ${{ matrix.os }}
@@ -38,6 +39,7 @@ jobs:
         environment-file: devtools/conda-envs/test_env.yaml
         create-args: >-
           python=${{ matrix.python-version }}
+          pint=${{ matrix.pint-version }}
 
     - name: Optionally install OpenMM
       if: ${{ matrix.openmm == 'true' }}

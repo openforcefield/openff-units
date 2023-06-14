@@ -37,7 +37,8 @@ __all__ = [
 ]
 
 MASSES: Dict[int, Quantity] = {
-    index + 1: Quantity(mass, unit.dalton)
+    # https://github.com/hgrecco/pint/issues/1804
+    index + 1: Quantity(mass, unit.dalton)  # type: ignore[call-overload]
     for index, mass in enumerate(
         [
             1.007947,
