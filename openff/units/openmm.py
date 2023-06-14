@@ -264,7 +264,8 @@ def _ensure_openff_quantity(
             )
     else:
         try:
-            return unit.Quantity(
+            # https://github.com/hgrecco/pint/issues/1804
+            return unit.Quantity(  # type: ignore[call-overload]
                 unknown_quantity,
                 unit.dimensionless,
             )
