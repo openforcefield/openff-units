@@ -3,7 +3,7 @@ Core classes for OpenFF Units
 """
 import uuid
 import warnings
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Type
 
 import pint
 from openff.utilities import requires_package
@@ -76,9 +76,9 @@ class UnitRegistry(pint.UnitRegistry):
 
 DEFAULT_UNIT_REGISTRY = UnitRegistry(get_defaults_path())
 
-Unit: _Unit = DEFAULT_UNIT_REGISTRY.Unit  # type: ignore[no-redef]
-Quantity: _Quantity = DEFAULT_UNIT_REGISTRY.Quantity  # type: ignore[no-redef]
-Measurement: _Measurement = DEFAULT_UNIT_REGISTRY.Measurement  # type: ignore
+Unit: Type[_Unit] = DEFAULT_UNIT_REGISTRY.Unit
+Quantity: Type[_Quantity] = DEFAULT_UNIT_REGISTRY.Quantity
+Measurement: Type[_Measurement] = DEFAULT_UNIT_REGISTRY.Measurement
 
 pint.set_application_registry(DEFAULT_UNIT_REGISTRY)
 
