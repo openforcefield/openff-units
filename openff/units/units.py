@@ -85,5 +85,3 @@ pint.set_application_registry(DEFAULT_UNIT_REGISTRY)
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     Quantity([])
-
-q = Quantity(3, None)
