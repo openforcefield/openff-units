@@ -4,10 +4,10 @@ Core classes for OpenFF Units
 import uuid
 import warnings
 from typing import TYPE_CHECKING, Type
-from typing_extensions import TypeAlias
 
 import pint
 from openff.utilities import requires_package
+from typing_extensions import TypeAlias
 
 from openff.units.utilities import get_defaults_path
 
