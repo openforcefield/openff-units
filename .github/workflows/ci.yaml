@@ -21,7 +21,7 @@ jobs:
       matrix:
         os: [macOS-latest, ubuntu-latest]
         openmm: ["true", "false"]
-        python-version: ["3.9", "3.10", "3.11"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
         pint-version: ["0.21", "0.22"]
 
     env:
@@ -44,7 +44,7 @@ jobs:
     - name: Optionally install OpenMM
       if: ${{ matrix.openmm == 'true' }}
       run: |
-        micromamba install "openmm >=7.6" -c conda-forge -yq
+        micromamba install "openmm >=7.6" -c conda-forge/label/openmm_rc -c conda-forge -yq
 
     - name: Verify OpenMM is not installed when not expected
       if: ${{ matrix.openmm == 'false' }}
