@@ -34,8 +34,10 @@ from openff.units import Quantity, unit
 __all__ = [
     "MASSES",
     "SYMBOLS",
+    "NUMBERS",
 ]
 
+"""Mapping from atomic number to atomic mass"""
 MASSES: Dict[int, Quantity] = {
     # https://github.com/hgrecco/pint/issues/1804
     index + 1: Quantity(mass, unit.dalton)  # type: ignore[call-overload]
@@ -160,8 +162,8 @@ MASSES: Dict[int, Quantity] = {
         ]
     )
 }
-"""Mapping from atomic number to atomic mass"""
 
+"""Mapping from atomic number to element symbol"""
 SYMBOLS: Dict[int, str] = {
     index + 1: symbol
     for index, symbol in enumerate(
@@ -285,3 +287,6 @@ SYMBOLS: Dict[int, str] = {
         ]
     )
 }
+
+"""Mapping from element symbol to atomic number"""
+NUMBERS: dict[str, int] = {val: key for key, val in SYMBOLS.items()}
