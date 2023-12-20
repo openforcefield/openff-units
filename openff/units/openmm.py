@@ -5,6 +5,7 @@ import ast
 import operator as op
 from typing import TYPE_CHECKING, List, Literal, Union
 
+import pint
 from openff.utilities import has_package, requires_package
 
 from openff.units.exceptions import (
@@ -211,7 +212,7 @@ def to_openmm(quantity: Quantity) -> "openmm_unit.Quantity":
 
         return value * openmm_unit_
 
-    assert isinstance(quantity, Quantity)
+    assert isinstance(quantity, (Quantity, pint.Quantity)), type(quantity)
 
     try:
         return to_openmm_inner(quantity)
@@ -232,7 +233,7 @@ def _ensure_openmm_quantity(
             raise ValueError(
                 f"Failed to process input of type {type(unknown_quantity)}."
             )
-    elif isinstance(unknown_quantity, Quantity):
+    elif isinstance(unknown_quantity, (Quantity, pint.Quantity)):
         return to_openmm(unknown_quantity)
     else:
         from openmm import unit as openmm_unit
@@ -251,7 +252,7 @@ def _ensure_openmm_quantity(
 def _ensure_openff_quantity(
     unknown_quantity: Union[Quantity, "openmm_unit.Quantity"]
 ) -> Quantity:
-    if isinstance(unknown_quantity, Quantity):
+    if isinstance(unknown_quantity, (Quantity, pint.Quantity)):
         return unknown_quantity
     elif "openmm" in str(type(unknown_quantity)):
         from openmm import unit as openmm_unit

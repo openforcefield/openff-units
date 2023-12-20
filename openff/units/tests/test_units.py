@@ -3,7 +3,7 @@ import pickle
 import pytest
 from openff.utilities.testing import skip_if_missing
 
-from openff.units import unit
+from openff.units import Quantity, unit
 
 
 class TestQuantity:
@@ -15,7 +15,7 @@ class TestQuantity:
         """
         from openmm import unit as openmm_unit
 
-        quantity = unit.Quantity(0.5, "nanometer")
+        quantity = Quantity(0.5, "nanometer")
         converted = quantity.to_openmm()
 
         assert converted == openmm_unit.Quantity(0.5, openmm_unit.nanometer)
@@ -75,7 +75,7 @@ class TestCompChemUnits:
         ],
     )
     def test_parse_molar_units_string(self, shorthand_string, full_string):
-        assert unit.Quantity(shorthand_string) == unit.Quantity(full_string)
+        assert Quantity(shorthand_string) == Quantity(full_string)
 
     def test_timestep_creation(self):
         # basic sanity check, can I make the unit and does it serialize
