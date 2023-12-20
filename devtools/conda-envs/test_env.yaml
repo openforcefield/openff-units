@@ -1,7 +1,6 @@
 name: openff-units-test
 channels:
   - conda-forge
-  - defaults
 dependencies:
   - python
   - pip
@@ -12,8 +11,9 @@ dependencies:
     # Tests
   - pytest
   - pytest-cov
-  - codecov
+  - pytest-nauto
+  - pytest-randomly
   - uncertainties
 
     # Typing
-  - mypy  # https://github.com/hgrecco/pint/issues/1767
+  - mypy
