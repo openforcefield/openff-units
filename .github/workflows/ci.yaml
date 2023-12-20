@@ -61,13 +61,13 @@ jobs:
       if: ${{ matrix.python-version == 'false' }}
       run: mypy -p "openff.units"
 
-    - name: Run unit tests with OpenMM
-      if: ${{ matrix.openmm == 'true' }}
-      run: pytest $PYTEST_ARGS $COV openff/units/_tests/
+    - name: Run unit tests
+      run: |
+        if [[ ${{ matrix.openmm }} == false ]]; then
+          PYTEST_ARGS +=" --ignore=openff/units/_tests/test_openmm.py"
+        fi
 
-    - name: Run unit tests without OpenMM
-      if: ${{ matrix.openmm == 'false' }}
-      run: pytest $PYTEST_ARGS $COV openff/units/_tests/ --ignore=openff/units/_tests/test_openmm.py
+        pytest $PYTEST_ARGS $COV openff/units/_tests/
 
     - name: Run docexamples
       if: ${{ matrix.openmm == 'true' }}

@@ -11,7 +11,7 @@ dependencies:
     # Tests
   - pytest
   - pytest-cov
-  - pytest-nauto
+  - pytest-xdist
   - pytest-randomly
   - uncertainties
 
