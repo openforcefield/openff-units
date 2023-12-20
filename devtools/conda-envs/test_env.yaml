@@ -12,7 +12,8 @@ dependencies:
   - pytest
   - pytest-cov
   - pytest-xdist
+  - pytest-randomly
   - uncertainties
 
     # Typing
-  - mypy  # https://github.com/hgrecco/pint/issues/1767
+  - mypy

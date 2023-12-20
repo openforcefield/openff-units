@@ -43,41 +43,35 @@ jobs:
 
     - name: Optionally install OpenMM
       if: ${{ matrix.openmm == 'true' }}
-      run: |
-        micromamba install "openmm >=7.6" -c conda-forge/label/openmm_rc -c conda-forge -yq
+      run: micromamba install openmm -c conda-forge -yq
 
     - name: Verify OpenMM is not installed when not expected
       if: ${{ matrix.openmm == 'false' }}
       run: |
         # If the number of packages matching "*openmm*" is greater than zero
-        if [[ $(conda list | grep openmm | wc -l) -gt 0 ]]; then
-          conda list;
+        if [[ $(micromamba list | grep openmm | wc -l) -gt 0 ]]; then
+          micromamba list;
           exit 1;
         fi
 
     - name: Install package
-      run: |
-        python setup.py develop --no-deps
+      run: python -m pip install -e .
 
     - name: Run mypy
-      # https://github.com/hgrecco/pint/issues/1767
       if: ${{ matrix.python-version == 'false' }}
-      run: |
-        mypy -p "openff.units"
+      run: mypy -p "openff.units"
 
     - name: Run unit tests
-      if: ${{ matrix.openmm == 'true' }}
       run: |
         if [[ ${{ matrix.openmm }} == false ]]; then
-          PYTEST_ARGS +=" --ignore=openff/units/tests/test_openmm.py"
+          PYTEST_ARGS +=" --ignore=openff/units/_tests/test_openmm.py"
         fi
 
-        pytest $PYTEST_ARGS $COV openff/units/tests/
+        pytest $PYTEST_ARGS $COV openff/units/_tests/
 
     - name: Run docexamples
       if: ${{ matrix.openmm == 'true' }}
-      run: |
-        pytest --doctest-modules $PYTEST_ARGS $COV openff --ignore=openff/units/tests
+      run: pytest --doctest-modules $PYTEST_ARGS $COV openff --ignore=openff/units/_tests
 
     - name: Codecov
       uses: codecov/codecov-action@v3
