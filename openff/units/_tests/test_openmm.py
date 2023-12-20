@@ -50,6 +50,8 @@ else:
         dimensionless = 1
         second = 1
         kelvin = 1
+        kilogram = 1
+        ampere = 1
 
     openmm_quantitites = []
     pint_quantities = []
@@ -180,8 +182,6 @@ class TestOpenMMUnits:
 
 @skip_if_missing("openmm.unit")
 class TestEnsureType:
-    from openmm import unit as openmm_unit
-
     from openff.units import unit
 
     @pytest.mark.parametrize(
