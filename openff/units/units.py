@@ -49,7 +49,7 @@ class Quantity[float_or_array, unit](pydantic.BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-    def __init__(self, value, unit, *args, **kwargs):
+    def __init__(self, value, unit=None, *args, **kwargs):
         super().__init__(
             pint=pint.Quantity(value, unit),
             *args,
