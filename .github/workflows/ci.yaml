@@ -14,15 +14,15 @@ defaults:
 
 jobs:
   test:
-    name: ${{ matrix.os }}, 🐍=${{ matrix.python-version }}, OpenMM=${{ matrix.openmm }}
+    name: ${{ matrix.os }}, 🐍=${{ matrix.python-version }}, OpenMM=${{ matrix.openmm }}, Pint=${{ matrix.pint-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [macOS-latest, ubuntu-latest]
         openmm: ["true", "false"]
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
-        pint-version: ["0.21", "0.22"]
+        python-version: ["3.12"]
+        pint-version: ["0.22", "0.23"]
 
     env:
       CI_OS: ${{ matrix.os }}

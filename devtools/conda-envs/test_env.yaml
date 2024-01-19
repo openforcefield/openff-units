@@ -6,6 +6,7 @@ dependencies:
   - pip
   - numpy
   - pint
+  - pydantic
   - openff-utilities >=0.1.3
 
     # Tests
