@@ -29,6 +29,7 @@ __all__ = [
 class Unit(pint.UnitRegistry.Unit):
     """A unit of measure."""
 
+    # TODO: Make Unit.__mult__ return a Quantity, not a pint.Quantity
     pass
 
 
@@ -63,6 +64,8 @@ class Quantity[float_or_array, unit](pydantic.BaseModel):
     def __class_getitem__(cls, item: tuple):
         print(item)
         return super().__class_getitem__(item)
+
+    # TODO: Define __eq__ to make it quack like a pint.Quantity?
 
 
 @requires_package("openmm")
