@@ -27,6 +27,7 @@ consistent with recent IUPAC values [2].
     }
 
 """
+
 from typing import Dict
 
 from openff.units import Quantity, unit

@@ -1,6 +1,7 @@
 """
 Functions for converting between OpenFF and OpenMM units
 """
+
 import ast
 import operator as op
 from typing import TYPE_CHECKING, List, Literal, Union
