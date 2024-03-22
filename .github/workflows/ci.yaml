@@ -22,7 +22,7 @@ jobs:
         os: [macOS-latest, ubuntu-latest]
         openmm: ["true", "false"]
         python-version: ["3.9", "3.10", "3.11", "3.12"]
-        pint-version: ["0.21", "0.22"]
+        pint-version: ["0.21", "0.22", "0.23"]
 
     env:
       CI_OS: ${{ matrix.os }}
