@@ -4,13 +4,11 @@ Core classes for OpenFF Units
 
 import uuid
 import warnings
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Type
 
 import pint
 from openff.utilities import requires_package
-from pint import Measurement as _Measurement
-from pint import Quantity as _Quantity
-from pint import Unit as _Unit
+from typing_extensions import TypeAlias
 
 from openff.units.utilities import get_defaults_path
 
@@ -25,13 +23,13 @@ __all__ = [
 ]
 
 
-class Unit(pint.UnitRegistry.Unit):
+class _Unit(pint.UnitRegistry.Unit):
     """A unit of measure."""
 
     pass
 
 
-class Quantity(pint.UnitRegistry.Quantity):
+class _Quantity(pint.UnitRegistry.Quantity):
     """A value with associated units."""
 
     def __dask_tokenize__(self):
@@ -42,22 +40,21 @@ class Quantity(pint.UnitRegistry.Quantity):
         values = func(results, *args)
         return Quantity(values, units)
 
+    @requires_package("openmm")
+    def to_openmm(self) -> "OpenMMQuantity":
+        """Convert the quantity to an ``openmm.unit.Quantity``.
 
-@requires_package("openmm")
-def _to_openmm(self) -> "OpenMMQuantity":
-    """Convert the quantity to an ``openmm.unit.Quantity``.
+        Returns
+        -------
+        openmm_quantity : openmm.unit.quantity.Quantity
+            The OpenMM compatible quantity.
+        """
+        from openff.units.openmm import to_openmm
 
-    Returns
-    -------
-    openmm_quantity : openmm.unit.quantity.Quantity
-        The OpenMM compatible quantity.
-    """
-    from openff.units.openmm import to_openmm
-
-    return to_openmm(self)
+        return to_openmm(self)
 
 
-class Measurement(pint.UnitRegistry.Measurement):  # type: ignore
+class Measurement(pint.UnitRegistry.Measurement):
     """A value with associated units and uncertainty."""
 
     def __dask_tokenize__(self):
@@ -69,21 +66,22 @@ class Measurement(pint.UnitRegistry.Measurement):  # type: ignore
         return Measurement(values, units)
 
 
-class UnitRegistry(pint.UnitRegistry):
-    _quantity_class = Quantity
-    _unit_class = Unit
-    _measurement_class = Measurement
+class UnitRegistry(
+    pint.UnitRegistry,
+    pint.registry.GenericUnitRegistry[_Quantity, _Unit],
+):
+    Unit: TypeAlias = _Unit
+    Quantity: TypeAlias = _Quantity
+    Measurement: TypeAlias = Measurement
 
 
-DEFAULT_UNIT_REGISTRY = UnitRegistry(get_defaults_path())
+DEFAULT_UNIT_REGISTRY: UnitRegistry = UnitRegistry(get_defaults_path())
 
-Unit: _Unit = DEFAULT_UNIT_REGISTRY.Unit  # type: ignore[no-redef]
-Quantity: _Quantity = DEFAULT_UNIT_REGISTRY.Quantity  # type: ignore[no-redef]
-Measurement: _Measurement = DEFAULT_UNIT_REGISTRY.Measurement  # type: ignore
+Quantity = UnitRegistry.Quantity
+Unit = UnitRegistry.Unit
+Measurement = UnitRegistry.Measurement
 
 pint.set_application_registry(DEFAULT_UNIT_REGISTRY)
-
-Quantity.to_openmm = _to_openmm  # type: ignore[attr-defined]
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
