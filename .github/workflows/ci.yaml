@@ -27,7 +27,7 @@ jobs:
     env:
       CI_OS: ${{ matrix.os }}
       PYVER: ${{ matrix.python-version }}
-      PYTEST_ARGS: -v -nauto
+      PYTEST_ARGS: -v -n logical
       COV: --cov=openff/units --cov-report=xml --cov-config=setup.cfg --cov-append
 
     steps:
@@ -55,7 +55,7 @@ jobs:
         fi
 
     - name: Install package
-      run: python -m pip install -e .
+      run: python -m pip install -e . downstream_dummy/
 
     - name: Run mypy
       if: ${{ matrix.python-version == 'false' }}
@@ -68,6 +68,9 @@ jobs:
         fi
 
         pytest $PYTEST_ARGS $COV openff/units/_tests/
+
+    - name: Run dummy package tests
+      run: pytest $PYTEST_ARGS downstream_dummy/tests/
 
     - name: Run docexamples
       if: ${{ matrix.openmm == 'true' }}
