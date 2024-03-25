@@ -1,3 +1,5 @@
+from typing import Union
+
 import pytest
 from dummy import object_to_quantity
 
@@ -16,7 +18,7 @@ def test_function_can_be_defined():
     def dummy_function(
         unit: Unit,
         quantity: Quantity,
-        extra: Unit | Quantity | str | None = None,
+        extra: Union[Unit, Quantity, str, None] = None,
     ):
         return f"{unit} {quantity} {extra}"
 
