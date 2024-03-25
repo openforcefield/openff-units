@@ -22,12 +22,12 @@ jobs:
         os: [macOS-latest, ubuntu-latest]
         openmm: ["true", "false"]
         python-version: ["3.9", "3.10", "3.11", "3.12"]
-        pint-version: ["0.21", "0.22"]
+        pint-version: ["0.21", "0.22", "0.23"]
 
     env:
       CI_OS: ${{ matrix.os }}
       PYVER: ${{ matrix.python-version }}
-      PYTEST_ARGS: -v -nauto
+      PYTEST_ARGS: -v -n logical
       COV: --cov=openff/units --cov-report=xml --cov-config=setup.cfg --cov-append
 
     steps:
@@ -55,7 +55,7 @@ jobs:
         fi
 
     - name: Install package
-      run: python -m pip install -e .
+      run: python -m pip install -e . downstream_dummy/
 
     - name: Run mypy
       if: ${{ matrix.python-version == 'false' }}
@@ -69,6 +69,9 @@ jobs:
 
         pytest $PYTEST_ARGS $COV openff/units/_tests/
 
+    - name: Run dummy package tests
+      run: pytest $PYTEST_ARGS downstream_dummy/tests/
+
     - name: Run docexamples
       if: ${{ matrix.openmm == 'true' }}
       run: pytest --doctest-modules $PYTEST_ARGS $COV openff --ignore=openff/units/_tests
@@ -76,5 +79,6 @@ jobs:
     - name: Codecov
       uses: codecov/codecov-action@v4
       with:
+        token: ${{ secrets.CODECOV_TOKEN }}
         file: ./coverage.xml
         fail_ci_if_error: false
