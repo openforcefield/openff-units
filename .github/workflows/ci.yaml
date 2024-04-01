@@ -74,9 +74,10 @@ jobs:
 
     - name: Run docexamples
       if: ${{ matrix.openmm == 'true' }}
-      run: pytest --doctest-modules $PYTEST_ARGS $COV openff --ignore=openff/units/_tests
+      run: pytest --doctest-modules $PYTEST_ARGS openff --ignore=openff/units/_tests
 
     - name: Codecov
+      if: ${{ matrix.openmm == 'true' }}
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
