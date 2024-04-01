@@ -57,10 +57,6 @@ jobs:
     - name: Install package
       run: python -m pip install -e . downstream_dummy/
 
-    - name: Run mypy
-      if: ${{ matrix.python-version == '3.12' }}
-      run: mypy -p "openff.units"
-
     - name: Run unit tests
       run: |
         if [[ ${{ matrix.openmm }} == false ]]; then
@@ -71,6 +67,12 @@ jobs:
 
     - name: Run dummy package tests
       run: pytest $PYTEST_ARGS downstream_dummy/tests/
+
+    - name: Run mypy
+      if: ${{ matrix.python-version == '3.12' }}
+      run: |
+        mypy -p "openff.units"
+        mypy downstream_dummy/
 
     - name: Run docexamples
       if: ${{ matrix.openmm == 'true' }}
