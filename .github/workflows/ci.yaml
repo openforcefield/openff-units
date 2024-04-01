@@ -55,7 +55,7 @@ jobs:
         fi
 
     - name: Install package
-      run: python -m pip install -e . downstream_dummy/
+      run: python -m pip install -e downstream_dummy/ .
 
     - name: Run unit tests
       run: |
@@ -70,9 +70,7 @@ jobs:
 
     - name: Run mypy
       if: ${{ matrix.python-version == '3.12' }}
-      run: |
-        mypy -p "openff.units"
-        mypy downstream_dummy/
+      run: mypy -p "openff.units" && mypy downstream_dummy/ --exclude=downstream_dummy/build/
 
     - name: Run docexamples
       if: ${{ matrix.openmm == 'true' }}
