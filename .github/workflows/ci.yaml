@@ -21,7 +21,7 @@ jobs:
       matrix:
         os: [macOS-latest, ubuntu-latest]
         openmm: ["true", "false"]
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12"]
         pint-version: ["0.21", "0.22", "0.23"]
 
     env:
@@ -58,7 +58,7 @@ jobs:
       run: python -m pip install -e . downstream_dummy/
 
     - name: Run mypy
-      if: ${{ matrix.python-version == 'false' }}
+      if: ${{ matrix.python-version == '3.12' }}
       run: mypy -p "openff.units"
 
     - name: Run unit tests

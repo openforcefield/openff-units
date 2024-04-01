@@ -41,7 +41,7 @@ __all__ = [
 """Mapping from atomic number to atomic mass"""
 MASSES: Dict[int, Quantity] = {
     # https://github.com/hgrecco/pint/issues/1804
-    index + 1: Quantity(mass, unit.dalton)  # type: ignore[call-overload]
+    index + 1: Quantity(mass, unit.dalton)
     for index, mass in enumerate(
         [
             1.007947,
