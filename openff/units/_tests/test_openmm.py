@@ -232,8 +232,8 @@ class TestEnsureType:
             value = numpy.asarray(value)
 
         numpy.testing.assert_allclose(
-            ensure_quantity(value, "openff"),
-            unit.Quantity(value, unit.dimensionless),
+            ensure_quantity(value, "openff").m,
+            unit.Quantity(value, unit.dimensionless).m,
         )
 
         numpy.testing.assert_equal(

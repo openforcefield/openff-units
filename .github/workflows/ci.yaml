@@ -21,7 +21,7 @@ jobs:
       matrix:
         os: [macOS-latest, ubuntu-latest]
         openmm: ["true", "false"]
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12"]
         pint-version: ["0.21", "0.22", "0.23"]
 
     env:
@@ -55,11 +55,7 @@ jobs:
         fi
 
     - name: Install package
-      run: python -m pip install -e . downstream_dummy/
-
-    - name: Run mypy
-      if: ${{ matrix.python-version == 'false' }}
-      run: mypy -p "openff.units"
+      run: python -m pip install -e downstream_dummy/ .
 
     - name: Run unit tests
       run: |
@@ -72,11 +68,16 @@ jobs:
     - name: Run dummy package tests
       run: pytest $PYTEST_ARGS downstream_dummy/tests/
 
+    - name: Run mypy
+      if: ${{ matrix.python-version == '3.12' }}
+      run: mypy -p "openff.units" && mypy downstream_dummy/ --exclude=downstream_dummy/build/
+
     - name: Run docexamples
       if: ${{ matrix.openmm == 'true' }}
-      run: pytest --doctest-modules $PYTEST_ARGS $COV openff --ignore=openff/units/_tests
+      run: pytest --doctest-modules $PYTEST_ARGS openff --ignore=openff/units/_tests
 
     - name: Codecov
+      if: ${{ matrix.openmm == 'true' }}
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
