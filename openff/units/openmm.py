@@ -4,7 +4,7 @@ Functions for converting between OpenFF and OpenMM units
 
 import ast
 import operator as op
-from typing import TYPE_CHECKING, Any, Literal
+from typing import Literal
 
 from openff.utilities import has_package, requires_package
 
@@ -23,14 +23,15 @@ __all__ = [
     "ensure_quantity",
 ]
 
-if has_package("openmm.unit") or TYPE_CHECKING:
+if has_package("openmm.unit"):
     import openmm.unit
 
     # Needed to make mypy happy
     from openmm.unit import Quantity as OpenMMQuantity
 
+    EitherQuantity = Quantity | OpenMMQuantity
 else:
-    OpenMMQuantity = Any
+    EitherQuantity = Quantity  # type: ignore[misc]
 
 
 @requires_package("openmm.unit")
@@ -227,7 +228,7 @@ def to_openmm(quantity: Quantity) -> "openmm.unit.Quantity":
 
 @requires_package("openmm.unit")
 def _ensure_openmm_quantity(
-    unknown_quantity: Quantity | OpenMMQuantity,
+    unknown_quantity: EitherQuantity,
 ) -> "openmm.unit.Quantity":
     if "openmm" in str(type(unknown_quantity)):
         from openmm import unit as openmm_unit
@@ -255,7 +256,7 @@ def _ensure_openmm_quantity(
 
 
 def _ensure_openff_quantity(
-    unknown_quantity: Quantity | OpenMMQuantity,
+    unknown_quantity: EitherQuantity,
 ) -> Quantity:
     if isinstance(unknown_quantity, Quantity):
         return unknown_quantity
@@ -281,9 +282,9 @@ def _ensure_openff_quantity(
 
 
 def ensure_quantity(
-    unknown_quantity: Quantity | OpenMMQuantity,
+    unknown_quantity: EitherQuantity,
     type_to_ensure: Literal["openmm", "openff"],
-) -> Quantity | OpenMMQuantity:
+) -> EitherQuantity:
     """
     Given a quantity that could be of a variety of types, attempt to coerce into a given type.
 
