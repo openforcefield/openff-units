@@ -180,7 +180,7 @@ def from_openmm(openmm_quantity: "openmm.unit.Quantity") -> Quantity:
 
 
 @requires_package("openmm.unit")
-def to_openmm(quantity: Quantity) -> openmm.unit.Quantity:
+def to_openmm(quantity: Quantity) -> "openmm.unit.Quantity":
     """Convert an OpenFF ``Quantity`` to an OpenMM ``Quantity``
 
     :class:`openmm.unit.quantity.Quantity` from OpenMM and
