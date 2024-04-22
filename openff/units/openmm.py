@@ -4,7 +4,7 @@ Functions for converting between OpenFF and OpenMM units
 
 import ast
 import operator as op
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 from openff.utilities import has_package, requires_package
 
@@ -28,6 +28,9 @@ if has_package("openmm.unit") or TYPE_CHECKING:
 
     # Needed to make mypy happy
     from openmm.unit import Quantity as OpenMMQuantity
+
+else:
+    OpenMMQuantity = Any
 
 
 @requires_package("openmm.unit")
