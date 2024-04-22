@@ -15,7 +15,7 @@ from pint import Unit as _Unit
 from openff.units.utilities import get_defaults_path
 
 if TYPE_CHECKING:
-    from openmm.unit import Quantity as OpenMMQuantity
+    import openmm.unit
 
 __all__ = [
     "DEFAULT_UNIT_REGISTRY",
@@ -44,7 +44,7 @@ class Quantity(pint.UnitRegistry.Quantity):
 
 
 @requires_package("openmm")
-def _to_openmm(self) -> "OpenMMQuantity":
+def _to_openmm(self) -> "openmm.unit.Quantity":
     """Convert the quantity to an ``openmm.unit.Quantity``.
 
     Returns

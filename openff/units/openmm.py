@@ -4,7 +4,7 @@ Functions for converting between OpenFF and OpenMM units
 
 import ast
 import operator as op
-from typing import TYPE_CHECKING, List, Literal, Union
+from typing import TYPE_CHECKING, Literal
 
 from openff.utilities import has_package, requires_package
 
@@ -25,11 +25,14 @@ __all__ = [
 ]
 
 if has_package("openmm.unit") or TYPE_CHECKING:
-    from openmm import unit as openmm_unit
+    import openmm.unit
+
+    # Needed to make mypy happy
+    from openmm.unit import Quantity as OpenMMQuantity
 
 
 @requires_package("openmm.unit")
-def openmm_unit_to_string(input_unit: "openmm_unit.Unit") -> str:
+def openmm_unit_to_string(input_unit: "openmm.unit.Unit") -> str:
     """
     Convert a openmm.unit.Unit to a string representation.
 
@@ -46,10 +49,10 @@ def openmm_unit_to_string(input_unit: "openmm_unit.Unit") -> str:
     if input_unit is None:
         raise NoneUnitError("Input is None, expected an (OpenMM) Unit object.")
 
-    if input_unit == openmm_unit.dimensionless:
+    if input_unit == openmm.unit.dimensionless:
         return "dimensionless"
 
-    if input_unit == openmm_unit.dalton:
+    if input_unit == openmm.unit.dalton:
         return "g/mol"
 
     # Decompose output_unit into a tuples of (base_dimension_unit, exponent)
@@ -60,13 +63,13 @@ def openmm_unit_to_string(input_unit: "openmm_unit.Unit") -> str:
         # Convert, for example "elementary charge" --> "elementary_charge"
         unit_component_name = unit_component_name.replace(" ", "_")
         if unit_component[1] == 1:
-            contribution = "{}".format(unit_component_name)
+            contribution = f"{unit_component_name}"
         else:
-            contribution = "{}**{}".format(unit_component_name, int(unit_component[1]))
+            contribution = f"{unit_component_name}**{int(unit_component[1])}"
         if unit_string == "":
             unit_string = contribution
         else:
-            unit_string += " * {}".format(contribution)
+            unit_string += f" * {contribution}"
 
     return unit_string
 
@@ -104,7 +107,7 @@ def _ast_eval(node):
     elif isinstance(node, ast.Name):
         # see if this is a openmm unit
         try:
-            b = getattr(openmm_unit, node.id)
+            b = getattr(openmm.unit, node.id)
         except AttributeError:
             raise MissingOpenMMUnitError(node.id)
         return b
@@ -115,7 +118,7 @@ def _ast_eval(node):
         raise TypeError(node)
 
 
-def string_to_openmm_unit(unit_string: str) -> "openmm_unit.Unit":
+def string_to_openmm_unit(unit_string: str) -> "openmm.unit.Unit":
     """
     Deserializes a openmm.unit.Quantity from a string representation, for
     example: "kilocalories_per_mole / angstrom ** 2"
@@ -137,14 +140,14 @@ def string_to_openmm_unit(unit_string: str) -> "openmm_unit.Unit":
         if the unit is unavailable in OpenMM.
     """
     if unit_string == "standard_atmosphere":
-        return openmm_unit.atmosphere
+        return openmm.unit.atmosphere
 
     output_unit = _ast_eval(ast.parse(unit_string, mode="eval").body)
     return output_unit
 
 
 @requires_package("openmm.unit")
-def from_openmm(openmm_quantity: "openmm_unit.Quantity") -> Quantity:
+def from_openmm(openmm_quantity: "openmm.unit.Quantity") -> Quantity:
     """Convert an OpenMM ``Quantity`` to an OpenFF ``Quantity``
 
     :class:`openmm.unit.quantity.Quantity` from OpenMM and
@@ -166,8 +169,8 @@ def from_openmm(openmm_quantity: "openmm_unit.Quantity") -> Quantity:
     if openmm_quantity is None:
         raise NoneQuantityError("Input is None, expected an (OpenMM) Quantity object.")
 
-    if isinstance(openmm_quantity, List):
-        openmm_quantity = openmm_unit.Quantity(openmm_quantity)
+    if isinstance(openmm_quantity, list):
+        openmm_quantity = openmm.unit.Quantity(openmm_quantity)
     openmm_unit_ = openmm_quantity.unit
     openmm_value = openmm_quantity.value_in_unit(openmm_unit_)
 
@@ -178,7 +181,7 @@ def from_openmm(openmm_quantity: "openmm_unit.Quantity") -> Quantity:
 
 
 @requires_package("openmm.unit")
-def to_openmm(quantity: Quantity) -> "openmm_unit.Quantity":
+def to_openmm(quantity: Quantity) -> openmm.unit.Quantity:
     """Convert an OpenFF ``Quantity`` to an OpenMM ``Quantity``
 
     :class:`openmm.unit.quantity.Quantity` from OpenMM and
@@ -204,7 +207,7 @@ def to_openmm(quantity: Quantity) -> "openmm_unit.Quantity":
     if quantity is None:
         raise NoneQuantityError("Input is None, expected an (OpenFF) Quantity object.")
 
-    def to_openmm_inner(quantity) -> "openmm_unit.Quantity":
+    def to_openmm_inner(quantity) -> "openmm.unit.Quantity":
         value = quantity.m
 
         unit_string = str(quantity.units._units)
@@ -222,8 +225,8 @@ def to_openmm(quantity: Quantity) -> "openmm_unit.Quantity":
 
 @requires_package("openmm.unit")
 def _ensure_openmm_quantity(
-    unknown_quantity: Union[Quantity, "openmm_unit.Quantity"]
-) -> "openmm_unit.Quantity":
+    unknown_quantity: Quantity | OpenMMQuantity,
+) -> "openmm.unit.Quantity":
     if "openmm" in str(type(unknown_quantity)):
         from openmm import unit as openmm_unit
 
@@ -236,12 +239,12 @@ def _ensure_openmm_quantity(
     elif isinstance(unknown_quantity, Quantity):
         return to_openmm(unknown_quantity)
     else:
-        from openmm import unit as openmm_unit
+        import openmm.unit
 
         try:
-            return openmm_unit.Quantity(
+            return openmm.unit.Quantity(
                 unknown_quantity,
-                openmm_unit.dimensionless,
+                openmm.unit.dimensionless,
             )
         except Exception as e:
             raise ValueError(
@@ -250,14 +253,14 @@ def _ensure_openmm_quantity(
 
 
 def _ensure_openff_quantity(
-    unknown_quantity: Union[Quantity, "openmm_unit.Quantity"]
+    unknown_quantity: Quantity | OpenMMQuantity,
 ) -> Quantity:
     if isinstance(unknown_quantity, Quantity):
         return unknown_quantity
     elif "openmm" in str(type(unknown_quantity)):
-        from openmm import unit as openmm_unit
+        import openmm.unit
 
-        if isinstance(unknown_quantity, openmm_unit.Quantity):
+        if isinstance(unknown_quantity, openmm.unit.Quantity):
             return from_openmm(unknown_quantity)
         else:
             raise ValueError(
@@ -266,7 +269,7 @@ def _ensure_openff_quantity(
     else:
         try:
             # https://github.com/hgrecco/pint/issues/1804
-            return unit.Quantity(  # type: ignore[call-overload]
+            return Quantity(  # type: ignore[call-overload]
                 unknown_quantity,
                 unit.dimensionless,
             )
@@ -277,9 +280,9 @@ def _ensure_openff_quantity(
 
 
 def ensure_quantity(
-    unknown_quantity: Union[Quantity, "openmm_unit.Quantity"],
+    unknown_quantity: Quantity | OpenMMQuantity,
     type_to_ensure: Literal["openmm", "openff"],
-) -> Union[Quantity, "openmm_unit.Quantity"]:
+) -> Quantity | OpenMMQuantity:
     """
     Given a quantity that could be of a variety of types, attempt to coerce into a given type.
 

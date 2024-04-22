@@ -3,12 +3,12 @@ See openff/toolkit/utils/utils.py
 """
 
 import functools
-from typing import Iterable, Union
+from collections.abc import Iterable
 
 from openff.units import Quantity, unit
 
 
-def string_to_quantity(quantity_string) -> Union[str, int, float, Quantity]:
+def string_to_quantity(quantity_string) -> str | int | float | Quantity:
     """Attempt to parse a string into a unit.Quantity.
 
     Note that dimensionless floats and ints are returns as floats or ints, not Quantity objects.

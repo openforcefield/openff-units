@@ -2,7 +2,7 @@ import pytest
 from openff.utilities.testing import skip_if_missing
 from openff.utilities.utilities import has_package
 
-from openff.units import unit
+from openff.units import Quantity, unit
 from openff.units.exceptions import NoneQuantityError, NoneUnitError
 from openff.units.openmm import ensure_quantity, from_openmm
 
@@ -232,8 +232,8 @@ class TestEnsureType:
             value = numpy.asarray(value)
 
         numpy.testing.assert_allclose(
-            ensure_quantity(value, "openff"),
-            unit.Quantity(value, unit.dimensionless),
+            ensure_quantity(value, "openff").m,
+            Quantity(value, unit.dimensionless).m,
         )
 
         numpy.testing.assert_equal(
