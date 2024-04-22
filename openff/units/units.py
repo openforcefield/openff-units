@@ -57,7 +57,7 @@ def _to_openmm(self) -> "openmm.unit.Quantity":
     return to_openmm(self)
 
 
-class Measurement(pint.UnitRegistry.Measurement):  # type: ignore
+class Measurement(pint.UnitRegistry.Measurement):
     """A value with associated units and uncertainty."""
 
     def __dask_tokenize__(self):
@@ -77,9 +77,9 @@ class UnitRegistry(pint.UnitRegistry):
 
 DEFAULT_UNIT_REGISTRY = UnitRegistry(get_defaults_path())
 
-Unit: _Unit = DEFAULT_UNIT_REGISTRY.Unit  # type: ignore[no-redef]
-Quantity: _Quantity = DEFAULT_UNIT_REGISTRY.Quantity  # type: ignore[no-redef]
-Measurement: _Measurement = DEFAULT_UNIT_REGISTRY.Measurement  # type: ignore
+Unit: _Unit = DEFAULT_UNIT_REGISTRY.Unit
+Quantity: _Quantity = DEFAULT_UNIT_REGISTRY.Quantity
+Measurement: _Measurement = DEFAULT_UNIT_REGISTRY.Measurement
 
 pint.set_application_registry(DEFAULT_UNIT_REGISTRY)
 

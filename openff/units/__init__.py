@@ -1,6 +1,6 @@
-from openff.units._version import get_versions  # type: ignore
+from openff.units._version import get_versions
 from openff.units.openmm import ensure_quantity
-from openff.units.units import (
+from openff.units.units import (  # type: ignore[attr-defined]
     DEFAULT_UNIT_REGISTRY,
     Measurement,
     Quantity,

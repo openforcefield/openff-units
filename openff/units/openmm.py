@@ -13,8 +13,7 @@ from openff.units.exceptions import (
     NoneQuantityError,
     NoneUnitError,
 )
-from openff.units.units import DEFAULT_UNIT_REGISTRY as unit
-from openff.units.units import Quantity
+from openff.units.units import Quantity, Unit
 
 __all__ = [
     "from_openmm",
@@ -98,8 +97,8 @@ def _ast_eval(node):
         ast.USub: op.neg,
     }
 
-    if isinstance(node, ast.Num):  # <number>
-        return node.n
+    if isinstance(node, ast.Constant):  # <number>
+        return node.value
     elif isinstance(node, ast.BinOp):  # <left> <operator> <right>
         return operators[type(node.op)](_ast_eval(node.left), _ast_eval(node.right))
     elif isinstance(node, ast.UnaryOp):  # <operator> <operand> e.g., -1
@@ -175,7 +174,7 @@ def from_openmm(openmm_quantity: "openmm.unit.Quantity") -> Quantity:
     openmm_value = openmm_quantity.value_in_unit(openmm_unit_)
 
     target_unit = openmm_unit_to_string(openmm_unit_)
-    target_unit = unit.Unit(target_unit)
+    target_unit = Unit(target_unit)
 
     return openmm_value * target_unit
 
@@ -268,10 +267,9 @@ def _ensure_openff_quantity(
             )
     else:
         try:
-            # https://github.com/hgrecco/pint/issues/1804
-            return Quantity(  # type: ignore[call-overload]
+            return Quantity(
                 unknown_quantity,
-                unit.dimensionless,
+                "dimensionless",
             )
         except Exception as e:
             raise ValueError(
