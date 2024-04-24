@@ -60,13 +60,13 @@ jobs:
     - name: Run unit tests
       run: |
         if [[ ${{ matrix.openmm }} == false ]]; then
-          PYTEST_ARGS +=" --ignore=openff/units/_tests/test_openmm.py"
+          PYTEST_ARGS+=" --ignore=openff/units/_tests/test_openmm.py"
         fi
 
-        pytest $PYTEST_ARGS $COV openff/units/_tests/
+        python -m pytest $PYTEST_ARGS $COV openff/units/_tests/
 
     - name: Run dummy package tests
-      run: pytest $PYTEST_ARGS downstream_dummy/tests/
+      run: python -m pytest $PYTEST_ARGS downstream_dummy/tests/
 
     - name: Run mypy
       if: ${{ matrix.python-version == '3.12' && matrix.openmm == 'true' }}
