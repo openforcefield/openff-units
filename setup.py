@@ -14,7 +14,7 @@ short_description = __doc__.split("\n")
 needs_pytest = {"pytest", "test", "ptr"}.intersection(sys.argv)
 pytest_runner = ["pytest-runner"] if needs_pytest else []
 
-long_description = open("README.md", "r").read()
+long_description = open("README.md").read()
 
 
 setup(
