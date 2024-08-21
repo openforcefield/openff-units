@@ -53,7 +53,7 @@ second = [time] = s = sec
 ampere = [current] = A = amp
 gram = [mass] = g
 mole = [substance] = mol
-kelvin = [temperature]; offset: 0 = K = degK = °K = degree_Kelvin = degreeK  # older names supported for compatibility
+kelvin = [temperature]; offset: 0 = K = degK = °K = degree_Kelvin = degreeK = Kelvin
 radian = [] = rad
 bit = []
 count = []
