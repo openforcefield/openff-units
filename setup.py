@@ -1,18 +1,13 @@
 """
-openff-toolkit
+openff-units
 A common units module for the OpenFF software stack
 """
-
-import sys
 
 from setuptools import find_namespace_packages, setup
 
 import versioneer
 
 short_description = __doc__.split("\n")
-
-needs_pytest = {"pytest", "test", "ptr"}.intersection(sys.argv)
-pytest_runner = ["pytest-runner"] if needs_pytest else []
 
 long_description = open("README.md").read()
 
@@ -30,5 +25,5 @@ setup(
     packages=find_namespace_packages(include=["openff.*"]),
     package_data={"openff.units": ["py.typed"]},
     include_package_data=True,
-    setup_requires=[] + pytest_runner,
+    setup_requires=[],
 )
