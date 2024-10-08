@@ -114,7 +114,8 @@ def _ast_eval(node):
         except AttributeError:
             raise MissingOpenMMUnitError(node.id)
         return b
-    # TODO: This toolkit code that had a hack to cover some edge behavior; not clear which tests trigger it
+    # TODO: This toolkit code that had a hack to cover some edge behavior
+    #       not clear which tests trigger it
     elif isinstance(node, ast.List):
         return ast.literal_eval(node)
     else:
@@ -236,9 +237,7 @@ def _ensure_openmm_quantity(
         if isinstance(unknown_quantity, openmm_unit.Quantity):
             return unknown_quantity
         else:
-            raise ValueError(
-                f"Failed to process input of type {type(unknown_quantity)}."
-            )
+            raise ValueError(f"Failed to process input of type {type(unknown_quantity)}.")
     elif isinstance(unknown_quantity, Quantity):
         return to_openmm(unknown_quantity)
     else:
@@ -250,9 +249,7 @@ def _ensure_openmm_quantity(
                 openmm.unit.dimensionless,
             )
         except Exception as e:
-            raise ValueError(
-                f"Failed to process input of type {type(unknown_quantity)}."
-            ) from e
+            raise ValueError(f"Failed to process input of type {type(unknown_quantity)}.") from e
 
 
 def _ensure_openff_quantity(
@@ -266,9 +263,7 @@ def _ensure_openff_quantity(
         if isinstance(unknown_quantity, openmm.unit.Quantity):
             return from_openmm(unknown_quantity)
         else:
-            raise ValueError(
-                f"Failed to process input of type {type(unknown_quantity)}."
-            )
+            raise ValueError(f"Failed to process input of type {type(unknown_quantity)}.")
     else:
         try:
             return Quantity(
@@ -276,9 +271,7 @@ def _ensure_openff_quantity(
                 "dimensionless",
             )
         except Exception as e:
-            raise ValueError(
-                f"Failed to process input of type {type(unknown_quantity)}."
-            ) from e
+            raise ValueError(f"Failed to process input of type {type(unknown_quantity)}.") from e
 
 
 def ensure_quantity(
@@ -318,6 +311,6 @@ def ensure_quantity(
         return _ensure_openff_quantity(unknown_quantity)
     else:
         raise ValueError(
-            f"Unsupported `type_to_ensure` found. Given {type_to_ensure}, "
-            "expected 'openff' or 'openmm'."
+            f"Unsupported `type_to_ensure` found. Given {type_to_ensure}, expected 'openff' or "
+            "'openmm'."
         )

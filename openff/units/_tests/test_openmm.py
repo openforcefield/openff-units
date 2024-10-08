@@ -174,9 +174,7 @@ class TestOpenMMUnits:
 
         assert abs(converted - to_openmm_quantity) < (
             # Multiply by dimensionless to ensure result is an openmm quantity
-            1.0e-6
-            * to_openmm_quantity
-            * openmm_unit.dimensionless
+            1.0e-6 * to_openmm_quantity * openmm_unit.dimensionless
         )
 
 
@@ -215,9 +213,7 @@ class TestEnsureType:
         ],
     )
     def test_primitives(self, value):
-        assert ensure_quantity(value, "openff") == unit.Quantity(
-            value, unit.dimensionless
-        )
+        assert ensure_quantity(value, "openff") == unit.Quantity(value, unit.dimensionless)
         assert ensure_quantity(value, "openmm") == openmm_unit.Quantity(
             value, openmm_unit.dimensionless
         )

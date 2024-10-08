@@ -1,0 +1,14 @@
+[tool.ruff]
+line-length = 99
+namespace-packages = ["openff/units/"]
+exclude = ["openff/units/_version.py", "versioneer.py"]
+
+[tool.ruff.lint]
+ignore = ["E721","D105","D107","D200","D203","D212"]
+select = ["F", "E", "W", "NPY", "UP", "RUF", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+"openff/units/**/__init__.py" = ["F401"]
+
+[tool.ruff.lint.isort]
+known-third-party = ["openff.utilities"]
