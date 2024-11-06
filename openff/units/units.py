@@ -17,13 +17,13 @@ from openff.units.utilities import get_defaults_path
 if TYPE_CHECKING:
     import openmm.unit
 
-__all__ = [
+__all__ = (
     "DEFAULT_UNIT_REGISTRY",
     "Quantity",
     "Measurement",
     "Unit",
     "unit",
-]
+)
 
 
 class Unit(pint.UnitRegistry.Unit):

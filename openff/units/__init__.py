@@ -16,7 +16,13 @@ from openff.units._version import get_versions
 if TYPE_CHECKING:
     # Type checkers can't see lazy-imported objects
     from openff.units.openmm import ensure_quantity
-    from openff.units.units import DEFAULT_UNIT_REGISTRY, Measurement, Quantity, Unit, UnitRegistry
+    from openff.units.units import (  # type: ignore[attr-defined]
+        DEFAULT_UNIT_REGISTRY,
+        Measurement,
+        Quantity,
+        Unit,
+        UnitRegistry,
+    )
 
 
 versions = get_versions()

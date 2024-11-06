@@ -70,7 +70,7 @@ jobs:
 
     - name: Run mypy
       if: ${{ matrix.python-version == '3.12' && matrix.openmm == 'true' }}
-      run: mypy -p "openff.units" && mypy downstream_dummy/ --exclude=downstream_dummy/build/
+      run: python -m mypy -p "openff.units" && python -m mypy downstream_dummy/ --exclude=downstream_dummy/build/
 
     - name: Run docexamples
       if: ${{ matrix.openmm == 'true' }}

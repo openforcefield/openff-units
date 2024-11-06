@@ -26,12 +26,9 @@ __all__ = [
 if has_package("openmm.unit"):
     import openmm.unit
 
-    # Needed to make mypy happy
-    from openmm.unit import Quantity as OpenMMQuantity
-
-    EitherQuantity = Quantity | OpenMMQuantity
+    EitherQuantity = Quantity | openmm.unit.Quantity
 else:
-    EitherQuantity = Quantity  # type: ignore[misc]
+    EitherQuantity = Quantity  # type: ignore
 
 
 @requires_package("openmm.unit")
