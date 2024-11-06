@@ -22,6 +22,7 @@ __all__ = [
     "Quantity",
     "Measurement",
     "Unit",
+    "unit",
 ]
 
 
@@ -76,6 +77,8 @@ class UnitRegistry(pint.UnitRegistry):
 
 
 DEFAULT_UNIT_REGISTRY = UnitRegistry(get_defaults_path())
+
+unit = DEFAULT_UNIT_REGISTRY
 
 Unit: _Unit = DEFAULT_UNIT_REGISTRY.Unit
 Quantity: _Quantity = DEFAULT_UNIT_REGISTRY.Quantity
