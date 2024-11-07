@@ -60,6 +60,9 @@ def __getattr__(name) -> ModuleType:
             return importlib.import_module(module).__dict__[name]
         except ImportError as error:
             raise ImportError from error
+        except KeyError:
+            # __dict__ may not be populated if that module uses PEP 562
+            return getattr(importlib.import_module(module), name)
 
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
