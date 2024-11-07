@@ -1,3 +1,18 @@
+[build-system]
+requires = [
+    "setuptools",
+    "versioningit",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name="openff-units"
+description = ""
+readme = "README.md"
+authors = [{name = "openff", email = "info@openforcefield.org"}]
+license = {text = "MIT"}
+dynamic = ["version"]
+
 [tool.ruff]
 line-length = 99
 namespace-packages = ["openff/units/"]
@@ -12,3 +27,16 @@ select = ["F", "E", "W", "NPY", "UP", "RUF", "I"]
 
 [tool.ruff.lint.isort]
 known-third-party = ["openff.utilities"]
+
+[tool.versioningit]
+default-version = "1+unknown"
+
+[tool.versioningit.format]
+distance = "{base_version}+{distance}.{vcs}{rev}"
+dirty = "{base_version}+{distance}.{vcs}{rev}.dirty"
+distance-dirty = "{base_version}+{distance}.{vcs}{rev}.dirty"
+
+[tool.versioningit.vcs]
+method = "git" 
+match = ["*"]
+default-tag = "0.0.0"
