@@ -1,3 +1,9 @@
+[tool.versioneer]
+VCS = "git"
+versionfile_source = "openff/units/_version.py"
+versionfile_build = "openff/units/_version.py"
+tag_prefix = ""
+
 [tool.ruff]
 line-length = 99
 namespace-packages = ["openff/units/"]
@@ -12,3 +18,27 @@ select = ["F", "E", "W", "NPY", "UP", "RUF", "I"]
 
 [tool.ruff.lint.isort]
 known-third-party = ["openff.utilities"]
+
+[tool.coverage.run]
+omit = [
+    "*/*/_tests/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "@overload",
+]
+
+[tool.mypy]
+mypy_path = "stubs/"
+plugins = "numpy.typing.mypy_plugin"
+warn_unused_configs = true
+warn_unused_ignores = true
+warn_incomplete_stub = true
+show_error_codes = true
+
+[tool.pytest.ini_options]
+addopts = "--cov=openff/units --cov-report=xml"
