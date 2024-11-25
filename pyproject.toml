@@ -1,8 +1,22 @@
-[tool.versioneer]
-VCS = "git"
-versionfile_source = "openff/units/_version.py"
-versionfile_build = "openff/units/_version.py"
-tag_prefix = ""
+[build-system]
+requires = [
+    "setuptools",
+    "versioningit",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name="openff-units"
+description = "A common units module for the OpenFF software stack"
+readme = "README.md"
+authors = [{name = "Open Force Field Initiative", email = "info@openforcefield.org"}]
+license = {text = "MIT"}
+dynamic = ["version"]
+
+[tool.setuptools.packages]
+find = {}
+
+[tool.versioningit]
 
 [tool.ruff]
 line-length = 99
@@ -39,6 +53,10 @@ warn_unused_configs = true
 warn_unused_ignores = true
 warn_incomplete_stub = true
 show_error_codes = true
+exclude = [
+    "openff/units/_tests/",
+    "openff/units/data",
+]
 
 [tool.pytest.ini_options]
 addopts = "--cov=openff/units --cov-report=xml"

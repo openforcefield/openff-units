@@ -27,10 +27,12 @@ jobs:
       CI_OS: ${{ matrix.os }}
       PYVER: ${{ matrix.python-version }}
       PYTEST_ARGS: -v -n logical
-      COV: --cov=openff/units --cov-report=xml --cov-config=setup.cfg --cov-append
+      COV: --cov=openff/units --cov-report=xml --cov-append
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Install conda environment
       uses: mamba-org/setup-micromamba@v2

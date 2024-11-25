@@ -4,6 +4,8 @@ channels:
 dependencies:
   - python
   - pip
+  - versioningit
+
   - numpy
   - pint
   - openff-utilities >=0.1.3
