@@ -16,11 +16,11 @@ from openff.units.exceptions import (
 from openff.units.units import Quantity, Unit
 
 __all__ = [
+    "ensure_quantity",
     "from_openmm",
-    "to_openmm",
     "openmm_unit_to_string",
     "string_to_openmm_unit",
-    "ensure_quantity",
+    "to_openmm",
 ]
 
 if has_package("openmm.unit"):

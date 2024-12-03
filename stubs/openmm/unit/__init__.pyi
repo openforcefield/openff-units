@@ -1,4 +1,4 @@
-from typing import Generator
+from collections.abc import Generator
 
 import numpy
 from openmm.unit.baseunit import BaseUnit
