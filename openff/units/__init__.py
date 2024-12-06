@@ -30,11 +30,11 @@ __version__ = get_versions()["version"]
 __git_revision__ = versions["full-revisionid"]
 
 __all__ = [
-    "unit",
-    "Quantity",
     "Measurement",
+    "Quantity",
     "Unit",
     "ensure_quantity",
+    "unit",
 ]
 
 _objects: dict[str, str] = {

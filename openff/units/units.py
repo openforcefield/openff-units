@@ -19,8 +19,8 @@ if TYPE_CHECKING:
 
 __all__ = (
     "DEFAULT_UNIT_REGISTRY",
-    "Quantity",
     "Measurement",
+    "Quantity",
     "Unit",
     "unit",
 )
