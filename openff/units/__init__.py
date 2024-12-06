@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 
 
 versions = get_versions()
-__version__ = get_versions()["version"]
+__version__ = versions["version"]
 __git_revision__ = versions["full-revisionid"]
 
 __all__ = [
