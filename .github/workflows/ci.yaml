@@ -22,7 +22,7 @@ jobs:
         os: [macOS-latest, ubuntu-latest]
         openmm: ["true", "false"]
         python-version: ["3.10", "3.11", "3.12"]
-        pint-version: ["0.21", "0.22", "0.23"]
+        pint-version: ["0.24"]
 
     env:
       CI_OS: ${{ matrix.os }}
@@ -69,7 +69,7 @@ jobs:
       run: python -m pytest $PYTEST_ARGS downstream_dummy/tests/
 
     - name: Run mypy
-      if: ${{ matrix.python-version == '3.12' && matrix.openmm == 'true' }}
+      if: ${{ matrix.python-version == '3.12' }}
       run: python -m mypy -p "openff.units" && python -m mypy downstream_dummy/ --exclude=downstream_dummy/build/
 
     - name: Run docexamples
