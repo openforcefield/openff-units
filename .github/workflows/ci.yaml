@@ -14,7 +14,7 @@ defaults:
 
 jobs:
   test:
-    name: ${{ matrix.os }}, 🐍=${{ matrix.python-version }}, OpenMM=${{ matrix.openmm }}
+    name: 💻=${{ matrix.os }}, 🐍=${{ matrix.python-version }}, 🍺=${{ matrix.pint-verison }}, ⚛️=${{ matrix.openmm }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -26,6 +26,12 @@ jobs:
         exclude:
           - python-version: "3.13"
             openmm: "true"
+          - python-version: "3.13"
+            pint-version: "0.21"
+          - python-version: "3.13"
+            pint-version: "0.22"
+          - python-version: "3.13"
+            pint-version: "0.23"
 
     env:
       CI_OS: ${{ matrix.os }}
