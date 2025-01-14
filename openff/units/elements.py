@@ -32,8 +32,8 @@ from openff.units import Quantity, unit
 
 __all__ = [
     "MASSES",
-    "SYMBOLS",
     "NUMBERS",
+    "SYMBOLS",
 ]
 
 """Mapping from atomic number to atomic mass"""

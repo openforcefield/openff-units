@@ -18,5 +18,5 @@ dependencies:
   - uncertainties
 
     # Typing
-  - mypy ~=1.13
+  - mypy
   - types-setuptools

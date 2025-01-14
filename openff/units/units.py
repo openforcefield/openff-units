@@ -19,8 +19,8 @@ if TYPE_CHECKING:
 
 __all__ = (
     "DEFAULT_UNIT_REGISTRY",
-    "Quantity",
     "Measurement",
+    "Quantity",
     "Unit",
     "unit",
 )
@@ -76,7 +76,7 @@ class UnitRegistry(pint.UnitRegistry):
     _measurement_class = Measurement
 
 
-DEFAULT_UNIT_REGISTRY = UnitRegistry(get_defaults_path())
+DEFAULT_UNIT_REGISTRY = UnitRegistry(get_defaults_path(), cache_folder=":auto:")
 
 unit = DEFAULT_UNIT_REGISTRY
 

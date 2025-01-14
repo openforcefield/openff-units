@@ -27,11 +27,11 @@ if TYPE_CHECKING:
 __version__ = version("openff.units")
 
 __all__ = [
-    "unit",
-    "Quantity",
     "Measurement",
+    "Quantity",
     "Unit",
     "ensure_quantity",
+    "unit",
 ]
 
 _objects: dict[str, str] = {
