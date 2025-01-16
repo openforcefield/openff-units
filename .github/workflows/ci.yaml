@@ -17,9 +17,8 @@ jobs:
     name: ${{ matrix.os }}, 🐍=${{ matrix.python-version }}, OpenMM=${{ matrix.openmm }}
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
       matrix:
-        os: [macOS-latest, ubuntu-latest]
+        os: [macos-latest, ubuntu-latest]
         openmm: ["true", "false"]
         python-version: ["3.10", "3.11", "3.12"]
         pint-version: ["0.24"]
@@ -28,10 +27,12 @@ jobs:
       CI_OS: ${{ matrix.os }}
       PYVER: ${{ matrix.python-version }}
       PYTEST_ARGS: -v -n logical
-      COV: --cov=openff/units --cov-report=xml --cov-config=setup.cfg --cov-append
+      COV: --cov=openff/units --cov-report=xml --cov-append
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Install conda environment
       uses: mamba-org/setup-micromamba@v2
@@ -84,5 +85,5 @@ jobs:
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./coverage.xml
+        files: ./coverage.xml
         fail_ci_if_error: false
