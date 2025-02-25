@@ -125,7 +125,7 @@ dyne = gram * centimeter / second ** 2 = dyn
 joule = newton * meter = J
 erg = dyne * centimeter
 rydberg = h * c * R_inf = Ry
-hartree = 2 * rydberg = E_h = Eh = hartree_energy = atomic_unit_of_energy = a_u_energy
+hartree = 2 * rydberg = E_h = Eh = hartree_energy = atomic_unit_of_energy = a_u_energy = Hartree
 calorie = 4.184 * joule = cal = thermochemical_calorie = cal_th
 
 # Energy per mole
