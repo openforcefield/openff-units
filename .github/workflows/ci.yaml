@@ -71,6 +71,7 @@ jobs:
           PYTEST_ARGS+=" --ignore=openff/units/_tests/test_openmm.py"
         fi
 
+        python -c "from openff.units import *"
         python -m pytest $PYTEST_ARGS $COV openff/units/_tests/
 
     - name: Run dummy package tests
