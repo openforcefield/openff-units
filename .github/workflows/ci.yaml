@@ -71,6 +71,7 @@ jobs:
           PYTEST_ARGS+=" --ignore=openff/units/_tests/test_openmm.py"
         fi
 
+        # https://github.com/openforcefield/openff-units/issues/111
         python -c "from openff.units import *"
         python -m pytest $PYTEST_ARGS $COV openff/units/_tests/
 
