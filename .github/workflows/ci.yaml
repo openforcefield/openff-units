@@ -20,7 +20,7 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest]
         openmm: ["true", "false"]
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.11", "3.12", "3.13"]
         pint-version: ["0.24"]
         exclude:
           - python-version: "3.13"
