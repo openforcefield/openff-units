@@ -13,4 +13,5 @@ Please note that all releases prior to a version 1.0.0 are considered pre-releas
 
 ### Behavior changes
 
+* #120 Unit registries are no longer cached
 * #114 Drops support for Python 3.10

@@ -76,7 +76,7 @@ class UnitRegistry(pint.UnitRegistry):
     _measurement_class = Measurement
 
 
-DEFAULT_UNIT_REGISTRY = UnitRegistry(get_defaults_path(), cache_folder=":auto:")
+DEFAULT_UNIT_REGISTRY = UnitRegistry(get_defaults_path())
 
 unit = DEFAULT_UNIT_REGISTRY
 
