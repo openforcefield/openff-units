@@ -25,12 +25,6 @@ jobs:
         exclude:
           - python-version: "3.13"
             openmm: "true"
-          - python-version: "3.13"
-            pint-version: "0.21"
-          - python-version: "3.13"
-            pint-version: "0.22"
-          - python-version: "3.13"
-            pint-version: "0.23"
 
     env:
       PYTEST_ARGS: -v -n auto
