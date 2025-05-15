@@ -12,6 +12,22 @@ readme = "README.md"
 authors = [{name = "Open Force Field Initiative", email = "info@openforcefield.org"}]
 license = {text = "MIT"}
 dynamic = ["version"]
+requires-python = ">=3.11, <3.13"
+dependencies = [
+  "numpy",
+  "pint>=0.20.1",
+  "openff-utilities",
+  "sphinx >=4.5,<5",
+  "myst-parser>=0.13.6",
+  "sphinx-notfound-page",
+  "typing-extensions",
+  "openff-sphinx-theme"
+]
+
+[tool.uv.sources]
+openff-sphinx-theme ={ git = "https://github.com/openforcefield/openff-sphinx-theme.git",branch="main"}
+openff-utilities = {git = "https://github.com/openforcefield/openff-utilities.git"}
+
 
 [tool.setuptools.packages]
 find = {}

@@ -26,6 +26,29 @@ Install via `conda` or a replacement:
 conda install openff-units -c conda-forge
 ```
 
+Install via `uv`
+As an environment
+```shell
+uv sync
+source .venv/bin/activate
+```
+
+As a Package
+```shell
+uv add "openff-units @ git+https://github.com/openforcefield/openff-units"
+```
+
+In a pyproject.toml
+```toml
+pyproject.toml
+
+[project]
+dependencies = ["openff-units"]
+
+[tool.uv.sources]
+httpx = { git = "https://github.com/openforcefield/openff-units", branch = "uv-dependencies" }
+```
+
 ### Getting Started
 
 Below shows how to tag a number with a unit (generating a `Quantity` object),
