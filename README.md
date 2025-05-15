@@ -46,7 +46,7 @@ pyproject.toml
 dependencies = ["openff-units"]
 
 [tool.uv.sources]
-httpx = { git = "https://github.com/openforcefield/openff-units", branch = "uv-dependencies" }
+httpx = { git = "https://github.com/openforcefield/openff-units", branch = "main" }
 ```
 
 ### Getting Started
