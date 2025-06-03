@@ -133,6 +133,10 @@ Quantity(value=4.0, unit=angstrom)  # OpenMM
 <Quantity(4.0, 'angstrom')>  # OpenFF
 ```
 
+### Known issues
+
+There is a quirk with cached unit registry definitions that can cause issues when running tests in parallel (i.e. with `pytest-xdist`). See [Issue #111](https://github.com/openforcefield/openff-units/issues/111) for more details.
+
 ### Copyright
 
 Copyright (c) 2021, Open Force Field Initiative

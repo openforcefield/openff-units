@@ -167,6 +167,14 @@ For more details, see the [API reference].
 [`to_openmm`]: openff.units.openmm.to_openmm
 [API reference]: openff.units
 
+```{toctree}
+---
+caption: Developing
+maxdepth: 2
+---
+releasehistory.md
+
+```
 :::{toctree}
 ---
 hidden: true

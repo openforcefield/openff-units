@@ -8,10 +8,9 @@ measure available as attributes. Available units can be found in the
 """
 
 import importlib
+from importlib.metadata import version
 from types import ModuleType
 from typing import TYPE_CHECKING
-
-from openff.units._version import get_versions
 
 if TYPE_CHECKING:
     # Type checkers can't see lazy-imported objects
@@ -25,9 +24,7 @@ if TYPE_CHECKING:
     )
 
 
-versions = get_versions()
-__version__ = get_versions()["version"]
-__git_revision__ = versions["full-revisionid"]
+__version__ = version("openff.units")
 
 __all__ = [
     "Measurement",

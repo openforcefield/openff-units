@@ -14,24 +14,26 @@ defaults:
 
 jobs:
   test:
-    name: ${{ matrix.os }}, 🐍=${{ matrix.python-version }}, OpenMM=${{ matrix.openmm }}
+    name: 💻=${{ matrix.os }}, 🐍=${{ matrix.python-version }}, 🍺=${{ matrix.pint-version }}, ⚛️=${{ matrix.openmm }}
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
       matrix:
-        os: [macOS-latest, ubuntu-latest]
+        os: [macos-latest, ubuntu-latest]
         openmm: ["true", "false"]
-        python-version: ["3.10", "3.11", "3.12"]
-        pint-version: ["0.21", "0.22", "0.23"]
+        python-version: ["3.11", "3.12", "3.13"]
+        pint-version: ["0.24"]
+        exclude:
+          - python-version: "3.13"
+            openmm: "true"
 
     env:
-      CI_OS: ${{ matrix.os }}
-      PYVER: ${{ matrix.python-version }}
-      PYTEST_ARGS: -v -n logical
-      COV: --cov=openff/units --cov-report=xml --cov-config=setup.cfg --cov-append
+      PYTEST_ARGS: -v -n auto
+      COV: --cov=openff/units --cov-report=xml --cov-append
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Install conda environment
       uses: mamba-org/setup-micromamba@v2
@@ -63,22 +65,28 @@ jobs:
           PYTEST_ARGS+=" --ignore=openff/units/_tests/test_openmm.py"
         fi
 
+        # https://github.com/openforcefield/openff-units/issues/111
+        python -c "from openff.units import *"
         python -m pytest $PYTEST_ARGS $COV openff/units/_tests/
 
     - name: Run dummy package tests
       run: python -m pytest $PYTEST_ARGS downstream_dummy/tests/
 
     - name: Run mypy
-      if: ${{ matrix.python-version == '3.12' && matrix.openmm == 'true' }}
+      if: ${{ matrix.python-version == '3.12' }}
       run: python -m mypy -p "openff.units" && python -m mypy downstream_dummy/ --exclude=downstream_dummy/build/
 
     - name: Run docexamples
       if: ${{ matrix.openmm == 'true' }}
       run: pytest --doctest-modules $PYTEST_ARGS openff --ignore=openff/units/_tests
 
+    - name: Check OpenMM is lazy-imported
+      if: ${{ matrix.openmm == 'true' }}
+      run: python -c "import sys; from openff.units import unit, Quantity; assert 'openmm' not in sys.modules"
+
     - name: Codecov
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./coverage.xml
+        files: ./coverage.xml
         fail_ci_if_error: false

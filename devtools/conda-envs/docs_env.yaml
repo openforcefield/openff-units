@@ -1,4 +1,4 @@
-name: openff-units-test
+name: openff-units-docs
 channels:
   - conda-forge
 dependencies:

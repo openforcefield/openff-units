@@ -80,9 +80,9 @@ DEFAULT_UNIT_REGISTRY = UnitRegistry(get_defaults_path())
 
 unit = DEFAULT_UNIT_REGISTRY
 
-Unit: _Unit = DEFAULT_UNIT_REGISTRY.Unit
-Quantity: _Quantity = DEFAULT_UNIT_REGISTRY.Quantity
-Measurement: _Measurement = DEFAULT_UNIT_REGISTRY.Measurement
+Unit: type[_Unit] = DEFAULT_UNIT_REGISTRY.Unit
+Quantity: type[_Quantity] = DEFAULT_UNIT_REGISTRY.Quantity
+Measurement: type[_Measurement] = DEFAULT_UNIT_REGISTRY.Measurement
 
 pint.set_application_registry(DEFAULT_UNIT_REGISTRY)
 
