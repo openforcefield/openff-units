@@ -178,7 +178,7 @@ def from_openmm(openmm_quantity: "openmm.unit.Quantity") -> Quantity:
     target_unit = openmm_unit_to_string(openmm_unit_)
     target_unit = Unit(target_unit)
 
-    return openmm_value * target_unit
+    return Quantity(openmm_value, target_unit)
 
 
 @requires_package("openmm.unit")
