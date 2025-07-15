@@ -201,7 +201,7 @@ def to_openmm(quantity: Quantity) -> "openmm.unit.Quantity":
     >>> from openmm import unit as openmm_unit
     >>> length = unit.Quantity(9.0, unit.angstrom)
     >>> to_openmm(length)
-    Quantity(value=9.0, unit=angstrom)
+    9.0 A
     >>> assert isinstance(to_openmm(length), openmm_unit.Quantity)
 
     """
@@ -299,7 +299,7 @@ def ensure_quantity(
     >>> ensure_quantity(numpy.array([1, 2]), "openff")
     <Quantity([1 2], 'dimensionless')>
     >>> ensure_quantity(4.0, "openmm")
-    Quantity(value=4.0, unit=dimensionless)
+    4.0 dimensionless
 
     """
     if type_to_ensure == "openmm":
