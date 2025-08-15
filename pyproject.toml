@@ -12,6 +12,11 @@ readme = "README.md"
 authors = [{name = "Open Force Field Initiative", email = "info@openforcefield.org"}]
 license = {text = "MIT"}
 dynamic = ["version"]
+requires-python = ">= 3.11"
+dependencies = [
+  "pint >=0.24.0,<0.24.5",
+  "numpy",
+]
 
 [tool.setuptools.packages]
 find = {}
