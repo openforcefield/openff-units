@@ -5,6 +5,9 @@ build:
   os: ubuntu-20.04
   tools:
     python: mambaforge-4.10 # Python version is specified in Conda environment
+  jobs:
+    post_build:
+      - PIP_NO_DEPS=1
 
 sphinx:
   configuration: docs/conf.py
