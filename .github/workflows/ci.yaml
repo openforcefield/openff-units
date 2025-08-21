@@ -60,7 +60,7 @@ jobs:
 
     - name: Install package locally (conda)
       if: ${{ matrix.install-source == 'conda' }}
-      run: python -m pip install -e downstream_dummy/ .
+      run: python -m pip install --no-deps -e downstream_dummy/ .
 
     - name: Setup Python
       if: ${{ matrix.install-source == 'pypi' }}
