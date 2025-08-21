@@ -18,6 +18,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        install-source: [conda, pypi]
         os: [macos-latest, ubuntu-latest]
         openmm: ["true", "false"]
         python-version: ["3.11", "3.12", "3.13"]
@@ -35,7 +36,8 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Install conda environment
+    - name: Setup conda environment
+      if: ${{ matrix.install-source == 'conda' }}
       uses: mamba-org/setup-micromamba@v2
       with:
         environment-file: devtools/conda-envs/test_env.yaml
@@ -43,12 +45,12 @@ jobs:
           python=${{ matrix.python-version }}
           pint=${{ matrix.pint-version }}
 
-    - name: Optionally install OpenMM
-      if: ${{ matrix.openmm == 'true' }}
-      run: micromamba install "openmm ~=8.3" -c conda-forge -yq
+    - name: Optionally install OpenMM via conda
+      if: ${{ matrix.install-source == 'conda' and matrix.openmm == 'true' }}
+      run: micromamba install "openmm ~=8.3" --yes
 
-    - name: Verify OpenMM is not installed when not expected
-      if: ${{ matrix.openmm == 'false' }}
+    - name: Verify OpenMM is not installed when not expected (conda)
+      if: ${{ matrix.install-source == 'conda' and matrix.openmm == 'false' }}
       run: |
         # If the number of packages matching "*openmm*" is greater than zero
         if [[ $(micromamba list | grep openmm | wc -l) -gt 0 ]]; then
@@ -56,8 +58,32 @@ jobs:
           exit 1;
         fi
 
-    - name: Install package
+    - name: Install package locally (conda)
+      if: ${{ matrix.install-source == 'conda' }}
       run: python -m pip install -e downstream_dummy/ .
+
+    - name: Setup Python
+      if: ${{ matrix.install-source == 'pypi' }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install package via PyPI
+      if: ${{ matrix.install-source == 'pypi' }}
+      run: python -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ -e ."[test,typing]" downstream_dummy/
+
+    - name: Optionally install OpenMM from PyPI
+      if: ${{ matrix.install-source == 'pypi' and matrix.openmm == 'true' }}
+      run: pip install "openmm ~=8.3"
+
+    - name: Verify OpenMM is not installed when not expected (PyPI)
+      if: ${{ matrix.install-source == 'pypi' and matrix.openmm == 'false' }}
+      run: |
+        # If the number of packages matching "*openmm*" is greater than zero
+        if [[ $(pip list | grep openmm | wc -l) -gt 0 ]]; then
+          pip list;
+          exit 1;
+        fi
 
     - name: Run unit tests
       run: |
