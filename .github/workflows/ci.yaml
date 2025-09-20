@@ -14,7 +14,7 @@ defaults:
 
 jobs:
   test:
-    name: 💻=${{ matrix.os }}, 🐍=${{ matrix.python-version }}, 🍺=${{ matrix.pint-version }}, ⚛️=${{ matrix.openmm }}
+    name: 📦=${{ matrix.install-source }}, 💻=${{ matrix.os }}, 🐍=${{ matrix.python-version }}, 🍺=${{ matrix.pint-version }}, ⚛️=${{ matrix.openmm }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
