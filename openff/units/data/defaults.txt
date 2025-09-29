@@ -140,6 +140,14 @@ kilojoule_per_mole = kilojoule / mol
 kilocalories_per_mole = kilocalorie / mol
 kilojoules_per_mole = kilojoule / mol
 
+# NMR spectroscopy
+tesla = kilogram * second ** -2 * ampere ** -1 = T
+henry = kilogram * meter ** 2 * second ** -2 * ampere ** -2 = H
+ohm = kilogram * meter ** 2 * second ** -3 * ampere ** -2 = Ω
+siemens = kilogram ** -1 * meter ** -2 * second ** 3 * ampere ** 2 = S
+watt = kilogram * meter ** 2 * second ** -3 = W
+weber = kilogram * meter ** 2 * second ** -2 * ampere ** -1 = Wb
+
 # Momentum
 [momentum] = [length] * [mass] / [time]
 
