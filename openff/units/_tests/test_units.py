@@ -1,9 +1,10 @@
 import pickle
+import random
 
 import pytest
 from openff.utilities.testing import skip_if_missing
 
-from openff.units import unit
+from openff.units import Quantity, unit
 
 
 class TestQuantity:
@@ -89,3 +90,28 @@ class TestCompChemUnits:
         q = 20 * unit.timestep
 
         assert not q.is_compatible_with(10 * unit.picosecond)
+
+
+class TestNMRUnits:
+    @pytest.mark.parametrize(
+        ["unit_name", "symbol"],
+        [
+            ("tesla", "T"),
+            ("ohm", "Ω"),
+            ("henry", "H"),
+            ("siemens", "S"),
+            ("watt", "W"),
+            ("weber", "Wb"),
+        ],
+    )
+    def test_symbols(self, unit_name, symbol):
+        number = random.random()
+        assert Quantity(f"{number} {unit_name}") == Quantity(f"{number} {symbol}")
+
+    def test_nmr_equivalents(self):
+        assert Quantity("1 ohm") == Quantity("1 henry / second")
+        assert Quantity("1 ohm") == 1 / Quantity("1 siemens")
+        assert Quantity("1 ohm") == Quantity("1 volt / ampere")
+        assert Quantity("1 watt") == Quantity("1 joule / second")
+        assert Quantity("1 henry") == Quantity("1 weber / ampere")
+        assert Quantity("1 tesla") == Quantity("1 weber / meter**2")

@@ -140,6 +140,30 @@ kilojoule_per_mole = kilojoule / mol
 kilocalories_per_mole = kilocalorie / mol
 kilojoules_per_mole = kilojoule / mol
 
+# Power
+[power] = [energy] / [time]
+watt = kilogram * meter ** 2 * second ** -3 = W
+
+# Resistance
+[resistance] = [electric_potential] / [current]
+ohm = kilogram * meter ** 2 * second ** -3 * ampere ** -2 = Ω
+
+# Conductance
+[conductance] = [current] / [electric_potential]
+siemens = kilogram ** -1 * meter ** -2 * second ** 3 * ampere ** 2 = S
+
+# Inductance
+[inductance] = [resistance] * [time]
+henry = kilogram * meter ** 2 * second ** -2 * ampere ** -2 = H
+
+# Magnetic flux
+[magnetic_flux] = [energy] / [current]
+weber = kilogram * meter ** 2 * second ** -2 * ampere ** -1 = Wb
+
+# Magnetic flux density
+[magnetic_flux_density] = [magnetic_flux] / [area]
+tesla = kilogram * second ** -2 * ampere ** -1 = T
+
 # Momentum
 [momentum] = [length] * [mass] / [time]
 
