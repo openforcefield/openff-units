@@ -2,8 +2,12 @@ ci:
   autoupdate_schedule: "monthly"
 repos:
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.12.12
+  rev: v0.12.10
   hooks:
     - id: ruff-format
     - id: ruff-check
       args: [--fix]
+- repo: https://github.com/tox-dev/pyproject-fmt
+  rev: v2.7.0
+  hooks:
+    - id: pyproject-fmt
