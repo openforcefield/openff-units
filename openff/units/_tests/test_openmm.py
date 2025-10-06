@@ -70,15 +70,15 @@ class TestOpenMMUnits:
         assert pint_quantity == converted_pint_quantity
 
     def test_from_openmm_quantity_none(self):
-        with pytest.raises(NoneQuantityError, match="Input is None.*OpenMM.*Quantity"):
+        with pytest.raises(NoneQuantityError, match=r"Input is None.*OpenMM.*Quantity"):
             from_openmm(None)
 
     def test_to_openmm_quantity_none(self):
-        with pytest.raises(NoneQuantityError, match="Input is None.*OpenFF.*Quantity"):
+        with pytest.raises(NoneQuantityError, match=r"Input is None.*OpenFF.*Quantity"):
             to_openmm(None)
 
     def test_openmm_unit_to_string_none(self):
-        with pytest.raises(NoneUnitError, match="Input is None.*OpenMM.*Unit"):
+        with pytest.raises(NoneUnitError, match=r"Input is None.*OpenMM.*Unit"):
             openmm_unit_to_string(None)
 
     @pytest.mark.parametrize(
@@ -195,7 +195,7 @@ class TestEnsureType:
     def test_unsupported_type(self):
         x = unit.Quantity(4.0, unit.angstrom)
 
-        with pytest.raises(ValueError, match="Unsupported.*type_to_ensure.*pint"):
+        with pytest.raises(ValueError, match=r"Unsupported.*type_to_ensure.*pint"):
             ensure_quantity(x, "pint")
 
     def test_short_circuit(self):
