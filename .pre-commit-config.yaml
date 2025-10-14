@@ -7,3 +7,7 @@ repos:
     - id: ruff-format
     - id: ruff-check
       args: [--fix]
+- repo: https://github.com/tox-dev/pyproject-fmt
+  rev: v2.7.0
+  hooks:
+    - id: pyproject-fmt

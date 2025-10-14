@@ -1,33 +1,38 @@
 [build-system]
-requires = [
-    "setuptools",
-    "versioningit",
-]
 build-backend = "setuptools.build_meta"
+requires = [
+  "setuptools>=77.0.3",
+  "versioningit",
+]
 
 [project]
-name="openff-units"
+name = "openff-units"
 description = "A common units module for the OpenFF software stack"
 readme = "README.md"
-authors = [{name = "Open Force Field Initiative", email = "info@openforcefield.org"}]
-license = {text = "MIT"}
-dynamic = ["version"]
-requires-python = ">= 3.11"
+license = { text = "MIT" }
+authors = [ { name = "Open Force Field Initiative", email = "info@openforcefield.org" } ]
+requires-python = ">=3.11"
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+dynamic = [ "version" ]
 dependencies = [
-  "pint >=0.24.0,<0.24.5",
   "numpy",
-  "openff-utilities >=0.1.3",
+  "openff-utilities>=0.1.3",
+  "pint>=0.24,<0.24.5",
 ]
 
-[project.optional-dependencies]
-test = [
+optional-dependencies.test = [
   "pytest",
   "pytest-cov",
-  "pytest-xdist",
   "pytest-randomly",
+  "pytest-xdist",
   "uncertainties",
 ]
-typing = [
+optional-dependencies.typing = [
   "mypy",
   "types-setuptools",
 ]
@@ -35,34 +40,30 @@ typing = [
 [tool.setuptools.packages]
 find = {}
 
-[tool.versioningit]
-
 [tool.ruff]
 line-length = 99
-namespace-packages = ["openff/units/"]
-exclude = ["openff/units/_version.py", "versioneer.py"]
+namespace-packages = [ "openff/units/" ]
+exclude = [ "openff/units/_version.py", "versioneer.py" ]
 
-[tool.ruff.lint]
-ignore = ["E721","D105","D107","D200","D203","D212"]
-select = ["F", "E", "W", "NPY", "UP", "RUF", "I"]
+lint.select = [ "E", "F", "I", "NPY", "RUF", "UP", "W" ]
+lint.ignore = [ "D105", "D107", "D200", "D203", "D212", "E721" ]
+lint.per-file-ignores."openff/units/**/__init__.py" = [ "F401" ]
+lint.isort.known-third-party = [ "openff.utilities" ]
 
-[tool.ruff.lint.per-file-ignores]
-"openff/units/**/__init__.py" = ["F401"]
-
-[tool.ruff.lint.isort]
-known-third-party = ["openff.utilities"]
+[tool.pytest.ini_options]
+addopts = "--cov=openff/units --cov-report=xml"
 
 [tool.coverage.run]
 omit = [
-    "*/*/_tests/*",
+  "*/*/_tests/*",
 ]
 
 [tool.coverage.report]
 exclude_lines = [
-    "pragma: no cover",
-    "if TYPE_CHECKING:",
-    "raise NotImplementedError",
-    "@overload",
+  "pragma: no cover",
+  "if TYPE_CHECKING:",
+  "raise NotImplementedError",
+  "@overload",
 ]
 
 [tool.mypy]
@@ -73,9 +74,8 @@ warn_unused_ignores = true
 warn_incomplete_stub = true
 show_error_codes = true
 exclude = [
-    "openff/units/_tests/",
-    "openff/units/data",
+  "openff/units/_tests/",
+  "openff/units/data",
 ]
 
-[tool.pytest.ini_options]
-addopts = "--cov=openff/units --cov-report=xml"
+[tool.versioningit]
