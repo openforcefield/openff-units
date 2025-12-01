@@ -38,8 +38,8 @@ optional-dependencies.typing = [
   "types-setuptools",
 ]
 
-[tool.setuptools.packages]
-find = {}
+[tool.setuptools.packages.find]
+include = [ 'openff.units*' ]
 
 [tool.ruff]
 line-length = 99
