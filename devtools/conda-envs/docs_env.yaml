@@ -11,5 +11,6 @@ dependencies:
   - myst-parser>=0.13.6
   - sphinx-notfound-page
   - typing-extensions
+  - beautifulsoup4
   - pip:
     - git+https://github.com/openforcefield/openff-sphinx-theme.git@main
