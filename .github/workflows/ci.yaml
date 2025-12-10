@@ -23,9 +23,6 @@ jobs:
         openmm: ["true", "false"]
         python-version: ["3.11", "3.12", "3.13"]
         pint-version: ["0.24", "0.25"]
-        exclude:
-          - python-version: "3.13"
-            openmm: "true"
 
     env:
       PYTEST_ARGS: -v -n auto
