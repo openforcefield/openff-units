@@ -33,8 +33,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
-      with:
-        fetch-depth: 0
 
     - name: Setup conda environment
       if: ${{ matrix.install-source == 'conda' }}
