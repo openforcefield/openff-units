@@ -23,7 +23,7 @@ dynamic = [ "version" ]
 dependencies = [
   "numpy",
   "openff-utilities>=0.1.3",
-  "pint>=0.24,<0.24.5",
+  "pint>=0.24,<0.26",
 ]
 
 optional-dependencies.test = [
