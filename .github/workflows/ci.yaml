@@ -18,11 +18,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        install-source: [pypi]
+        install-source: [conda, pypi]
         os: [macos-latest, ubuntu-latest]
         openmm: ["true", "false"]
         python-version: ["3.11", "3.12", "3.13", "3.14"]
-        pint-version: ["0.25"]
+        pint-version: ["0.24", "0.25"]
 
     env:
       PYTEST_ARGS: -v -n auto

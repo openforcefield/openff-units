@@ -1,7 +1,7 @@
 name: openff-units-test
 channels:
   - conda-forge
-  - conda-forge/label/openff-units_dev
+  # conda-forge/label/openff-units_dev
 dependencies:
   - python
   - pip
