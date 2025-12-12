@@ -21,7 +21,7 @@ jobs:
         install-source: [conda, pypi]
         os: [macos-latest, ubuntu-latest]
         openmm: ["true", "false"]
-        python-version: ["3.11", "3.12", "3.13"]
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
         pint-version: ["0.24"]
 
     env:
