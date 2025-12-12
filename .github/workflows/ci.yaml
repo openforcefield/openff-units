@@ -69,7 +69,7 @@ jobs:
         python -m pip install \
             --index-url https://test.pypi.org/simple/ \
             --extra-index-url https://pypi.org/simple/ \
-            pint==${{ matrix.pint-version }} \
+            pint~=${{ matrix.pint-version }} \
             -e ."[test,typing]" downstream_dummy/
 
     - name: Optionally install OpenMM from PyPI
