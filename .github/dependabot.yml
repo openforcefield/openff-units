@@ -10,5 +10,4 @@ updates:
     directory: "devtools/conda-envs/"
     patterns: ["test*ml"]
     schedule:
-      interval: "cron"
-      cronjob: "0 * * * *"
+      interval: "daily"
