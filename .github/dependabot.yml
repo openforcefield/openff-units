@@ -7,7 +7,7 @@ updates:
 
   - package-ecosystem: "conda"
     target-branch: "dependabot-conda-live"
-    directory: "devtools/conda-envs/"
-    patterns: ["test*ml"]
+    directory: "/"
+    patterns: ["**/*.yaml"]
     schedule:
       interval: "daily"
