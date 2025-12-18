@@ -6,8 +6,6 @@ updates:
       interval: "daily"
 
   - package-ecosystem: "conda"
-    target-branch: "dependabot-conda-live"
     directory: "/"
-    patterns: ["**/*.yaml", "**/*.yml"]
     schedule:
       interval: "daily"
