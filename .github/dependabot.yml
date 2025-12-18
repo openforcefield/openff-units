@@ -4,3 +4,10 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+
+  - package-ecosystem: "conda"
+    # might need relevant test file(s) to be moved to base
+    # of repo and named /environment.yml
+    directory: "/"
+    schedule:
+      interval: "daily"
