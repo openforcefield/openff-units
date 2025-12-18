@@ -35,7 +35,7 @@ jobs:
       if: ${{ matrix.install-source == 'conda' }}
       uses: mamba-org/setup-micromamba@v2
       with:
-        environment-file: devtools/conda-envs/test_env.yaml
+        environment-file: devtools/conda-envs/environment.yml
         create-args: >-
           python=${{ matrix.python-version }}
           pint=${{ matrix.pint-version }}
