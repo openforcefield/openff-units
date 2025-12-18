@@ -11,5 +11,5 @@ updates:
     schedule:
       interval: "cron"
       cronjob: "* * * * *"
-      patterns: ["test*ml"]
+      pattern: ["test*ml"]
 
