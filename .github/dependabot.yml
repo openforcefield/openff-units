@@ -8,7 +8,7 @@ updates:
   - package-ecosystem: "conda"
     target-branch: "dependabot-conda-live"
     directory: "devtools/conda-envs/"
-    pattern: ["test*ml"]
+    patterns: ["test*ml"]
     schedule:
       interval: "cron"
       cronjob: "* * * * *"
