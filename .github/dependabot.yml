@@ -4,3 +4,10 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+
+  - package-ecosystem: "conda"
+    target-branch: "dependabot-conda-live"
+    directory: "devtools/conda-envs/"
+    patterns: ["test*ml"]
+    schedule:
+      interval: "daily"
