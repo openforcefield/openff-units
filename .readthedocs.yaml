@@ -6,6 +6,9 @@ build:
   tools:
     python: mambaforge-4.10 # Python version is specified in Conda environment
   jobs:
+    pre_build:
+      - mamba list
+      - pip list
     install:
       - pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ .
 
