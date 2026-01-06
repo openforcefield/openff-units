@@ -37,6 +37,7 @@ conda create -n openff-units-dev -f devtools/conda-envs/test_env.yaml
 conda run -n openff-units-dev pip install --no-deps -e .
 ```
 
+The important detail, as of December 2025, is the `--no-deps` argument.
 ### Getting Started
 
 Below shows how to tag a number with a unit (generating a `Quantity` object),
