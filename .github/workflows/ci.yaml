@@ -14,87 +14,105 @@ defaults:
 
 jobs:
   test:
-    name: ${{ matrix.os }}, 🐍=${{ matrix.python-version }}, OpenMM=${{ matrix.openmm }}
+    name: 📦=${{ matrix.install-source }}, 💻=${{ matrix.os }}, 🐍=${{ matrix.python-version }}, 🍺=${{ matrix.pint-version }}, ⚛️=${{ matrix.openmm }}
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
       matrix:
-        os: [macOS-latest, ubuntu-latest]
+        install-source: [conda, pypi]
+        os: [macos-latest, ubuntu-latest]
         openmm: ["true", "false"]
-        python-version: ["3.9", "3.10", "3.11"]
-        pint-version: ["0.21", "0.22"]
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+        pint-version: ["0.24", "0.25"]
 
     env:
-      CI_OS: ${{ matrix.os }}
-      PYVER: ${{ matrix.python-version }}
-      PYTEST_ARGS: -v
-      COV: --cov=openff/units --cov-report=xml --cov-config=setup.cfg --cov-append
+      PYTEST_ARGS: -v -n auto
+      COV: --cov=openff/units --cov-report=xml --cov-append
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
-    - name: Install conda environment
-      uses: mamba-org/setup-micromamba@v1
+    - name: Setup conda environment
+      if: ${{ matrix.install-source == 'conda' }}
+      uses: mamba-org/setup-micromamba@v2
       with:
         environment-file: devtools/conda-envs/test_env.yaml
         create-args: >-
           python=${{ matrix.python-version }}
           pint=${{ matrix.pint-version }}
 
-    - name: Optionally install OpenMM
-      if: ${{ matrix.openmm == 'true' }}
-      run: |
-        micromamba install "openmm >=7.6" -c conda-forge -yq
+    - name: Optionally install OpenMM via conda
+      if: ${{ matrix.install-source == 'conda' && matrix.openmm == 'true' }}
+      run: micromamba install "openmm ~=8.3" --yes
 
-    - name: Verify OpenMM is not installed when not expected
-      if: ${{ matrix.openmm == 'false' }}
+    - name: Verify OpenMM is not installed when not expected (conda)
+      if: ${{ matrix.install-source == 'conda' && matrix.openmm == 'false' }}
       run: |
         # If the number of packages matching "*openmm*" is greater than zero
-        if [[ $(conda list | grep openmm | wc -l) -gt 0 ]]; then
-          conda list;
+        if [[ $(micromamba list | grep openmm | wc -l) -gt 0 ]]; then
+          micromamba list;
           exit 1;
         fi
 
-    - name: Additional info about the build
-      shell: bash
-      run: |
-        uname -a
-        df -h
-        ulimit -a
+    - name: Install package locally (conda)
+      if: ${{ matrix.install-source == 'conda' }}
+      run: python -m pip install --no-deps -e downstream_dummy/ .
 
-    - name: Environment Information
-      run: |
-        conda info
-        conda list
+    - name: Setup Python
+      if: ${{ matrix.install-source == 'pypi' }}
+      uses: actions/setup-python@v6
+      with:
+        python-version: ${{ matrix.python-version }}
 
-    - name: Install package
+    - name: Install package via PyPI
+      if: ${{ matrix.install-source == 'pypi' }}
       run: |
-        python setup.py develop --no-deps
+        python -m pip install \
+            --index-url https://test.pypi.org/simple/ \
+            --extra-index-url https://pypi.org/simple/ \
+            pint~=${{ matrix.pint-version }} \
+            -e ."[test,typing]" downstream_dummy/
+
+    - name: Optionally install OpenMM from PyPI
+      if: ${{ matrix.install-source == 'pypi' && matrix.openmm == 'true' }}
+      run: pip install "openmm ~=8.3"
+
+    - name: Verify OpenMM is not installed when not expected (PyPI)
+      if: ${{ matrix.install-source == 'pypi' && matrix.openmm == 'false' }}
+      run: |
+        # If the number of packages matching "*openmm*" is greater than zero
+        if [[ $(pip list | grep openmm | wc -l) -gt 0 ]]; then
+          pip list;
+          exit 1;
+        fi
+
+    - name: Run unit tests
+      run: |
+        if [[ ${{ matrix.openmm }} == false ]]; then
+          PYTEST_ARGS+=" --ignore=openff/units/_tests/test_openmm.py"
+        fi
+
+        # https://github.com/openforcefield/openff-units/issues/111
+        python -c "from openff.units import *"
+        python -m pytest $PYTEST_ARGS $COV openff/units/_tests/
+
+    - name: Run dummy package tests
+      run: python -m pytest $PYTEST_ARGS downstream_dummy/tests/
 
     - name: Run mypy
-      # https://github.com/hgrecco/pint/issues/1767
-      if: ${{ matrix.python-version == 'false' }}
-      run: |
-        mypy -p "openff.units"
-
-    - name: Run unit tests with OpenMM
-      if: ${{ matrix.openmm == 'true' }}
-      run: |
-        pytest $PYTEST_ARGS $COV openff/units/tests/
-
-    - name: Run unit tests without OpenMM
-      if: ${{ matrix.openmm == 'false' }}
-      run: |
-        pytest $PYTEST_ARGS $COV openff/units/tests/ \
-          --ignore=openff/units/tests/test_openmm.py
+      if: ${{ matrix.python-version == '3.12' }}
+      run: python -m mypy -p "openff.units" && python -m mypy downstream_dummy/ --exclude=downstream_dummy/build/
 
     - name: Run docexamples
       if: ${{ matrix.openmm == 'true' }}
-      run: |
-        pytest --doctest-modules $PYTEST_ARGS $COV openff --ignore=openff/units/tests
+      run: pytest --doctest-modules $PYTEST_ARGS openff --ignore=openff/units/_tests
+
+    - name: Check OpenMM is lazy-imported
+      if: ${{ matrix.openmm == 'true' }}
+      run: python -c "import sys; from openff.units import unit, Quantity; assert 'openmm' not in sys.modules"
 
     - name: Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v5
       with:
-        file: ./coverage.xml
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage.xml
         fail_ci_if_error: false

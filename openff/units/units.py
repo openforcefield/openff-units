@@ -1,6 +1,7 @@
 """
 Core classes for OpenFF Units
 """
+
 import uuid
 import warnings
 from typing import TYPE_CHECKING
@@ -14,14 +15,15 @@ from pint import Unit as _Unit
 from openff.units.utilities import get_defaults_path
 
 if TYPE_CHECKING:
-    from openmm.unit import Quantity as OpenMMQuantity
+    import openmm.unit
 
-__all__ = [
+__all__ = (
     "DEFAULT_UNIT_REGISTRY",
-    "Quantity",
     "Measurement",
+    "Quantity",
     "Unit",
-]
+    "unit",
+)
 
 
 class Unit(pint.UnitRegistry.Unit):
@@ -43,7 +45,7 @@ class Quantity(pint.UnitRegistry.Quantity):
 
 
 @requires_package("openmm")
-def _to_openmm(self) -> "OpenMMQuantity":
+def _to_openmm(self) -> "openmm.unit.Quantity":
     """Convert the quantity to an ``openmm.unit.Quantity``.
 
     Returns
@@ -56,7 +58,7 @@ def _to_openmm(self) -> "OpenMMQuantity":
     return to_openmm(self)
 
 
-class Measurement(pint.UnitRegistry.Measurement):  # type: ignore
+class Measurement(pint.UnitRegistry.Measurement):
     """A value with associated units and uncertainty."""
 
     def __dask_tokenize__(self):
@@ -76,9 +78,11 @@ class UnitRegistry(pint.UnitRegistry):
 
 DEFAULT_UNIT_REGISTRY = UnitRegistry(get_defaults_path())
 
-Unit: _Unit = DEFAULT_UNIT_REGISTRY.Unit  # type: ignore[no-redef]
-Quantity: _Quantity = DEFAULT_UNIT_REGISTRY.Quantity  # type: ignore[no-redef]
-Measurement: _Measurement = DEFAULT_UNIT_REGISTRY.Measurement  # type: ignore
+unit = DEFAULT_UNIT_REGISTRY
+
+Unit: type[_Unit] = DEFAULT_UNIT_REGISTRY.Unit
+Quantity: type[_Quantity] = DEFAULT_UNIT_REGISTRY.Quantity
+Measurement: type[_Measurement] = DEFAULT_UNIT_REGISTRY.Measurement
 
 pint.set_application_registry(DEFAULT_UNIT_REGISTRY)
 

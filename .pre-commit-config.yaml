@@ -1,21 +1,13 @@
 ci:
   autoupdate_schedule: "monthly"
-
 repos:
-- repo: https://github.com/psf/black
-  rev: 23.9.1
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.14.10
   hooks:
-  - id: black
-    files: ^openff
-  - id: black-jupyter
-    files: ^examples/((?!deprecated).)*$
-- repo: https://github.com/PyCQA/isort
-  rev: 5.12.0
+    - id: ruff-format
+    - id: ruff-check
+      args: [--fix]
+- repo: https://github.com/tox-dev/pyproject-fmt
+  rev: v2.11.1
   hooks:
-  - id: isort
-    files: ^openff
-- repo: https://github.com/PyCQA/flake8
-  rev: 6.1.0
-  hooks:
-  - id: flake8
-    files: ^openff
+    - id: pyproject-fmt

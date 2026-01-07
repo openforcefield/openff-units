@@ -20,10 +20,10 @@ While this repository is based on [Pint](https://pint.readthedocs.io/en/0.16.1/)
 
 ### Installation
 
-Install via `conda` or a replacement:
+Install via `mamba` or a replacement:
 
 ```shell
-conda install openff-units -c conda-forge
+mamba install openff-units -c conda-forge
 ```
 
 #### Developer installation
@@ -44,15 +44,15 @@ Below shows how to tag a number with a unit (generating a `Quantity` object),
 get its magnitude with and without units, convert to another unit, and also get its magnitude after converting to another unit.
 
 ```python3
->>> from openff.units import unit
->>> bond_length = 1.4 * unit.angstrom
+>>> from openff.units import Quantity
+>>> bond_length = Quantity(1.4, "angstrom")
 >>> bond_length
 <Quantity(1.4, 'angstrom')>
 >>> bond_length.magnitude
 1.4
->>> bond_length.to(unit.nanometer)
+>>> bond_length.to("nanometer")
 <Quantity(0.14, 'nanometer')>
->>> bond_length.magnitude_as(unit.nanometer)
+>>> bond_length.m_as("nanometer")
 0.14
 ```
 
@@ -63,12 +63,12 @@ One could also do the [Pint tutorial](https://pint.readthedocs.io/en/0.16.1/tuto
 Scalar quantities can be serialized to strings using the built-in `str()` function and deserialized using the `unit.Quantity` constructor.
 
 ```python3
->>> k = 10 * unit.kilocalorie / unit.mol / unit.nanometer**2
+>>> k = Quantity(10, "kilocalorie / mol / nanometer**2")
 >>> k
 <Quantity(10.0, 'kilocalorie / mole / nanometer ** 2')>
 >>> str(k)
 '10.0 kcal / mol / nm ** 2'
->>> unit.Quantity(str(k))
+>>> Quantity(str(k))
 <Quantity(10.0, 'kilocalorie / mole / nanometer ** 2')>
 ```
 
@@ -77,19 +77,19 @@ Scalar quantities can be serialized to strings using the built-in `str()` functi
 For compatibility with [OpenMM units](http://docs.openmm.org/latest/api-python/app.html#units), a submodule (`openff.units.openmm`) with conversion functions (`to_openmm`, `from_openmm`) is also provided.
 
 ```python3
->>> from openff.units import unit
+>>> from openff.units import Quantity
 >>> from openff.units.openmm import to_openmm, from_openmm
->>> distance = 24.0 * unit.meter
+>>> distance = Quantity(24.0, "meter")
 >>> converted = to_openmm(distance)
 >>> converted
-Quantity(value=24.0, unit=meter)
+24.0 m
 >>> type(converted)
 <class 'openmm.unit.quantity.Quantity'>
 >>> roundtripped = from_openmm(converted)
 >>> roundtripped
 <Quantity(24.0, 'meter')>
 >>> type(roundtripped)
-<class 'openff.units.units.Quantity'>
+pint.Quantity
 ```
 
 An effort is made to convert from OpenMM constructs, such as when OpenMM provides array-like data as a list of `Vec3` objects:into Pint's wrapped NumPy arrays:
@@ -132,18 +132,22 @@ You may find yourself needing to normalize a quantity to a particular unit packa
 [`ensure_quantity`]: https://docs.openforcefield.org/projects/units/en/stable/api/generated/openff.units.ensure_quantity.html
 
 ```python3
->>> from openff.units import unit, ensure_quantity
->>> ensure_quantity(unit.Quantity(4.0, unit.angstrom), "openff")
+>>> from openff.units import Quantity, ensure_quantity
+>>> ensure_quantity(Quantity(4.0, "angstrom"), "openff")
 <Quantity(4.0, 'angstrom')>  # OpenFF
->>> ensure_quantity(unit.Quantity(4.0, unit.angstrom), "openmm")
-Quantity(value=4.0, unit=angstrom)  # OpenMM
+>>> ensure_quantity(Quantity(4.0, "angstrom"), "openmm")
+4.0 A
 >>>
 >>> import openmm.unit
 >>> ensure_quantity(openmm.unit.Quantity(4.0, openmm.unit.angstrom), "openmm")
-Quantity(value=4.0, unit=angstrom)  # OpenMM
+4.0 A
 >>> ensure_quantity(openmm.unit.Quantity(4.0, openmm.unit.angstrom), "openff")
 <Quantity(4.0, 'angstrom')>  # OpenFF
 ```
+
+### Known issues
+
+There is a quirk with cached unit registry definitions that could cause issues when running tests in parallel (i.e. with `pytest-xdist`). See [Issue #111](https://github.com/openforcefield/openff-units/issues/111) for more details. This was fixed in version 0.3.1.
 
 ### Copyright
 

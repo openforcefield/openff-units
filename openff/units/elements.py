@@ -27,18 +27,19 @@ consistent with recent IUPAC values [2].
     }
 
 """
-from typing import Dict
 
 from openff.units import Quantity, unit
 
 __all__ = [
     "MASSES",
+    "NUMBERS",
     "SYMBOLS",
 ]
 
-MASSES: Dict[int, Quantity] = {
+"""Mapping from atomic number to atomic mass"""
+MASSES: dict[int, Quantity] = {
     # https://github.com/hgrecco/pint/issues/1804
-    index + 1: Quantity(mass, unit.dalton)  # type: ignore[call-overload]
+    index + 1: Quantity(mass, unit.dalton)
     for index, mass in enumerate(
         [
             1.007947,
@@ -160,9 +161,9 @@ MASSES: Dict[int, Quantity] = {
         ]
     )
 }
-"""Mapping from atomic number to atomic mass"""
 
-SYMBOLS: Dict[int, str] = {
+"""Mapping from atomic number to element symbol"""
+SYMBOLS: dict[int, str] = {
     index + 1: symbol
     for index, symbol in enumerate(
         [
@@ -285,3 +286,6 @@ SYMBOLS: Dict[int, str] = {
         ]
     )
 }
+
+"""Mapping from element symbol to atomic number"""
+NUMBERS: dict[str, int] = {val: key for key, val in SYMBOLS.items()}
