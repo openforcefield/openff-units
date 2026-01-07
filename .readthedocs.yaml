@@ -7,6 +7,7 @@ build:
     python: mambaforge-4.10 # Python version is specified in Conda environment
   jobs:
     install:
+      - pip install -r devtools/conda-envs/requirements.txt
       - pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ .
 
 sphinx:

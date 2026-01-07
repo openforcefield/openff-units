@@ -1,0 +1,8 @@
+git+https://github.com/openforcefield/openff-sphinx-theme.git@main
+css-html-js-minify
+libsass
+beautifulsoup4
+libsass
+python-slugify
+text-unidecode
+lxml
