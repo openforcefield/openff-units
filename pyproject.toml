@@ -57,17 +57,17 @@ lint.isort.known-third-party = [ "openff.utilities" ]
 [tool.pytest.ini_options]
 addopts = "--cov=openff/units --cov-report=xml"
 
-[tool.coverage.run]
-omit = [
-  "*/*/_tests/*",
-]
-
 [tool.coverage.report]
 exclude_lines = [
   "pragma: no cover",
   "if TYPE_CHECKING:",
   "raise NotImplementedError",
   "@overload",
+]
+
+[tool.coverage.run]
+omit = [
+  "*/*/_tests/*",
 ]
 
 [tool.mypy]
