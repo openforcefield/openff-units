@@ -33,7 +33,7 @@ jobs:
 
     - name: Setup conda environment
       if: ${{ matrix.install-source == 'conda' }}
-      uses: mamba-org/setup-micromamba@v2
+      uses: mamba-org/setup-micromamba@v3
       with:
         environment-file: devtools/conda-envs/test_env.yaml
         create-args: >-
