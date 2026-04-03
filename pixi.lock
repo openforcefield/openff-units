@@ -3924,7 +3924,7 @@ packages:
   timestamp: 1773845156357
 - pypi: ./
   name: openff-units
-  version: 0.3.2.dev26+g7c09762fa.d20260403
+  version: 0.3.3.dev1+g45da6b2e0.d20260403
   sha256: 4b2c240e3db5d3b220d861ce76066b1d52a24a15af4d836a592419790dd6b6b9
   requires_dist:
   - numpy
