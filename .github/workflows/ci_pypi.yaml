@@ -1,4 +1,4 @@
-name: CI
+name: CI (PyPI install)
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        install-source: [conda, pypi]
+        install-source: [pypi]
         os: [macos-latest, ubuntu-latest]
         openmm: ["true", "false"]
         python-version: ["3.11", "3.12", "3.13", "3.14"]
