@@ -28,7 +28,7 @@ consistent with recent IUPAC values [2].
 
 """
 
-from openff.units import Quantity, unit
+from openff.units import Quantity
 
 __all__ = [
     "MASSES",
@@ -39,7 +39,7 @@ __all__ = [
 """Mapping from atomic number to atomic mass"""
 MASSES: dict[int, Quantity] = {
     # https://github.com/hgrecco/pint/issues/1804
-    index + 1: Quantity(mass, unit.dalton)
+    index + 1: Quantity(mass, "dalton")
     for index, mass in enumerate(
         [
             1.007947,

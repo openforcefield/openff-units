@@ -62,6 +62,10 @@ exclude = [
   "openff/units/_tests/",
   "openff/units/data",
 ]
+overrides = [ { module = [
+  "pydantic_pint",
+] } ]
+ignore_missing_imports = true
 
 [tool.pytest]
 ini_options.addopts = "--cov=openff/units --cov-report=xml --cov-append"

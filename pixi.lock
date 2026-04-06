@@ -4116,8 +4116,8 @@ packages:
   timestamp: 1773845156357
 - pypi: ./
   name: openff-units
-  version: 0.3.3.dev6+gfaeef7198.d20260406
-  sha256: 4b2c240e3db5d3b220d861ce76066b1d52a24a15af4d836a592419790dd6b6b9
+  version: 0.3.3.dev7+gfaaee06a1.d20260406
+  sha256: 85c52e99d17e02a817bcb282a29aec70167daf2b58b08b2a4dfc1e71d62f6d07
   requires_dist:
   - numpy
   - openff-utilities>=0.1.3
