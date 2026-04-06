@@ -3,14 +3,14 @@ Core classes for OpenFF Units
 """
 
 import uuid
-import warnings
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Union
 
 import pint
+import pydantic.v1 as pydantic
 from openff.utilities import requires_package
 from pint import Measurement as _Measurement
-from pint import Quantity as _Quantity
 from pint import Unit as _Unit
+from pint import UnitRegistry as unit
 
 from openff.units.utilities import get_defaults_path
 
@@ -29,19 +29,40 @@ __all__ = (
 class Unit(pint.UnitRegistry.Unit):
     """A unit of measure."""
 
+    # TODO: Make Unit.__mult__ return a Quantity, not a pint.Quantity
     pass
 
 
-class Quantity(pint.UnitRegistry.Quantity):
-    """A value with associated units."""
+class Quantity[float_or_array, unit](pydantic.BaseModel):
+    pint: Any  # pint.Quantity
 
-    def __dask_tokenize__(self):
-        return uuid.uuid4().hex
+    class Config:
+        arbitrary_types_allowed = True
 
-    @staticmethod
-    def _dask_finalize(results, func, args, units):
-        values = func(results, *args)
-        return Quantity(values, units)
+    def value_in_unit(self, openmm_unit: Union[str, "openmm.unit.Unit"]) -> float:
+        pass
+        return self.to_openmm().value_in_unit(openmm_unit)
+
+    def to_openmm():
+        pass
+        # keep this implementation
+
+    def __init__(self, value, unit=None, *args, **kwargs):
+        super().__init__(
+            pint=pint.Quantity(value, unit),
+            *args,
+            **kwargs,
+        )
+
+    def __getattr__(self, name: str):
+        return self.pint.__getattribute__(name)
+
+    @classmethod
+    def __class_getitem__(cls, item: tuple):
+        print(item)
+        return super().__class_getitem__(item)
+
+    # TODO: Define __eq__ to make it quack like a pint.Quantity?
 
 
 @requires_package("openmm")
@@ -78,16 +99,9 @@ class UnitRegistry(pint.UnitRegistry):
 
 DEFAULT_UNIT_REGISTRY = UnitRegistry(get_defaults_path())
 
-unit = DEFAULT_UNIT_REGISTRY
-
-Unit: type[_Unit] = DEFAULT_UNIT_REGISTRY.Unit
-Quantity: type[_Quantity] = DEFAULT_UNIT_REGISTRY.Quantity
-Measurement: type[_Measurement] = DEFAULT_UNIT_REGISTRY.Measurement
+Unit: _Unit = DEFAULT_UNIT_REGISTRY.Unit  # type: ignore[no-redef]
+Measurement: _Measurement = DEFAULT_UNIT_REGISTRY.Measurement  # type: ignore
 
 pint.set_application_registry(DEFAULT_UNIT_REGISTRY)
 
 Quantity.to_openmm = _to_openmm  # type: ignore[attr-defined]
-
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore")
-    Quantity([])

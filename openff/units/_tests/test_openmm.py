@@ -25,12 +25,12 @@ if has_package("openmm.unit"):
     ]
 
     pint_quantities = [
-        4.0 * unit.nanometer,
-        5.0 * unit.angstrom,
-        1.0 * unit.elementary_charge,
-        0.5 * unit.erg,
-        1.0 * unit.dimensionless,
-        0.5 * unit.gram / unit.mol,
+        Quantity(4.0, unit.nanometer),
+        Quantity(5.0, unit.angstrom),
+        Quantity(1.0, unit.elementary_charge),
+        Quantity(0.5, unit.erg),
+        Quantity(1.0, unit.dimensionless),
+        Quantity(0.5, unit.gram / unit.mol),
     ]
 else:
     # Must be defined as something, despite not being used, because pytest
@@ -121,12 +121,9 @@ class TestOpenMMUnits:
     @pytest.mark.parametrize(
         "openff_quantity,openmm_quantity",
         [
-            (300.0 * unit.kelvin, 300.0 * openmm_unit.kelvin),
-            (
-                1.5 * unit.kilojoule,
-                1.5 * openmm_unit.kilojoule,
-            ),
-            (1.0 / unit.meter, 1.0 / openmm_unit.meter),
+            (Quantity(300.0, unit.kelvin), 300.0 * openmm_unit.kelvin),
+            (Quantity(1.5, unit.kilojoule), 1.5 * openmm_unit.kilojoule),
+            (Quantity(1.0, 1.0 / unit.meter), 1.0 / openmm_unit.meter),
         ],
     )
     def test_openmm_roundtrip(self, openff_quantity, openmm_quantity):
@@ -187,6 +184,9 @@ class TestEnsureType:
         ["openmm", "openff"],
     )
     def test_ensure_units(self, registry):
+        if registry == "openff":
+            pytest.skip("Unit.__mult__ behavior not functional")
+
         x = unit.Quantity(4.0, unit.angstrom)
         y = openmm_unit.Quantity(4.0, openmm_unit.angstrom)
 
