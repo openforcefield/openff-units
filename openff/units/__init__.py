@@ -18,9 +18,11 @@ if TYPE_CHECKING:
     from openff.units.units import (  # type: ignore[attr-defined]
         DEFAULT_UNIT_REGISTRY,
         Measurement,
-        Quantity,
         Unit,
         UnitRegistry,
+    )
+    from openff.units.units import (
+        Quantity as _Quantity,
     )
 
 

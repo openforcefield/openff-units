@@ -17,6 +17,7 @@ numpy = "*"
 pint = "*"
 openff-utilities = ">=0.1.3"
 uncertainties = "*"
+pydantic-pint = ">=0.3,<0.4"
 
 [pypi-dependencies]
 openff-units = { path = ".", editable = true}
