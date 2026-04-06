@@ -10,6 +10,7 @@ import pydantic.v1 as pydantic
 from openff.utilities import requires_package
 from pint import Measurement as _Measurement
 from pint import Unit as _Unit
+from pint import UnitRegistry as unit
 
 from openff.units.utilities import get_defaults_path
 
@@ -38,16 +39,13 @@ class Quantity[float_or_array, unit](pydantic.BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-    def value_in_unit(self, openmm_unit: Union[str, "OpenMMUnit"]) -> float:
+    def value_in_unit(self, openmm_unit: Union[str, "openmm.unit.Unit"]) -> float:
         pass
         return self.to_openmm().value_in_unit(openmm_unit)
 
     def to_openmm():
         pass
         # keep this implementation
-
-    class Config:
-        arbitrary_types_allowed = True
 
     def __init__(self, value, unit=None, *args, **kwargs):
         super().__init__(
