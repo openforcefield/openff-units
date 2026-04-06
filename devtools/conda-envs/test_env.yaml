@@ -4,6 +4,7 @@ channels:
 dependencies:
   - python
   - pip
+
   - numpy
   - pint
   - pydantic
@@ -18,3 +19,4 @@ dependencies:
 
     # Typing
   - mypy
+  - types-setuptools

@@ -1,23 +1,13 @@
 ci:
   autoupdate_schedule: "monthly"
-default_language_version:
-  python: python3.12
-
 repos:
-- repo: https://github.com/psf/black
-  rev: 23.12.1
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.15.9
   hooks:
-  - id: black
-    files: ^openff
-  - id: black-jupyter
-    files: ^examples/((?!deprecated).)*$
-- repo: https://github.com/PyCQA/isort
-  rev: 5.13.2
+    - id: ruff-format
+    - id: ruff-check
+      args: [--fix]
+- repo: https://github.com/tox-dev/pyproject-fmt
+  rev: v2.21.0
   hooks:
-  - id: isort
-    files: ^openff
-- repo: https://github.com/PyCQA/flake8
-  rev: 6.1.0
-  hooks:
-  - id: flake8
-    files: ^openff
+    - id: pyproject-fmt

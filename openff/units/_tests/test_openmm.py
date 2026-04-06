@@ -70,15 +70,15 @@ class TestOpenMMUnits:
         assert pint_quantity == converted_pint_quantity
 
     def test_from_openmm_quantity_none(self):
-        with pytest.raises(NoneQuantityError, match="Input is None.*OpenMM.*Quantity"):
+        with pytest.raises(NoneQuantityError, match=r"Input is None.*OpenMM.*Quantity"):
             from_openmm(None)
 
     def test_to_openmm_quantity_none(self):
-        with pytest.raises(NoneQuantityError, match="Input is None.*OpenFF.*Quantity"):
+        with pytest.raises(NoneQuantityError, match=r"Input is None.*OpenFF.*Quantity"):
             to_openmm(None)
 
     def test_openmm_unit_to_string_none(self):
-        with pytest.raises(NoneUnitError, match="Input is None.*OpenMM.*Unit"):
+        with pytest.raises(NoneUnitError, match=r"Input is None.*OpenMM.*Unit"):
             openmm_unit_to_string(None)
 
     @pytest.mark.parametrize(
@@ -171,9 +171,7 @@ class TestOpenMMUnits:
 
         assert abs(converted - to_openmm_quantity) < (
             # Multiply by dimensionless to ensure result is an openmm quantity
-            1.0e-6
-            * to_openmm_quantity
-            * openmm_unit.dimensionless
+            1.0e-6 * to_openmm_quantity * openmm_unit.dimensionless
         )
 
 
@@ -197,7 +195,7 @@ class TestEnsureType:
     def test_unsupported_type(self):
         x = unit.Quantity(4.0, unit.angstrom)
 
-        with pytest.raises(ValueError, match="Unsupported.*type_to_ensure.*pint"):
+        with pytest.raises(ValueError, match=r"Unsupported.*type_to_ensure.*pint"):
             ensure_quantity(x, "pint")
 
     def test_short_circuit(self):
@@ -215,9 +213,7 @@ class TestEnsureType:
         ],
     )
     def test_primitives(self, value):
-        assert ensure_quantity(value, "openff") == unit.Quantity(
-            value, unit.dimensionless
-        )
+        assert ensure_quantity(value, "openff") == unit.Quantity(value, unit.dimensionless)
         assert ensure_quantity(value, "openmm") == openmm_unit.Quantity(
             value, openmm_unit.dimensionless
         )
@@ -232,8 +228,8 @@ class TestEnsureType:
             value = numpy.asarray(value)
 
         numpy.testing.assert_allclose(
-            ensure_quantity(value, "openff"),
-            unit.Quantity(value, unit.dimensionless),
+            ensure_quantity(value, "openff").m,
+            Quantity(value, unit.dimensionless).m,
         )
 
         numpy.testing.assert_equal(

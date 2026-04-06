@@ -1,7 +1,6 @@
 """
 Core classes for OpenFF Units
 """
-from __future__ import annotations
 
 import uuid
 from typing import TYPE_CHECKING, Any, Union
@@ -15,15 +14,15 @@ from pint import Unit as _Unit
 from openff.units.utilities import get_defaults_path
 
 if TYPE_CHECKING:
-    from openmm.unit import Quantity as OpenMMQuantity
-    from openmm.unit import Unit as OpenMMUnit
+    import openmm.unit
 
-__all__ = [
+__all__ = (
     "DEFAULT_UNIT_REGISTRY",
-    "Quantity",
     "Measurement",
+    "Quantity",
     "Unit",
-]
+    "unit",
+)
 
 
 class Unit(pint.UnitRegistry.Unit):
@@ -69,7 +68,7 @@ class Quantity[float_or_array, unit](pydantic.BaseModel):
 
 
 @requires_package("openmm")
-def _to_openmm(self) -> "OpenMMQuantity":
+def _to_openmm(self) -> "openmm.unit.Quantity":
     """Convert the quantity to an ``openmm.unit.Quantity``.
 
     Returns
@@ -82,7 +81,7 @@ def _to_openmm(self) -> "OpenMMQuantity":
     return to_openmm(self)
 
 
-class Measurement(pint.UnitRegistry.Measurement):  # type: ignore
+class Measurement(pint.UnitRegistry.Measurement):
     """A value with associated units and uncertainty."""
 
     def __dask_tokenize__(self):
