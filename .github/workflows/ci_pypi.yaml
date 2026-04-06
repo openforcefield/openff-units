@@ -111,7 +111,7 @@ jobs:
       run: python -c "import sys; from openff.units import unit, Quantity; assert 'openmm' not in sys.modules"
 
     - name: Codecov
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v6
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./coverage.xml
