@@ -9,8 +9,9 @@ from typing import TYPE_CHECKING
 import pint
 from openff.utilities import requires_package
 from pint import Measurement as _Measurement
-from pint import Quantity as _Quantity
+from pint import Quantity as PintQuantity
 from pint import Unit as _Unit
+from pydantic_pint import PydanticPintQuantity
 
 from openff.units.utilities import get_defaults_path
 
@@ -24,15 +25,25 @@ __all__ = (
     "Unit",
     "unit",
 )
+from typing import Annotated, Any, TypeVar
+
+from pydantic import PlainSerializer
+
+
+def ser_type(value: type[Any]) -> str:
+    return value.__name__
+
+
+T = TypeVar("T")
+
+JSONSerializableType = Annotated[type[T], PlainSerializer(ser_type, when_used="json-unless-none")]
 
 
 class Unit(pint.UnitRegistry.Unit):
     """A unit of measure."""
 
-    pass
 
-
-class Quantity(pint.UnitRegistry.Quantity):
+class _Quantity(pint.UnitRegistry.Quantity):
     """A value with associated units."""
 
     def __dask_tokenize__(self):
@@ -71,7 +82,7 @@ class Measurement(pint.UnitRegistry.Measurement):
 
 
 class UnitRegistry(pint.UnitRegistry):
-    _quantity_class = Quantity
+    _quantity_class = _Quantity
     _unit_class = Unit
     _measurement_class = Measurement
 
@@ -85,6 +96,12 @@ Quantity: type[_Quantity] = DEFAULT_UNIT_REGISTRY.Quantity
 Measurement: type[_Measurement] = DEFAULT_UNIT_REGISTRY.Measurement
 
 pint.set_application_registry(DEFAULT_UNIT_REGISTRY)
+
+Quantity = Annotated[
+    PintQuantity, PydanticPintQuantity("kilocalories_per_mole", ureg=DEFAULT_UNIT_REGISTRY)
+]
+
+DEFAULT_UNIT_REGISTRY._quantity_class = Quantity
 
 Quantity.to_openmm = _to_openmm  # type: ignore[attr-defined]
 
