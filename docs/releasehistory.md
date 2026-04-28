@@ -17,6 +17,7 @@ Please note that all releases prior to a version 1.0.0 are considered pre-releas
 * #148 Switches version handling from `versioningit` to `setuptools-scm`
 * #149 Runs tests with Python 3.14
 * #150 Runs tests with Pint 0.25
+* #174 Drops support for Python 3.11
 
 ## 0.3.1
 
