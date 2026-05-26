@@ -21,6 +21,7 @@ uncertainties = "*"
 [pypi-dependencies]
 openff-units = { path = ".", editable = true}
 openff-units-downstream-dummy = { path = "downstream_dummy/" }
+pydantic = "==2.13.*"
 
 [feature.test.dependencies]
 pytest = "*"
