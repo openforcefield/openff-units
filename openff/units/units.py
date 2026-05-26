@@ -2,15 +2,20 @@
 Core classes for OpenFF Units
 """
 
+from __future__ import annotations
+
 import uuid
 import warnings
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import pint
 from openff.utilities import requires_package
 from pint import Measurement as _Measurement
 from pint import Quantity as _Quantity
 from pint import Unit as _Unit
+from pint.facets.plain.quantity import PlainQuantity as PintQuantity
+from pydantic import GetCoreSchemaHandler
+from pydantic_core import core_schema
 
 from openff.units.utilities import get_defaults_path
 
@@ -32,7 +37,82 @@ class Unit(pint.UnitRegistry.Unit):
     pass
 
 
-class Quantity(pint.UnitRegistry.Quantity):
+class _QuantityMixin:
+    @classmethod
+    def serialize(
+        cls,
+        v: PintQuantity,
+        info: core_schema.SerializationInfo | None = None,
+    ) -> dict | str | PintQuantity:
+        to_json = info is not None and info.mode_is_json()
+
+        if to_json:
+            return f"{v.magnitude} {v.units}"
+
+        return {
+            "magnitude": v.magnitude,
+            "units": str(v.units),
+        }
+
+    @classmethod
+    def validate(
+        cls,
+        v: dict | str | PintQuantity,
+    ):
+        if isinstance(v, Quantity):
+            return v
+        elif isinstance(v, str):
+            return Quantity(v)
+        elif isinstance(v, dict):
+            return Quantity(v["magnitude"], v["units"])
+        else:
+            raise ValueError(f"Invalid type {type(v)} for Quantity")
+
+    @classmethod
+    def __get_pydantic_core_schema__(
+        cls,
+        source_type: Any,
+        handler: GetCoreSchemaHandler,
+    ) -> core_schema.CoreSchema:
+
+        validate_schema = core_schema.chain_schema(
+            [
+                core_schema.union_schema(
+                    [
+                        core_schema.is_instance_schema(PintQuantity),
+                        core_schema.str_schema(),
+                        core_schema.dict_schema(),
+                    ]
+                ),
+                core_schema.no_info_plain_validator_function(cls.validate),
+            ]
+        )
+
+        validate_json_schema = core_schema.chain_schema(
+            [
+                core_schema.union_schema(
+                    [
+                        core_schema.str_schema(coerce_numbers_to_str=True),
+                        core_schema.dict_schema(),
+                    ]
+                ),
+                core_schema.no_info_plain_validator_function(cls.validate),
+            ]
+        )
+
+        serialize_schema = core_schema.plain_serializer_function_ser_schema(
+            cls.serialize,
+            info_arg=True,
+        )
+
+        return core_schema.json_or_python_schema(
+            json_schema=validate_json_schema,
+            python_schema=validate_schema,
+            serialization=serialize_schema,
+        )
+
+
+class Quantity(_QuantityMixin, PintQuantity):
     """A value with associated units."""
 
     def __dask_tokenize__(self):
@@ -45,7 +125,7 @@ class Quantity(pint.UnitRegistry.Quantity):
 
 
 @requires_package("openmm")
-def _to_openmm(self) -> "openmm.unit.Quantity":
+def _to_openmm(self) -> openmm.unit.Quantity:
     """Convert the quantity to an ``openmm.unit.Quantity``.
 
     Returns
@@ -84,9 +164,16 @@ Unit: type[_Unit] = DEFAULT_UNIT_REGISTRY.Unit
 Quantity: type[_Quantity] = DEFAULT_UNIT_REGISTRY.Quantity
 Measurement: type[_Measurement] = DEFAULT_UNIT_REGISTRY.Measurement
 
-pint.set_application_registry(DEFAULT_UNIT_REGISTRY)
-
 Quantity.to_openmm = _to_openmm  # type: ignore[attr-defined]
+
+# Re-attach the Pydantic magic to our new Quantity class, which itself was
+# dynamically created by Pint's magic (and lost these methods in the process).
+Quantity.__get_pydantic_core_schema__ = _QuantityMixin.__get_pydantic_core_schema__  # type: ignore[attr-defined]
+Quantity.validate = _QuantityMixin.validate  # type: ignore[attr-defined]
+Quantity.serialize = _QuantityMixin.serialize  # type: ignore[attr-defined]
+
+
+pint.set_application_registry(DEFAULT_UNIT_REGISTRY)
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
