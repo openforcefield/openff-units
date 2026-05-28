@@ -23,6 +23,7 @@ if TYPE_CHECKING:
 try:
     from pydantic import GetCoreSchemaHandler
     from pydantic_core import core_schema
+
     has_pydantic = True
 except ImportError:
     has_pydantic = False
@@ -41,7 +42,9 @@ class Unit(pint.UnitRegistry.Unit):
 
     pass
 
+
 if has_pydantic:
+
     class _QuantityMixin:
         @classmethod
         def serialize(
@@ -116,8 +119,10 @@ if has_pydantic:
                 serialization=serialize_schema,
             )
 else:
+
     class _QuantityMixin:
         pass
+
 
 class Quantity(_QuantityMixin, PintQuantity):
     """A value with associated units."""
