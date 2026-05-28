@@ -14,13 +14,18 @@ from pint import Measurement as _Measurement
 from pint import Quantity as _Quantity
 from pint import Unit as _Unit
 from pint.facets.plain.quantity import PlainQuantity as PintQuantity
-from pydantic import GetCoreSchemaHandler
-from pydantic_core import core_schema
 
 from openff.units.utilities import get_defaults_path
 
 if TYPE_CHECKING:
     import openmm.unit
+
+try:
+    from pydantic import GetCoreSchemaHandler
+    from pydantic_core import core_schema
+    has_pydantic = True
+except ImportError:
+    has_pydantic = False
 
 __all__ = (
     "DEFAULT_UNIT_REGISTRY",
@@ -36,81 +41,83 @@ class Unit(pint.UnitRegistry.Unit):
 
     pass
 
+if has_pydantic:
+    class _QuantityMixin:
+        @classmethod
+        def serialize(
+            cls,
+            v: PintQuantity,
+            info: core_schema.SerializationInfo | None = None,
+        ) -> dict | str | PintQuantity:
+            to_json = info is not None and info.mode_is_json()
 
-class _QuantityMixin:
-    @classmethod
-    def serialize(
-        cls,
-        v: PintQuantity,
-        info: core_schema.SerializationInfo | None = None,
-    ) -> dict | str | PintQuantity:
-        to_json = info is not None and info.mode_is_json()
+            if to_json:
+                return f"{v.magnitude} {v.units}"
 
-        if to_json:
-            return f"{v.magnitude} {v.units}"
+            return {
+                "magnitude": v.magnitude,
+                "units": str(v.units),
+            }
 
-        return {
-            "magnitude": v.magnitude,
-            "units": str(v.units),
-        }
+        @classmethod
+        def validate(
+            cls,
+            v: dict | str | PintQuantity,
+        ):
+            if isinstance(v, Quantity):
+                return v
+            elif isinstance(v, str):
+                return Quantity(v)
+            elif isinstance(v, dict):
+                return Quantity(v["magnitude"], v["units"])
+            else:
+                raise ValueError(f"Invalid type {type(v)} for Quantity")
 
-    @classmethod
-    def validate(
-        cls,
-        v: dict | str | PintQuantity,
-    ):
-        if isinstance(v, Quantity):
-            return v
-        elif isinstance(v, str):
-            return Quantity(v)
-        elif isinstance(v, dict):
-            return Quantity(v["magnitude"], v["units"])
-        else:
-            raise ValueError(f"Invalid type {type(v)} for Quantity")
+        @classmethod
+        def __get_pydantic_core_schema__(
+            cls,
+            source_type: Any,
+            handler: GetCoreSchemaHandler,
+        ) -> core_schema.CoreSchema:
 
-    @classmethod
-    def __get_pydantic_core_schema__(
-        cls,
-        source_type: Any,
-        handler: GetCoreSchemaHandler,
-    ) -> core_schema.CoreSchema:
+            validate_schema = core_schema.chain_schema(
+                [
+                    core_schema.union_schema(
+                        [
+                            core_schema.is_instance_schema(PintQuantity),
+                            core_schema.str_schema(),
+                            core_schema.dict_schema(),
+                        ]
+                    ),
+                    core_schema.no_info_plain_validator_function(cls.validate),
+                ]
+            )
 
-        validate_schema = core_schema.chain_schema(
-            [
-                core_schema.union_schema(
-                    [
-                        core_schema.is_instance_schema(PintQuantity),
-                        core_schema.str_schema(),
-                        core_schema.dict_schema(),
-                    ]
-                ),
-                core_schema.no_info_plain_validator_function(cls.validate),
-            ]
-        )
+            validate_json_schema = core_schema.chain_schema(
+                [
+                    core_schema.union_schema(
+                        [
+                            core_schema.str_schema(coerce_numbers_to_str=True),
+                            core_schema.dict_schema(),
+                        ]
+                    ),
+                    core_schema.no_info_plain_validator_function(cls.validate),
+                ]
+            )
 
-        validate_json_schema = core_schema.chain_schema(
-            [
-                core_schema.union_schema(
-                    [
-                        core_schema.str_schema(coerce_numbers_to_str=True),
-                        core_schema.dict_schema(),
-                    ]
-                ),
-                core_schema.no_info_plain_validator_function(cls.validate),
-            ]
-        )
+            serialize_schema = core_schema.plain_serializer_function_ser_schema(
+                cls.serialize,
+                info_arg=True,
+            )
 
-        serialize_schema = core_schema.plain_serializer_function_ser_schema(
-            cls.serialize,
-            info_arg=True,
-        )
-
-        return core_schema.json_or_python_schema(
-            json_schema=validate_json_schema,
-            python_schema=validate_schema,
-            serialization=serialize_schema,
-        )
-
+            return core_schema.json_or_python_schema(
+                json_schema=validate_json_schema,
+                python_schema=validate_schema,
+                serialization=serialize_schema,
+            )
+else:
+    class _QuantityMixin:
+        pass
 
 class Quantity(_QuantityMixin, PintQuantity):
     """A value with associated units."""
@@ -166,11 +173,12 @@ Measurement: type[_Measurement] = DEFAULT_UNIT_REGISTRY.Measurement
 
 Quantity.to_openmm = _to_openmm  # type: ignore[attr-defined]
 
-# Re-attach the Pydantic magic to our new Quantity class, which itself was
-# dynamically created by Pint's magic (and lost these methods in the process).
-Quantity.__get_pydantic_core_schema__ = _QuantityMixin.__get_pydantic_core_schema__  # type: ignore[attr-defined]
-Quantity.validate = _QuantityMixin.validate  # type: ignore[attr-defined]
-Quantity.serialize = _QuantityMixin.serialize  # type: ignore[attr-defined]
+if has_pydantic:
+    # Re-attach the Pydantic magic to our new Quantity class, which itself was
+    # dynamically created by Pint's magic (and lost these methods in the process).
+    Quantity.__get_pydantic_core_schema__ = _QuantityMixin.__get_pydantic_core_schema__  # type: ignore[attr-defined]
+    Quantity.validate = _QuantityMixin.validate  # type: ignore[attr-defined]
+    Quantity.serialize = _QuantityMixin.serialize  # type: ignore[attr-defined]
 
 
 pint.set_application_registry(DEFAULT_UNIT_REGISTRY)

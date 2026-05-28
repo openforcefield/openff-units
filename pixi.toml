@@ -21,6 +21,8 @@ uncertainties = "*"
 [pypi-dependencies]
 openff-units = { path = ".", editable = true}
 openff-units-downstream-dummy = { path = "downstream_dummy/" }
+
+[feature.pydantic.pypi-dependencies]
 pydantic = "==2.13.*"
 
 [feature.test.dependencies]
@@ -69,3 +71,6 @@ py314pint25 = [ "py314", "test", "typing", "pint25" ]
 py312pint25openmm = [ "py312", "test", "typing", "pint25", "openmm" ]
 py313pint25openmm = [ "py313", "test", "typing", "pint25", "openmm" ]
 py314pint25openmm = [ "py314", "test", "typing", "pint25", "openmm" ]
+py312pydantic = [ "py312", "test", "pydantic", "pint25" ]
+py313pydantic = [ "py313", "test", "pydantic", "pint25" ]
+py314pydantic = [ "py314", "test", "pydantic", "pint25" ]
