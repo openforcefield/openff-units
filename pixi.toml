@@ -31,7 +31,7 @@ pytest-cov = "*"
 pytest-xdist = "*"
 pytest-randomly = "*"
 
-[feature.typing.dependencies]
+[feature.typing.pypi-dependencies]
 mypy = "*"
 types-setuptools = "*"
 
@@ -71,6 +71,6 @@ py314pint25 = [ "py314", "test", "typing", "pint25" ]
 py312pint25openmm = [ "py312", "test", "typing", "pint25", "openmm" ]
 py313pint25openmm = [ "py313", "test", "typing", "pint25", "openmm" ]
 py314pint25openmm = [ "py314", "test", "typing", "pint25", "openmm" ]
-py312pydantic = [ "py312", "test", "pydantic", "pint25" ]
-py313pydantic = [ "py313", "test", "pydantic", "pint25" ]
-py314pydantic = [ "py314", "test", "pydantic", "pint25" ]
+py312pydantic = [ "py312", "test", "typing", "pydantic", "pint25" ]
+py313pydantic = [ "py313", "test", "typing", "pydantic", "pint25" ]
+py314pydantic = [ "py314", "test", "typing", "pydantic", "pint25" ]
