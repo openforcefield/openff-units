@@ -54,14 +54,14 @@ lint.isort.known-third-party = [ "openff.utilities" ]
 
 [tool.mypy]
 mypy_path = "stubs/"
-warn_unused_configs = true
-warn_unused_ignores = true
-warn_incomplete_stub = true
-show_error_codes = true
 exclude = [
   "openff/units/_tests/",
   "openff/units/data",
 ]
+warn_unused_ignores = true
+warn_incomplete_stub = true
+warn_unused_configs = true
+show_error_codes = true
 
 [tool.pytest]
 ini_options.addopts = "--cov=openff/units --cov-report=xml --cov-append"

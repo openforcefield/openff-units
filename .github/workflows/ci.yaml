@@ -38,8 +38,9 @@ jobs:
 
     - uses: prefix-dev/setup-pixi@v0.9.6
       with:
-        pixi-version: v0.66.0
+        pixi-version: v0.70.0
         environments: ${{ matrix.environment }}
+        frozen: true
 
     - name: Run type-checker
       run: pixi run -e ${{ matrix.environment }} run_mypy
