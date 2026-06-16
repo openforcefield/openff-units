@@ -41,8 +41,9 @@ jobs:
 
     - uses: prefix-dev/setup-pixi@v0.9.6
       with:
-        pixi-version: v0.69.0
+        pixi-version: v0.70.2
         environments: ${{ matrix.environment }}
+        frozen: true
 
     - name: Run type-checker
       run: pixi run -e ${{ matrix.environment }} run_mypy
@@ -61,7 +62,7 @@ jobs:
       run: pixi run -e ${{ matrix.environment }} python -c "import sys; from openff.units import unit, Quantity; assert 'openmm' not in sys.modules"
 
     - name: Codecov
-      uses: codecov/codecov-action@v6
+      uses: codecov/codecov-action@v7
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./coverage.xml
