@@ -1,14 +1,15 @@
 import numpy
 import pytest
-from pydantic import BaseModel
 
 from openff.units import Quantity, unit
 
 
+pydantic = pytest.importorskip("pydantic")
+
 def test_model_definition():
     """Just define a Pydantic model, which will crash if the schema is bad."""
 
-    class MyModel(BaseModel):
+    class MyModel(pydantic.BaseModel):
         x: Quantity
 
 
@@ -22,7 +23,7 @@ def test_model_definition():
     ],
 )
 def test_basic_field_validation(value):
-    class MyModel(BaseModel):
+    class MyModel(pydantic.BaseModel):
         x: Quantity
 
     stored_value = MyModel(x=value).x
@@ -35,7 +36,7 @@ def test_basic_field_validation(value):
 def test_model_roundtrip(serialize_with):
     """Test that a model can be round-tripped in Python."""
 
-    class MyModel(BaseModel):
+    class MyModel(pydantic.BaseModel):
         x: Quantity
         y: Quantity
         z: Quantity
@@ -63,7 +64,7 @@ def test_model_roundtrip(serialize_with):
 
 @pytest.mark.parametrize("serialize_with", ["python", "json"])
 def test_different_iterables(serialize_with):
-    class MyModel(BaseModel):
+    class MyModel(pydantic.BaseModel):
         a: Quantity
         b: Quantity
         c: Quantity
