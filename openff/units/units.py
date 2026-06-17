@@ -104,6 +104,9 @@ if has_pydantic:
             elif isinstance(v, dict):
                 return Quantity(v["magnitude"], v["units"])
             else:
+                # this cannot be accessed with the current core_schema definition - the types of the
+                # `v` argument to this method **happen** to be identical to the supported types in the
+                # core_schema. If **either** is changed, this clause may be hit
                 raise ValueError(f"Invalid type {type(v)} for Quantity")
 
         @classmethod
@@ -120,6 +123,7 @@ if has_pydantic:
                             core_schema.is_instance_schema(PintQuantity),
                             core_schema.str_schema(),
                             core_schema.dict_schema(),
+                            # any other types that could be accepted by a quantity field?
                         ]
                     ),
                     core_schema.no_info_plain_validator_function(cls.validate),
