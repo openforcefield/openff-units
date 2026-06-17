@@ -4,10 +4,12 @@ Core classes for OpenFF Units
 
 from __future__ import annotations
 
+import json
 import uuid
 import warnings
 from typing import TYPE_CHECKING, Any
 
+import numpy  # possible to make this optional?
 import pint
 from openff.utilities import requires_package
 from pint import Measurement as _Measurement
@@ -55,7 +57,22 @@ if has_pydantic:
             to_json = info is not None and info.mode_is_json()
 
             if to_json:
-                return f"{v.magnitude} {v.units}"
+                magnitude = v.magnitude
+
+                # storing numpy arrays natively works fine in memory in Python,
+                # but must be list-ified when serializing to JSON.
+                if isinstance(magnitude, numpy.ndarray):
+                    magnitude = v.magnitude.tolist()
+
+                # TODO: I think this is necessary for handling unit-wrapped arrays, but it is
+                #       not so performant. Scalar quantities can be directly serialized to much
+                #       shorter strings
+                return json.dumps(
+                    {
+                        "magnitude": magnitude,
+                        "units": str(v.units),
+                    }
+                )
 
             return {
                 "magnitude": v.magnitude,
@@ -70,7 +87,20 @@ if has_pydantic:
             if isinstance(v, Quantity):
                 return v
             elif isinstance(v, str):
-                return Quantity(v)
+                # TODO: A significant wart is that we have to try to guess whether the string is a
+                #       JSON-serialized quantity or a simple string representation of a quantity.
+                #       For example: input of "0.9 nanometer" can be passed directly to the
+                #       Quantity constructor, but "{"magnitude": 0.9, "units": "nanometer"}" cannot
+                #       as it needs to be unwrapped. A better solution would require a better way
+                #       of serializing unit-wrapped arrays to JSON
+                if "{" in v:
+                    deserialized = json.loads(v)
+                    return Quantity(
+                        deserialized["magnitude"],
+                        deserialized["units"],
+                    )
+                else:
+                    return Quantity(v)
             elif isinstance(v, dict):
                 return Quantity(v["magnitude"], v["units"])
             else:

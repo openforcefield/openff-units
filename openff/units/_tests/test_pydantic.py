@@ -1,3 +1,4 @@
+import numpy
 import pytest
 from pydantic import BaseModel
 
@@ -28,3 +29,33 @@ def test_basic_field_validation(value):
 
     assert str(stored_value.units) == "angstrom"
     assert stored_value.m_as("angstrom") == 1.0
+
+
+@pytest.mark.parametrize("serialize_with", ["python", "json"])
+def test_model_roundtrip(serialize_with):
+    """Test that a model can be round-tripped in Python."""
+
+    class MyModel(BaseModel):
+        x: Quantity
+        y: Quantity
+        z: Quantity
+
+    model = MyModel(
+        x=1.0 * unit.angstrom,
+        y=[2, 3] * unit.amu,
+        z={"magnitude": 299.99, "units": "kelvin"},
+    )
+
+    match serialize_with:
+        case "json":
+            model_as_json = model.model_dump_json()
+            new_model = MyModel.model_validate_json(model_as_json)
+        case "python":
+            model_as_dict = model.model_dump()
+            new_model = MyModel.model_validate(model_as_dict)
+
+    assert new_model.x == Quantity(1.0, unit.angstrom), model.model_dump_json()
+    assert (new_model.y == Quantity([2, 3], unit.amu)).all()
+    assert type(new_model.y.m) is not list
+    assert type(new_model.y.m) is numpy.ndarray
+    assert new_model.z == Quantity(299.99, unit.kelvin)
