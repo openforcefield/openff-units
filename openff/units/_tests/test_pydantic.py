@@ -3,8 +3,8 @@ import pytest
 
 from openff.units import Quantity, unit
 
-
 pydantic = pytest.importorskip("pydantic")
+
 
 def test_model_definition():
     """Just define a Pydantic model, which will crash if the schema is bad."""
