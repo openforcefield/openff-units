@@ -34,7 +34,7 @@ jobs:
           - py314pint25openmm
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - uses: prefix-dev/setup-pixi@v0.9.6
       with:
