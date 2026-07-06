@@ -30,7 +30,7 @@ jobs:
       COV: --cov=openff/units --cov-report=xml --cov-append
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - name: Setup conda environment
       if: ${{ matrix.install-source == 'conda' }}
