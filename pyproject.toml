@@ -24,6 +24,7 @@ dependencies = [
   "openff-utilities>=0.1.3",
   "pint>=0.24,<0.26",
 ]
+optional-dependencies.pydantic = [ "pydantic==2.13.*" ]
 optional-dependencies.test = [
   "pytest",
   "pytest-cov",

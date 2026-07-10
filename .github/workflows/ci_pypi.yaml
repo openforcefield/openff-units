@@ -14,7 +14,7 @@ defaults:
 
 jobs:
   test:
-    name: 📦=${{ matrix.install-source }}, 💻=${{ matrix.os }}, 🐍=${{ matrix.python-version }}, 🍺=${{ matrix.pint-version }}, ⚛️=${{ matrix.openmm }}
+    name: 📦=${{ matrix.install-source }}, 💻=${{ matrix.os }}, 🐍=${{ matrix.python-version }}, 🍺=${{ matrix.pint-version }}, ⚛️==${{ matrix.openmm }}, 🤓=${{ matrix.pydantic }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -23,6 +23,7 @@ jobs:
         openmm: ["true", "false"]
         python-version: ["3.12", "3.13", "3.14"]
         pint-version: ["0.24", "0.25"]
+        pydantic: ["true", "false"]
 
     env:
       PYTEST_ARGS: -v -n auto
@@ -71,6 +72,10 @@ jobs:
             --extra-index-url https://pypi.org/simple/ \
             pint~=${{ matrix.pint-version }} \
             -e ."[test,typing]" downstream_dummy/
+
+    - name: Optionally install Pydantic from PyPI
+      if: ${{ matrix.install-source == 'pypi' && matrix.pydantic == 'true' }}
+      run: pip install "pydantic ==2.13.*"
 
     - name: Optionally install OpenMM from PyPI
       if: ${{ matrix.install-source == 'pypi' && matrix.openmm == 'true' }}

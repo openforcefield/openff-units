@@ -32,6 +32,9 @@ jobs:
           - py312pint25openmm
           - py313pint25openmm
           - py314pint25openmm
+          - py312pydantic
+          - py313pydantic
+          - py314pydantic
 
     steps:
     - uses: actions/checkout@v7

@@ -11,13 +11,19 @@ Please note that all releases prior to a version 1.0.0 are considered pre-releas
 
 ## 0.4.0
 
+### Behavior changes
+
+* #148 Switches version handling from `versioningit` to `setuptools-scm`
+* #174 Drops support for Python 3.11
+* #178 Define Pydantic schema on `Quantity`
+
+# Other improvements
+
 * #137 Add some NMR-related units
 * #138 Support PEP 639
 * #143 Updates how some data files are packaged
-* #148 Switches version handling from `versioningit` to `setuptools-scm`
 * #149 Runs tests with Python 3.14
 * #150 Runs tests with Pint 0.25
-* #174 Drops support for Python 3.11
 
 ## 0.3.1
 
