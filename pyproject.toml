@@ -9,7 +9,7 @@ requires = [
 name = "openff-units"
 description = "A common units module for the OpenFF software stack"
 readme = "README.md"
-license = { text = "MIT" }
+license = "MIT"
 authors = [ { name = "Open Force Field Initiative", email = "info@openforcefield.org" } ]
 requires-python = ">=3.12"
 classifiers = [
