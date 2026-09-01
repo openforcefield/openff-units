@@ -3,6 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - python <3.13
+  - setuptools-scm
   - pip
   - numpy
   - pint >=0.20.1
