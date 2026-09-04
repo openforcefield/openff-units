@@ -7,8 +7,11 @@ build:
     python: "mambaforge-latest"
   jobs:
     install:
+      - pip list
       - pip install -r devtools/conda-envs/requirements.txt
+      - pip list
       - pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ .
+      - pip list
 
 sphinx:
   configuration: docs/conf.py
