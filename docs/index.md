@@ -51,11 +51,16 @@ True
 ```pycon
 >>> import numpy as np
 >>> 
->>> box_vectors = np.array([
-...     [5.0, 0.0, 0.0],
-...     [0.0, 5.0, 0.0],
-...     [0.0, 0.0, 5.0],
-... ]) * unit.nanometer
+>>> box_vectors = (
+...     np.array(
+...         [
+...             [5.0, 0.0, 0.0],
+...             [0.0, 5.0, 0.0],
+...             [0.0, 0.0, 5.0],
+...         ]
+...     )
+...     * unit.nanometer
+... )
 ```
 
 When constructed like this, `Quantity` is transparent; it will pass any attributes it doesn't have through to the inner value. This means that an quantity-wrapped array can be used exactly as though it were an array --- the units are just checked silently in the background:
