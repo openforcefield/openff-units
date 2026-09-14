@@ -2,8 +2,9 @@ name: openff-units-docs
 channels:
   - conda-forge
 dependencies:
-  - python <3.13
-  - setuptools-scm
+  - python =3.12
+  - setuptools >=84
+  - setuptools-scm >=10
   - pip
   - numpy
   - pint >=0.20.1
