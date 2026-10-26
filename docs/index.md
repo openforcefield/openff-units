@@ -16,7 +16,7 @@ OpenFF Units is based on [Pint]. Its [`Quantity`], [`Unit`], and [`Measurement`]
 
 ## Installation
 
-We recommend installing OpenFF Units with the [Conda] or [Mamba] package managers. If you don't yet have a Conda distribution installed, we recommend [MambaForge] for most users; see the [OpenFF install docs]. The `openff-units` package can be installed from Conda Forge:
+We recommend installing OpenFF Units with the [Conda] or [Mamba] package managers. If you don't yet have a Conda distribution installed, we recommend [Miniforge3] for most users; see the [OpenFF install docs]. The `openff-units` package can be installed from `conda-forge`:
 
 ```shell
 conda install -c conda-forge openff-units
@@ -25,7 +25,7 @@ conda install -c conda-forge openff-units
 [Conda]: https://conda.io
 [Mamba]: https://mamba.readthedocs.io
 [OpenFF install docs]: openff.docs:install
-[MambaForge]: https://github.com/conda-forge/miniforge#mambaforge
+[Miniforge3]: https://github.com/conda-forge/miniforge
 
 ## Using OpenFF Units
 
