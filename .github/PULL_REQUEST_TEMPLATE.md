@@ -1,8 +1,8 @@
 ## Description
-Provide a brief description of the PR's purpose here.
+<!-- Provide a brief description of the PR's purpose here -->
 
 ## Todos
-Notable points that this PR has either accomplished or will accomplish.
+<!-- Notable points that this PR has either accomplished or will accomplish. -->
   - [ ] TODO 1
 
 ## Questions
@@ -10,3 +10,6 @@ Notable points that this PR has either accomplished or will accomplish.
 
 ## Status
 - [ ] Ready to go
+
+## AI disclosure
+- [ ] Agentic tools or LLMs were used in this contribution
