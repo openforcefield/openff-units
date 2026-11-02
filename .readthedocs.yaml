@@ -1,25 +1,20 @@
-# https://docs.readthedocs.io/en/stable/config-file/v2.html
 version: 2
 
 build:
-  os: ubuntu-24.04
-  tools:
-    python: "miniforge3-latest"
-  jobs:
-    install:
-      - pip list
-      - pip install -r devtools/conda-envs/requirements.txt
-      - pip list
-      - pip install --index-url https://pypi.org/simple/ --extra-index-url https://test.pypi.org/simple/ --no-build-isolation .
-      - pip list
+   os: ubuntu-26.04
+   tools:
+       python: "latest"
+   jobs:
+      create_environment:
+         - asdf plugin add pixi
+         - asdf install pixi latest
+         - asdf global pixi latest
+      install:
+         - pixi install -e docs
+      build:
+         html:
+            - pixi run -e docs sphinx-build -T -b html docs $READTHEDOCS_OUTPUT/html
 
 sphinx:
   configuration: docs/conf.py
 
-python:
-  install:
-    - method: pip
-      path: .
-
-conda:
-  environment: devtools/conda-envs/docs_env.yaml

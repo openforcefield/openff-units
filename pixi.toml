@@ -14,7 +14,7 @@ run_docexamples = "pytest --doctest-modules openff --ignore=openff/units/_tests"
 python = "*"
 pip = "*"
 numpy = "*"
-pint = "*"
+pint = "<0.26"
 openff-utilities = ">=0.1.3"
 uncertainties = "*"
 
@@ -38,6 +38,22 @@ types-setuptools = "*"
 [feature.dev.dependencies]
 pre-commit = "*"
 ipython = "*"
+
+[feature.docs.dependencies]
+sphinx = ">=4.5,<5"
+myst-parser = ">=0.13.6"
+sphinx-notfound-page = "*"
+typing-extensions = "*"
+beautifulsoup4 = "*"
+pint = "0.25.*"
+
+[feature.docs.pypi-dependencies]
+pint = "==0.25.*"
+openff-sphinx-theme = {
+  git = "https://github.com/openforcefield/openff-sphinx-theme",
+  rev = "main",
+}
+openff-units = { path = ".", editable = true }
 
 [feature.py312.dependencies]
 python = "3.12.*"
@@ -74,3 +90,4 @@ py314pint25openmm = [ "py314", "test", "typing", "pint25", "openmm" ]
 py312pydantic = [ "py312", "test", "typing", "pydantic", "pint25" ]
 py313pydantic = [ "py313", "test", "typing", "pydantic", "pint25" ]
 py314pydantic = [ "py314", "test", "typing", "pydantic", "pint25" ]
+docs = ["py312", "pint25", "docs"]
