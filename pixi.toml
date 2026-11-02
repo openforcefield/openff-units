@@ -47,7 +47,6 @@ typing-extensions = "*"
 beautifulsoup4 = "*"
 
 [feature.docs.pypi-dependencies]
-pint = "==0.25.*"
 openff-sphinx-theme = {
   git = "https://github.com/openforcefield/openff-sphinx-theme",
   rev = "main",
