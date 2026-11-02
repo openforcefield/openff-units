@@ -45,7 +45,6 @@ myst-parser = ">=0.13.6"
 sphinx-notfound-page = "*"
 typing-extensions = "*"
 beautifulsoup4 = "*"
-pint = "0.25.*"
 
 [feature.docs.pypi-dependencies]
 pint = "==0.25.*"
