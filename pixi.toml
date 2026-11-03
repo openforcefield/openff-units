@@ -14,12 +14,12 @@ run_docexamples = "pytest --doctest-modules openff --ignore=openff/units/_tests"
 python = "*"
 pip = "*"
 numpy = "*"
-pint = "*"  # pint>=0.25,<0.27
+pint = ">=0.25,<0.27"
 openff-utilities = ">=0.1.3"
 uncertainties = "*"
 
 [pypi-options.dependency-overrides]
-pint = "==0.26.*"
+pint = ">=0.25,<0.27"
 
 [pypi-dependencies]
 openff-units = { path = ".", editable = true}
@@ -68,11 +68,20 @@ python = "3.14.*"
 [feature.openmm.dependencies]
 openmm = ">=8.3"
 
+[feature.pint25.dependencies]
+pint = "0.25.*"
+
 [feature.pint26.dependencies]
 pint = "0.26.*"
 
 [environments]
 dev = [ "py312", "test", "typing", "dev"]
+py312pint25 = [ "py312", "test", "typing", "pint25" ]
+py313pint25 = [ "py313", "test", "typing", "pint25" ]
+py314pint25 = [ "py314", "test", "typing", "pint25" ]
+py312pint25openmm = [ "py312", "test", "typing", "pint25", "openmm" ]
+py313pint25openmm = [ "py313", "test", "typing", "pint25", "openmm" ]
+py314pint25openmm = [ "py314", "test", "typing", "pint25", "openmm" ]
 py312pint26 = [ "py312", "test", "typing", "pint26" ]
 py313pint26 = [ "py313", "test", "typing", "pint26" ]
 py314pint26 = [ "py314", "test", "typing", "pint26" ]

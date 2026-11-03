@@ -21,6 +21,15 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest]
         environment:
+          - py312pint25
+          - py313pint25
+          - py314pint25
+          - py312pint26openmm
+          - py313pint26openmm
+          - py314pint26openmm
+          - py312pint25
+          - py313pint25
+          - py314pint25
           - py312pint26openmm
           - py313pint26openmm
           - py314pint26openmm
