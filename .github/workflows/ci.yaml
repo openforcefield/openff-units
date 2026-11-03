@@ -24,12 +24,12 @@ jobs:
           - py312pint25
           - py313pint25
           - py314pint25
-          - py312pint26openmm
-          - py313pint26openmm
-          - py314pint26openmm
-          - py312pint25
-          - py313pint25
-          - py314pint25
+          - py312pint25openmm
+          - py313pint25openmm
+          - py314pint25openmm
+          - py312pint26
+          - py313pint26
+          - py314pint26
           - py312pint26openmm
           - py313pint26openmm
           - py314pint26openmm
@@ -42,7 +42,6 @@ jobs:
 
     - uses: prefix-dev/setup-pixi@v0.11.2
       with:
-        pixi-version: v0.72.0
         environments: ${{ matrix.environment }}
         frozen: true
 
