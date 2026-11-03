@@ -55,7 +55,7 @@ jobs:
       run: pixi run -e ${{ matrix.environment }} run_dummy_tests
 
     - name: Run docexamples
-      if: ${{ contains(matrix.environment, 'openmm') }}
+      if: ${{ contains(matrix.environment, 'pint26openmm') }}
       run: pixi run -e ${{ matrix.environment }} run_docexamples
 
     - name: Check OpenMM is lazy-imported
