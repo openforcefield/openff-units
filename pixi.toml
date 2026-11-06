@@ -34,6 +34,9 @@ pytest-cov = "*"
 pytest-xdist = "*"
 pytest-randomly = "*"
 
+[feature.test.pypi-dependencies]
+pytest-markdown-docs = "*"
+
 [feature.typing.pypi-dependencies]
 mypy = "*"
 types-setuptools = "*"

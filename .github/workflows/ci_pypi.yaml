@@ -110,7 +110,7 @@ jobs:
 
     - name: Run docexamples
       if: ${{ matrix.openmm == 'true' && matrix.pint == '0.26' }}
-      run: pytest --doctest-modules $PYTEST_ARGS openff --ignore=openff/units/_tests
+      run: pytest --doctest-modules --doctest-glob="*.md" $PYTEST_ARGS openff --ignore=openff/units/_tests
 
     - name: Check OpenMM is lazy-imported
       if: ${{ matrix.openmm == 'true' }}
