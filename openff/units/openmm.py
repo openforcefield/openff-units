@@ -163,7 +163,7 @@ def from_openmm(openmm_quantity: "openmm.unit.Quantity") -> Quantity:
     >>> from openmm import unit
     >>> length = unit.Quantity(9.0, unit.angstrom)
     >>> from_openmm(length)
-    <Quantity(9.0, 'angstrom')>
+    Quantity(9.0, "angstrom")
     >>> assert isinstance(from_openmm(length), OpenFFQuantity)
 
     """
@@ -297,7 +297,7 @@ def ensure_quantity(
     >>> # NumPy arrays and some primitives are automatically up-converted to `Quantity` objects
     >>> # Note that their units are set to "dimensionless"
     >>> ensure_quantity(numpy.array([1, 2]), "openff")
-    <Quantity([1 2], 'dimensionless')>
+    Quantity(array([1, 2]), "dimensionless")
     >>> ensure_quantity(4.0, "openmm")
     4.0 dimensionless
 
