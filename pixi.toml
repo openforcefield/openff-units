@@ -62,6 +62,9 @@ python = "3.13.*"
 [feature.py314.dependencies]
 python = "3.14.*"
 
+[feature.py315.dependencies]
+python = "3.15.*"
+
 [feature.openmm.dependencies]
 openmm = ">=8.3"
 
@@ -76,16 +79,21 @@ dev = [ "py312", "test", "typing", "dev"]
 py312pint24 = [ "py312", "test", "typing", "pint24" ]
 py313pint24 = [ "py313", "test", "typing", "pint24" ]
 py314pint24 = [ "py314", "test", "typing", "pint24" ]
+py315pint24 = [ "py315", "test", "typing", "pint24" ]
 py312pint24openmm = [ "py312", "test", "typing", "pint24", "openmm" ]
 py313pint24openmm = [ "py313", "test", "typing", "pint24", "openmm" ]
 py314pint24openmm = [ "py314", "test", "typing", "pint24", "openmm" ]
+py315pint24openmm = [ "py315", "test", "typing", "pint24", "openmm" ]
 py312pint25 = [ "py312", "test", "typing", "pint25" ]
 py313pint25 = [ "py313", "test", "typing", "pint25" ]
 py314pint25 = [ "py314", "test", "typing", "pint25" ]
+py315pint25 = [ "py315", "test", "typing", "pint25" ]
 py312pint25openmm = [ "py312", "test", "typing", "pint25", "openmm" ]
 py313pint25openmm = [ "py313", "test", "typing", "pint25", "openmm" ]
 py314pint25openmm = [ "py314", "test", "typing", "pint25", "openmm" ]
+py315pint25openmm = [ "py315", "test", "typing", "pint25", "openmm" ]
 py312pydantic = [ "py312", "test", "typing", "pydantic", "pint25" ]
 py313pydantic = [ "py313", "test", "typing", "pydantic", "pint25" ]
 py314pydantic = [ "py314", "test", "typing", "pydantic", "pint25" ]
+py315pydantic = [ "py315", "test", "typing", "pydantic", "pint25" ]
 docs = ["py312", "pint25", "docs"]
