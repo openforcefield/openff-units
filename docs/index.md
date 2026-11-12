@@ -35,7 +35,8 @@ OpenFF Units provides the [`Quantity`] class, which represents a numerical value
 >>> from openff.units import unit, Quantity
 >>> 
 >>> Quantity(1.007, unit.amu)
-<Quantity(1.007, 'unified_atomic_mass_unit')>
+Quantity(1.007, "unified_atomic_mass_unit")
+
 ```
 
 The `unit` singleton value is a registry of units, but also exposes the `Quantity`, `Unit`, and `Measurement` classes so you don't have to import them individually. Even easier, multiplying a number by the appropriate unit also provides a `Quantity`:
@@ -44,6 +45,7 @@ The `unit` singleton value is a registry of units, but also exposes the `Quantit
 >>> mass_proton = 1.007 * unit.amu
 >>> mass_proton == unit.Quantity(1.007, unit.amu)
 True
+
 ```
 
 `Quantity` can also wrap NumPy arrays. It's best to wrap an array of floats in a quantity, rather than have an array of quantities:
@@ -61,6 +63,7 @@ True
 ...     )
 ...     * unit.nanometer
 ... )
+
 ```
 
 When constructed like this, `Quantity` is transparent; it will pass any attributes it doesn't have through to the inner value. This means that an quantity-wrapped array can be used exactly as though it were an array --- the units are just checked silently in the background:
@@ -70,8 +73,11 @@ When constructed like this, `Quantity` is transparent; it will pass any attribut
 >>> 
 >>> trajectory = 10 * rand(10, 10000, 3) * unit.nanometer
 >>> centroids = trajectory.mean(axis=1)[..., None]
->>> last_water = trajectory[:, 97:99, :]
+>>> last_water = trajectory[:, 97:100, :]
 >>> last_water_recentered = last_water - centroids
+>>> last_water_recentered.dtype, last_water_recentered.units, last_water_recentered.shape
+(dtype('float64'), Unit("nanometer"), (10, 3, 3))
+
 ```
 
 This transparency works with most container types, so it's usually best to have `Quantity` be the outermost wrapper type.
@@ -80,35 +86,40 @@ Complex units can be constructed by combining units with the usual arithmetic op
 
 ```pycon
 >>> boltzmann_constant = 8.314462618e-3 * unit.kilojoule / unit.kelvin / unit.avogadro_number
+
 ```
 
 Some common constants are provided as units as well:
 
 ```pycon
 >>> boltzmann_constant = 1.0 * unit.boltzmann_constant
+
 ```
 
 Adding or subtracting different units with the same dimensions just works:
 
 ```pycon
 >>> 1.0 * unit.angstrom + 1.0 * unit.nanometer
-<Quantity(11.0, 'angstrom')>
+Quantity(11.0, "angstrom")
+
 ```
 
 But quantities with different dimensions raise an exception:
 
 ```pycon
->>> 1.0 * unit.angstrom + 1.0 * unit.nanojoule
+>>> 1.0 * unit.angstrom + 1.0 * unit.nanojoule  # doctest: +ELLIPSIS
 Traceback (most recent call last):
 ...
-pint.errors.DimensionalityError: Cannot convert from 'angstrom' ([length]) to 'nanojoule' ([length] ** 2 * [mass] / [time] ** 2)
+pint.errors.DimensionalityError: Cannot convert from 'angstrom' ([length]) to 'nanojoule' ([mass] * [length] ** 2 / [time] ** 2)
+
 ```
 
 Quantities can be converted between units with the [`.to()`] method:
 
 ```pycon
 >>> (1.0 * unit.nanometer).to(unit.angstrom)
-<Quantity(10.0, 'angstrom')>
+Quantity(10.0, "angstrom")
+
 ```
 
 Or with the [`.ito()`] method for in-place transformations:
@@ -116,8 +127,9 @@ Or with the [`.ito()`] method for in-place transformations:
 ```pycon
 >>> quantity = 10.0 * unit.angstrom
 >>> quantity.ito(unit.nanometer)
->>> quantity
-<Quantity(1.0, 'nanometer')>
+>>> round(quantity, 10)
+Quantity(1.0, "nanometer")
+
 ```
 
 The underlying value without units can be retrieved with the [`.m`] or [`.magnitude`] properties. Just make sure it's in the units you expect first:
@@ -127,6 +139,7 @@ The underlying value without units can be retrieved with the [`.m`] or [`.magnit
 >>> assert quantity.units == unit.kilogram * unit.meter**2 / unit.kelvin / unit.second**2
 >>> quantity.magnitude
 1.380649e-23
+
 ```
 
 Alternatively, specify the target units of the output magnitude with [`.m_as`]:
@@ -135,6 +148,7 @@ Alternatively, specify the target units of the output magnitude with [`.m_as`]:
 >>> quantity = 1.0 * unit.k_B
 >>> quantity.m_as(unit.kilogram * unit.meter**2 / unit.kelvin / unit.second**2)
 1.380649e-23
+
 ```
 
 OpenFF Units also provides the [`from_openmm`] and [`to_openmm`] functions to convert between OpenFF quantities and OpenMM quantities:
@@ -145,14 +159,15 @@ OpenFF Units also provides the [`from_openmm`] and [`to_openmm`] functions to co
 >>> quantity = 10.0 * unit.angstrom
 >>> omm_quant = to_openmm(quantity)
 >>> omm_quant
-Quantity(value=10.0, unit=angstrom)
+10.0 A
 >>> type(omm_quant)
 <class 'openmm.unit.quantity.Quantity'>
 >>> quant_roundtrip = from_openmm(omm_quant)
 >>> quant_roundtrip
-<Quantity(10.0, 'angstrom')>
+Quantity(10.0, "angstrom")
 >>> type(quant_roundtrip)
-<class 'openff.units.units.Quantity'>
+<class 'pint.Quantity'>
+
 ```
 
 For more details, see the [API reference].

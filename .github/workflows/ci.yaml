@@ -21,14 +21,6 @@ jobs:
       matrix:
         os: [macos-latest, ubuntu-latest]
         environment:
-          - py312pint24
-          - py313pint24
-          - py314pint24
-          - py315pint24
-          - py312pint24openmm
-          - py313pint24openmm
-          - py314pint24openmm
-          - py315pint24openmm
           - py312pint25
           - py313pint25
           - py314pint25
@@ -37,6 +29,14 @@ jobs:
           - py313pint25openmm
           - py314pint25openmm
           - py315pint25openmm
+          - py312pint26
+          - py313pint26
+          - py314pint26
+          - py315pint26
+          - py312pint26openmm
+          - py313pint26openmm
+          - py314pint26openmm
+          - py315pint26openmm
           - py312pydantic
           - py313pydantic
           - py314pydantic
@@ -60,7 +60,7 @@ jobs:
       run: pixi run -e ${{ matrix.environment }} run_dummy_tests
 
     - name: Run docexamples
-      if: ${{ contains(matrix.environment, 'openmm') }}
+      if: ${{ contains(matrix.environment, 'pint26openmm') }}
       run: pixi run -e ${{ matrix.environment }} run_docexamples
 
     - name: Check OpenMM is lazy-imported
