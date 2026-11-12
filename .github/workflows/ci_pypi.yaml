@@ -22,9 +22,12 @@ jobs:
         install-source: [pypi]
         os: [macos-latest, ubuntu-latest]
         openmm: ["true", "false"]
-        python-version: ["3.15"]
+        python-version: ["3.12", "3.13", "3.14", "3.15"]
         pint-version: ["0.25", "0.26"]
         pydantic: ["true", "false"]
+        exclude:
+          - python-version: "3.15"
+            openmm: "true"
 
     env:
       PYTEST_ARGS: -v -n auto
