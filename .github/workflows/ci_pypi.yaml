@@ -47,7 +47,7 @@ jobs:
 
     - name: Optionally install OpenMM via conda
       if: ${{ matrix.install-source == 'conda' && matrix.openmm == 'true' }}
-      run: micromamba install "openmm >=8.3" --yes
+      run: micromamba install "openmm ~=8.3" --yes
 
     - name: Verify OpenMM is not installed when not expected (conda)
       if: ${{ matrix.install-source == 'conda' && matrix.openmm == 'false' }}
@@ -83,7 +83,7 @@ jobs:
 
     - name: Optionally install OpenMM from PyPI
       if: ${{ matrix.install-source == 'pypi' && matrix.openmm == 'true' }}
-      run: pip install "openmm >=8.3"
+      run: pip install "openmm ~=8.3"
 
     - name: Verify OpenMM is not installed when not expected (PyPI)
       if: ${{ matrix.install-source == 'pypi' && matrix.openmm == 'false' }}
