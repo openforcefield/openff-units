@@ -131,7 +131,10 @@ jobs:
             echo "Expected exactly one wheel, found ${#wheels[@]}"
             exit 1
           fi
-          python -m pip install "${wheels[0]}" pytest-xdist --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple
+          python -m pip install "${wheels[0]}" --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple
+
+          # this dummy package is part of the testing infra
+          python -m pip install downstream_dummy/
           python -m pip install -r devtools/test-requirements.txt --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple
 
       - name: Verify installed wheel version
