@@ -1,6 +1,0 @@
-pytest
-pytest-cov
-pytest-randomly
-pytest-xdist
-uncertainties
-openmm

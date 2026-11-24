@@ -3,7 +3,7 @@ name: Build and publish package
 on:
   pull_request:
   release:
-    # Only trigger on GitHub Releases - but include "pre-relesae" if that box is ticked
+    # Only trigger on GitHub Releases - but include "pre-release" if that box is ticked
     types:
       - released
       - prereleased
@@ -131,11 +131,10 @@ jobs:
             echo "Expected exactly one wheel, found ${#wheels[@]}"
             exit 1
           fi
-          python -m pip install "${wheels[0]}"
+          python -m pip install "${wheels[0]}[test]"
 
           # this dummy package is part of the testing infra
           python -m pip install downstream_dummy/
-          python -m pip install -r devtools/test-requirements.txt
 
       - name: Verify installed wheel version
         env:
@@ -159,8 +158,8 @@ jobs:
           PY
 
       - name: Run tests
-        # working-directory: /tmp
-        run: python -m pytest -n auto -v --color=yes --durations=10
+        working-directory: /tmp
+        run: python -m pytest -v --color=yes --durations=10 --import-mode=importlib "$GITHUB_WORKSPACE"
 
   publish:
     name: Publish to PyPI
