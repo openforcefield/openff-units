@@ -27,6 +27,7 @@ dependencies = [
 ]
 optional-dependencies.pydantic = [ "pydantic==2.13.*" ]
 optional-dependencies.test = [
+  "openmm",
   "pytest",
   "pytest-cov",
   "pytest-randomly",
